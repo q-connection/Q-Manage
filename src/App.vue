@@ -1,28 +1,49 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+    <div id="app">
+        <component :is="layout">
+            <router-view />
+        </component>
+        <idle-screen />
+        <alert-custom />
+    </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
 export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
-}
+    name: "App",
+    data: () => ({
+        innerWidth: 0,
+        innerHeight: 0
+    }),
+
+    computed: {
+        layout() {
+            let device = this.$device.mobile ? "mobile" : "desktop";
+
+            if(device == 'desktop' && this.innerWidth < 1200) {
+                device = 'mobile'
+            }
+
+            if(device == 'mobile' && this.innerWidth >= 1200) {
+                device = 'desktop'
+            }
+
+            return (this.$route.meta.layout || "blank") + `-${device}-layout`;
+        },
+    },
+    mounted() {
+        const that = this;
+        this.innerWidth = window.innerWidth;
+        this.innerHeight = window.innerHeight;
+
+        window.addEventListener("resize", function () {
+            that.innerWidth = window.innerWidth;
+            that.innerHeight = window.innerHeight;
+        });
+    },
+};
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+<style lang="scss">
+@import "@/assets/sass/main.scss";
 </style>

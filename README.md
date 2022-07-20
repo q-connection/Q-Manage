@@ -1,4 +1,4 @@
-# qmanage-frontend
+# Q-Manage
 
 ## Project setup
 ```
