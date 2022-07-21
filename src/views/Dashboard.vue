@@ -36,10 +36,6 @@
                         </div>                      
                     </div>
                 </div>
-                <div class="orgchart-wrapper" v-if="ds">
-                    <h5>Organization Chart</h5>
-                    <organization-chart :datasource="ds" zoom pan/>          
-                </div>
             </div>
         </div>
     </div>
@@ -47,38 +43,13 @@
 
 <script>
     import { mapState } from 'vuex';
-    import OrganizationChart from 'vue-organization-chart'
 
     export default {
         name: 'DashboardPage',
-        components: {OrganizationChart},
-
-        data: () => ({
-            ds: null
-        }),
-
         computed: {
             ...mapState({
                 user: state => state.user || {}
             })
-        },
-
-        async mounted() {
-            await this.fetchOrgChartData()
-        },
-
-        methods: {
-            async fetchOrgChartData() {
-                try {
-                    const { data } = await this.$http.get('department/org-chart-data')
-
-                    if(!data.error) {
-                        this.ds = data.data
-                    }
-                } catch (err) {
-                    console.log(err)
-                }
-            }
         }
     }
 </script>

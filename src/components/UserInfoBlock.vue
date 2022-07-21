@@ -18,6 +18,11 @@
                     </div>
                 </div>
             </div>
+            <div class="text-right mt-2">
+                <h5 class="text-primary text-cursor" @click="$bvModal.show('modal-organization')">
+                    Organizational Charts
+                </h5>
+            </div>
         </div>
     </div>
 </template>
