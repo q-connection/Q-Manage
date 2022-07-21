@@ -1,6 +1,7 @@
 <template>
-    <div>
+    <div class="position-relative">
         <DesktopNavbar/>
+        <notification-main fixed/>
         <div class="page-content">
             <slot/>
         </div>
@@ -21,6 +22,7 @@ import StickyFooter from '@/components/StickyFooter.vue'
 
 <style lang="scss">
 .page-content {
-    padding-top: 60px
+    padding-top: 60px;
+    padding-bottom: 60px;
 }
 </style>

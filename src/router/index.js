@@ -19,6 +19,18 @@ const routes = [
         component: () => import('@/views/Dashboard.vue')
     },
     {
+        path: '/user/profile',
+        name: 'profile',
+        meta: { layout: 'default', requiresAuth: true },
+        component: () => import('@/views/UserProfile.vue')
+    },
+    {
+        path: '/user/security',
+        name: 'secutiry',
+        meta: { layout: 'default', requiresAuth: true },
+        component: () => import('@/views/UserSecutiry.vue')
+    },
+    {
         path: '/auth/login',
         name: 'login',
         meta: { layout: 'blank', requiresGuest: true },
@@ -46,7 +58,7 @@ const router = new VueRouter({
 router.beforeEach(async (to, from, next) => {
     const { userInfo } = store.getters;
     const token        = localStorage.getItem('access_token')
-    
+
     if(!to.name) {
         next({name: "not_found"})
     }
@@ -87,6 +99,7 @@ router.beforeEach(async (to, from, next) => {
 });
 
 router.afterEach(async () => {
+    // app.$Progress.finish()
     store.commit('SET_IDLE_LOADING', false)
 })
 

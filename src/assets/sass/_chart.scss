@@ -1,11 +1,18 @@
 @import 'vue-organization-chart/dist/orgchart.css';
 
-.orgchart-container {
-    border: 0;
-    width: 100%;
+.orgchart-wrapper {
     border-radius: 10px;
-}
+    border: 1px solid var(--light);
+    padding: .5rem;
+    box-shadow: 0 0.125rem 0.25rem rgb(0 0 0 / 8%) !important;
+    
+    .orgchart-container {
+        border: 0;
+        width: 100%;
 
-.orgchart {
-    width: 100%
+        .orgchart {
+            width: 100%;
+            background: transparent;
+        }    
+    }
 }

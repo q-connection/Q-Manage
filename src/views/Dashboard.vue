@@ -2,16 +2,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-12 col-xl-3 col-lg-2">
-                <div class="dashboard-user-info">
-                    <h5 class="mb-1">{{ user.fullname }}</h5>
-                    <div>Department: <b>{{ user.role_name }}</b></div>
-                    <div>Check-in at: <b class="text-danger">{{ formatTime(user.today_check_in_at) }}</b></div>
-                    <div>Check-out at: <b class="text-danger">{{ formatTime(user.today_check_out_at) }}</b></div>
-                    <hr>
-                    <h5 v-if="!user.today_check_in_at">Not working today</h5>
-                    <h5 v-else-if="user.today_check_in_at && !user.today_check_out_at" class="text-success">Working</h5>
-                    <h5 v-else class="text-danger">End of shift</h5>
-                </div>
+                <user-info-block/>
             </div>
             <div class="col-12 col-xl-9 col-lg-10">
                 <div class="dashboard-statistics">
@@ -45,7 +36,10 @@
                         </div>                      
                     </div>
                 </div>
-                <organization-chart :datasource="ds" v-if="ds"></organization-chart>                
+                <div class="orgchart-wrapper" v-if="ds">
+                    <h5>Organization Chart</h5>
+                    <organization-chart :datasource="ds" zoom pan/>          
+                </div>
             </div>
         </div>
     </div>
@@ -84,14 +78,6 @@
                 } catch (err) {
                     console.log(err)
                 }
-            },
-
-            formatTime(time) {
-                if(!time || time == 'N/A') {
-                    return 'N/A';
-                }
-
-                return this.$mm(time).format('HH:mm')
             }
         }
     }

@@ -5,6 +5,7 @@
         </component>
         <idle-screen />
         <alert-custom />
+        <vue-progress-bar/>
     </div>
 </template>
 
@@ -40,7 +41,7 @@ export default {
             that.innerWidth = window.innerWidth;
             that.innerHeight = window.innerHeight;
         });
-    },
+    }   
 };
 </script>
 

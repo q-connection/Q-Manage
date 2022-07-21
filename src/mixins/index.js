@@ -1,5 +1,6 @@
 import $http from '@/axios'
 import moment from 'moment'
+import currencyFormatter from 'currency-formatter'
 
 export default {
     computed: {
@@ -10,6 +11,10 @@ export default {
         $mm() {
             moment.locale('en')
             return moment
+        },
+
+        $user() {
+            return this.$store.state.user || {}
         }
     },
 
@@ -17,6 +22,10 @@ export default {
         $showAlert({type = 'success', message = '', title = '', timeout = 3000}) {
             const default_title = type == 'success' ? 'Successfully!' : 'Oops!'
             this.$root.$emit('SHOW_ALERT', type, message, title ? title : default_title, timeout)
+        },
+
+        $formatCurrency(amount, code = 'VND') {
+            return currencyFormatter.format(amount, {code})
         }
     }
 }

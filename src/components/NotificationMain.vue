@@ -1,9 +1,11 @@
 
 <template>
     <div class="notifications" :class="{fixed}">
-        <marquee>
-            Đây là nội dung thông báo mới
-        </marquee>
+        <div class="notifications-content">
+            <marquee>
+                Đây là nội dung thông báo mới
+            </marquee>
+        </div>
     </div>
 </template>
 
@@ -20,8 +22,7 @@
 
 <style lang="scss" scoped>
 .notifications {
-    background-color: rgba(245, 147, 0, 0.05);
-    padding: .15rem;
+    background-color: #fff;
     font-weight: bold;
 
     &.fixed {
@@ -29,6 +30,12 @@
         top: 80px;
         left: 0;
         width: 100%;
+        z-index: 1;
+    }
+
+    .notifications-content {
+        background: rgba(245, 147, 0, 0.05);      
+        padding: .15rem; 
     }
 }
 </style>

@@ -1,10 +1,17 @@
 <template>
     <b-button :type="type" :variant="variant" :disabled="disabled" :size="size" @click="($event) => $emit('click', $event)">
         <div v-if="!loading">
+            <slot name="icon"/>
             <slot/>
         </div>
         <div v-else>
-            <b-spinner type="grow" variant="white" label="Loading..." :small="this.size != 'lg'"></b-spinner>
+            <div v-if="loadingWithoutHiddenText">
+                <b-spinner type="grow" variant="white" label="Loading..." :small="this.size != 'lg'"></b-spinner>
+                <slot/>
+            </div>
+            <div v-else>
+                <b-spinner type="grow" variant="white" label="Loading..." :small="this.size != 'lg'"></b-spinner>
+            </div>
         </div>
     </b-button>
 </template>
@@ -35,6 +42,11 @@
             size: {
                 type: String,
                 default: 'md'
+            },
+
+            loadingWithoutHiddenText: {
+                type: Boolean,
+                default: false
             }
         }
     }

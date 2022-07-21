@@ -1,6 +1,5 @@
 <template>
-<header>
-    <b-navbar type="dark" variant="primary">
+    <b-navbar type="dark" variant="primary" sticky>
         <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
         <b-collapse id="nav-collapse" is-nav>
@@ -72,11 +71,11 @@
                     <b-dropdown-item class="account-name" href="javascript:;" active>
                         {{ user.fullname }}
                     </b-dropdown-item>
-                    <b-dropdown-item href="#">
+                    <b-dropdown-item :to="{name: 'profile'}">
                         <b-icon icon="person" variant="dark"/>
                         Profile
                     </b-dropdown-item>
-                    <b-dropdown-item href="#">
+                    <b-dropdown-item :to="{name: 'secutiry'}">
                         <b-icon icon="lock" variant="dark"/>
                         Security
                     </b-dropdown-item>
@@ -88,8 +87,6 @@
             </b-navbar-nav>
         </b-collapse>
     </b-navbar>
-    <notification-main fixed/>
-</header>
 </template>
 
 <script>
