@@ -35,8 +35,8 @@
                 </b-nav-item-dropdown>
                 <b-nav-item href="#">Recently Viewed</b-nav-item>
                 <b-nav-item href="#">
-                    <span class="h5">
-                        <b-icon icon="plus-square-fill"/>
+                    <span class="h2">
+                        <q-icon icon="bxs:message-square-add"/>
                     </span>
                 </b-nav-item>
                 <b-nav-form>
@@ -51,36 +51,36 @@
             <!-- Right aligned nav items -->
             <b-navbar-nav class="ml-auto">
                 <b-nav-item href="#">
-                    <span class="h5">
-                        <b-icon icon="bell-fill"/>
+                    <span class="h3">
+                        <q-icon icon="clarity:bell-solid"/>
                     </span>                    
                 </b-nav-item>
 
                 <b-nav-item href="#">
-                    <span class="h5">
-                        <b-icon icon="question-circle"/>
+                    <span class="h3">
+                        <q-icon icon="ant-design:question-circle-filled"/>
                     </span>                    
                 </b-nav-item>
 
                 <b-nav-item-dropdown class="account-dropdown" right>
                     <template #button-content>
-                        <span class="h5 text-white">
-                            <b-icon icon="person-circle"/>
+                        <span class="h3 text-white">
+                            <q-icon icon="carbon:user-avatar-filled"/>
                         </span>
                     </template>
                     <b-dropdown-item class="account-name" href="javascript:;" active>
                         {{ user.fullname }}
                     </b-dropdown-item>
                     <b-dropdown-item :to="{name: 'profile'}">
-                        <b-icon icon="person" variant="dark"/>
+                        <q-icon icon="fa-solid:user-edit"/>
                         Profile
                     </b-dropdown-item>
                     <b-dropdown-item :to="{name: 'secutiry'}">
-                        <b-icon icon="lock" variant="dark"/>
+                        <q-icon icon="teenyicons:password-solid"/>
                         Security
                     </b-dropdown-item>
                     <b-dropdown-item @click="onLogout">
-                        <b-icon icon="power" variant="dark"/>
+                        <q-icon icon="ri:logout-circle-r-fill"/>
                         Sign Out
                     </b-dropdown-item>
                 </b-nav-item-dropdown>
@@ -173,11 +173,14 @@ export default {
     .btn {
         position: absolute;
         top: 50%;
-        right: 5px;
+        right: 8px;
         transform: translateY(-50%);
         border-radius: 5px;
         color: #fff;
         padding: .20rem .5rem;
+        min-width: auto;
+        font-size: 16px;
+        height: auto;
 
         &:hover {
             outline: none;

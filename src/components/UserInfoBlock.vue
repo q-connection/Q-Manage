@@ -1,14 +1,24 @@
 <template>
-    <div class="dashboard-user-info">
-        <h5 class="mb-1">{{ user.fullname }}</h5>
-        <div>Department: <b>{{ user.department_name }}</b></div>
-        <div>Position title: <b>{{ user.role_name }}</b></div>
-        <div>Check-in at: <b class="text-danger">{{ formatTime(user.today_check_in_at) }}</b></div>
-        <div>Check-out at: <b class="text-danger">{{ formatTime(user.today_check_out_at) }}</b></div>
-        <hr>
-        <h5 v-if="!user.today_check_in_at">Not working today</h5>
-        <h5 v-else-if="user.today_check_in_at && !user.today_check_out_at" class="text-success">Working</h5>
-        <h5 v-else class="text-danger">End of shift</h5>
+    <div class="dashboard-user-info mb-3">
+        <div class="user-avatar shadow-sm">
+            <img src="/images/default-avatar.png"/>
+        </div>
+        <div class="user-info">
+            <h5 class="mb-1">{{ user.fullname }}</h5>
+            <div>Department: <b>{{ user.department_name }}</b></div>
+            <div>Position title: <b>{{ user.role_name }}</b></div>
+            <div>Check-in at: <b class="text-danger">{{ formatTime(user.today_check_in_at) }}</b></div>
+            <div>Check-out at: <b class="text-danger">{{ formatTime(user.today_check_out_at) }}</b></div>
+            <hr>
+            <div v-if="not_working_users.length > 0">
+                <h5>Not working today</h5>
+                <div class="user-notworking-wrapper">
+                    <div class="notworking-item" v-for="(u, index) in not_working_users" :key="index">
+                        {{ u }}
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -16,13 +26,33 @@
     import {mapState} from 'vuex'
 
     export default {
+        data: () => ({
+            not_working_users: []
+        }),
+
         computed: {
             ...mapState({
                 user: state => state.user || {}
             })
         },
+
+        async mounted() {
+            await this.fetchNotWorkingUsers()
+        },
         
         methods: {
+            async fetchNotWorkingUsers() {
+                try {
+                    const { data } = await this.$http.get('employee/not-working-today')
+
+                    if(!data.error) {
+                        this.not_working_users = data.data.map((x) => x.name)
+                    }
+                } catch (err) {
+                    console.log(err)
+                }
+            },
+
             formatTime(time) {
                 if(!time || time == 'N/A') {
                     return 'N/A';
@@ -35,5 +65,38 @@
 </script>
 
 <style lang="scss" scoped>
+.user-avatar {
+    border-radius: 50%;
+    background: var(--light);
+    width: 150px;
+    height: 150px;
+    padding: .5rem;
+    border: 1px solid var(--light);
+    overflow: hidden;
+    margin-bottom: 10px;
 
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+}
+
+.user-info {
+    padding-left: .5rem;
+
+    .user-notworking-wrapper {
+        margin-top: 10px;
+        max-height: 150px;
+        overflow: auto;
+
+        .notworking-item {
+            padding: .25rem .5rem;
+            font-size: 18px;
+            background: #F5F5F5;
+            border-bottom: 1px solid #d9d9d9;
+            margin-bottom: 5px;
+        }
+    }
+}
 </style>

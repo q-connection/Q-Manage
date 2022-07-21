@@ -11,6 +11,7 @@ import progressBar from 'vue-progressbar'
 
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
 import * as rules from 'vee-validate/dist/rules';
+import { Icon } from '@iconify/vue2';
 
 Object.keys(rules).forEach(rule => {
     extend(rule, rules[rule]);
@@ -52,6 +53,7 @@ Vue.component('default-mobile-layout', DefaultMobileLayout)
 Vue.component('blank-mobile-layout', BlankMobileLayout)
 Vue.component('ValidationProvider', ValidationProvider);
 Vue.component('ValidationObserver', ValidationObserver);
+Vue.component('QIcon', Icon);
 
 const componentContext = require.context('./components/', true, /\.vue$/i, 'lazy');
 componentContext.keys().forEach((componentFilePath) => {

@@ -28,7 +28,7 @@ const routes = [
         path: '/user/security',
         name: 'secutiry',
         meta: { layout: 'default', requiresAuth: true },
-        component: () => import('@/views/UserSecutiry.vue')
+        component: () => import('@/views/UserSecurity.vue')
     },
     {
         path: '/auth/login',
