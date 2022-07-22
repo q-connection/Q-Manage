@@ -2,13 +2,33 @@
     <div class="alert-wrapper fade" :style="{width: clientWidth, height: clientHeight}" :class="{show: isActive === true}">
         <div class="alert-wrapper--dialog">
             <div class="alert-wrapper--dialog__content">
+                <div class="alert-icon text-info mb-2" v-if="type == 'confirm'">
+                    <q-icon icon="bi:shield-lock-fill" style="font-size: 65px"/>
+                </div>                
                 <div class="alert-title">
                     {{ title }}
                 </div>
                 <div class="alert-message" v-html="message"></div>
-                <div class="alert-icon">
+                <div class="alert-icon" v-if="type != 'confirm'">
                     <img :src="`/images/icons/${type}.png`">
                 </div>
+                <b-form @submit.prevent="onCallback" v-if="this.type == 'confirm'">
+                    <b-form-group label="Password" :invalid-feedback="confirmErrorMsg" :state="confirmErrorMsg">
+                        <b-input type="password" placeholder="Enter your password" :state="confirmErrorMsg" v-model="password" required/>
+                    </b-form-group>
+                    <div class="alert-confirm--buttons">
+                        <div class="p-2">
+                            <b-button variant="secondary" size="sm" @click="isActive = false">
+                                Cancel
+                            </b-button>
+                        </div>
+                        <div class="p-2">
+                            <form-button variant="success" type="submit" :disabled="isConfirming" :loading="isConfirming">
+                                Confirm
+                            </form-button>
+                        </div>
+                    </div>
+                </b-form>
             </div>
         </div>
     </div>   
@@ -22,7 +42,11 @@
             title: 'Successfully!',
             type: 'success',
             message: '',
-            isActive: false
+            isActive: false,
+            callback: null,
+            isConfirming: false,
+            password: '',
+            confirmErrorMsg: null
         }),
 
         computed: {
@@ -36,15 +60,18 @@
         },
 
         created() {
-            this.$root.$on('SHOW_ALERT', (type = 'success', message = '', title = 'Successfully!', timeout = 3500) => {
+            this.$root.$on('SHOW_ALERT', (type = 'success', message = '', title = 'Successfully!', timeout = 3500, callback = null) => {
                 this.title = title
                 this.message = message
                 this.type = type
                 this.isActive = true
+                this.callback = callback
 
-                setTimeout(() => {
-                    this.isActive = false
-                }, timeout)
+                if(type != 'confirm') {
+                    setTimeout(() => {
+                        this.dismiss()
+                    }, timeout)
+                }
             })
         },
 
@@ -55,6 +82,23 @@
                 that.innerHeight = window.innerHeight; 
             });
         },
+
+        methods: {
+            async onCallback() {
+                this.isConfirming = true
+                if(typeof this.callback === "function") {
+                    await this.callback(this)
+                }
+
+                this.isConfirming = false
+            },
+
+            dismiss() {
+                this.isActive = false
+                this.password = ''
+                this.isConfirming = false
+            }
+        }
     }
 </script>
 
@@ -62,7 +106,7 @@
     .alert-wrapper {
         position: fixed;
         background: rgba(0, 0, 0, 0.1);
-        z-index: 999;
+        z-index: 9999;
         top: 0;
         left: 0;
         overflow: hidden;
@@ -107,7 +151,7 @@
                 width: 360px;
                 min-height: 210px;
                 max-width: 80%;
-                max-height: 280px;
+                max-height: 400px;
 
                 .alert-title {
                     font-style: normal;
@@ -134,6 +178,15 @@
                     img {
                         width: 65px;
                         height: 65px
+                    }
+                }
+
+                .alert-confirm--buttons {
+                    display: flex;
+                    justify-content: center;
+
+                    .btn {
+                        height: 48px;
                     }
                 }
             }   

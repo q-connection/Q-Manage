@@ -16,6 +16,16 @@
     }
 }
 
+.b-form-datepicker {
+    .btn {
+       min-width: auto
+    }
+
+    label.form-control {
+        line-height: 2.75rem
+    }
+}
+
 .v-select {
     .vs__dropdown-toggle {
         background: #FFFFFF;

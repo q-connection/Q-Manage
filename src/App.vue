@@ -6,15 +6,28 @@
         <idle-screen />
         <alert-custom />
         <vue-progress-bar/>
+        <b-modal id="modal-organization" hide-footer size="lg">
+            <template #modal-title>
+                Organizational Chart
+            </template>
+            <div class="orgchart-wrapper" v-if="ds">
+                <organization-chart :datasource="ds" zoom pan/>          
+            </div>
+        </b-modal>        
     </div>
 </template>
 
 <script>
+import OrganizationChart from 'vue-organization-chart'
+
 export default {
     name: "App",
+    components: {OrganizationChart},
+
     data: () => ({
         innerWidth: 0,
-        innerHeight: 0
+        innerHeight: 0,
+        ds: null
     }),
 
     computed: {
@@ -32,7 +45,7 @@ export default {
             return (this.$route.meta.layout || "blank") + `-${device}-layout`;
         },
     },
-    mounted() {
+    async mounted() {
         const that = this;
         this.innerWidth = window.innerWidth;
         this.innerHeight = window.innerHeight;
@@ -41,7 +54,23 @@ export default {
             that.innerWidth = window.innerWidth;
             that.innerHeight = window.innerHeight;
         });
-    }   
+
+        await this.fetchOrgChartData()
+    },    
+    
+    methods: {
+        async fetchOrgChartData() {
+            try {
+                const { data } = await this.$http.get('department/org-chart-data')
+
+                if(!data.error) {
+                    this.ds = data.data
+                }
+            } catch (err) {
+                console.log(err)
+            }
+        }        
+    }
 };
 </script>
 

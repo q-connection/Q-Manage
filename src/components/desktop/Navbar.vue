@@ -72,16 +72,13 @@
                         {{ user.fullname }}
                     </b-dropdown-item>
                     <b-dropdown-item :to="{name: 'profile'}">
-                        <q-icon icon="fa-solid:user-edit"/>
-                        Profile
+                        <span><q-icon icon="fa-solid:user-edit"/>Profile</span>
                     </b-dropdown-item>
                     <b-dropdown-item :to="{name: 'secutiry'}">
-                        <q-icon icon="teenyicons:password-solid"/>
-                        Security
+                        <span><q-icon icon="teenyicons:password-solid"/>Security</span>
                     </b-dropdown-item>
                     <b-dropdown-item @click="onLogout">
-                        <q-icon icon="ri:logout-circle-r-fill"/>
-                        Sign Out
+                        <span><q-icon icon="ri:logout-circle-r-fill"/>Sign Out</span>
                     </b-dropdown-item>
                 </b-nav-item-dropdown>
             </b-navbar-nav>
