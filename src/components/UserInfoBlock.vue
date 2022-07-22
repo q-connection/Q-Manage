@@ -6,7 +6,8 @@
         <div class="user-info">
             <h5 class="mb-1">{{ user.fullname }}</h5>
             <div>Department: <b>{{ user.department_name }}</b></div>
-            <div>Position title: <b>{{ user.role_name }}</b></div>
+            <div>Position: <b>{{ user.role_name }}</b></div>
+            <div>Point: <b>{{ user.point || 0 }}</b></div>
             <div>Check-in at: <b class="text-danger">{{ formatTime(user.today_check_in_at) }}</b></div>
             <div>Check-out at: <b class="text-danger">{{ formatTime(user.today_check_out_at) }}</b></div>
             <hr>

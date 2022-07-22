@@ -11,7 +11,9 @@ import progressBar from 'vue-progressbar'
 
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
 import * as rules from 'vee-validate/dist/rules';
+import { messages } from 'vee-validate/dist/locale/en.json';
 import { Icon } from '@iconify/vue2';
+import vSelect from 'vue-select'
 
 Object.keys(rules).forEach(rule => {
     extend(rule, rules[rule]);
@@ -20,7 +22,8 @@ Object.keys(rules).forEach(rule => {
 // with typescript
 for (let [rule, validation] of Object.entries(rules)) {
     extend(rule, {
-        ...validation
+        ...validation,
+        message: messages[rule]
     });
 }
 
@@ -54,6 +57,7 @@ Vue.component('blank-mobile-layout', BlankMobileLayout)
 Vue.component('ValidationProvider', ValidationProvider);
 Vue.component('ValidationObserver', ValidationObserver);
 Vue.component('QIcon', Icon);
+Vue.component('b-select2', vSelect)
 
 const componentContext = require.context('./components/', true, /\.vue$/i, 'lazy');
 componentContext.keys().forEach((componentFilePath) => {

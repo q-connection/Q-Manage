@@ -15,6 +15,10 @@ export default {
 
         $user() {
             return this.$store.state.user || {}
+        },
+
+        $userPermissions() {
+            return this.$user.permissions
         }
     },
 
@@ -26,6 +30,24 @@ export default {
 
         $formatCurrency(amount, code = 'VND') {
             return currencyFormatter.format(amount, {code})
+        },
+
+        $hasPermission(name) {
+            const permissions = this.$userPermissions || {}
+
+            return permissions[name] || false
+        },
+
+        $isValid(errors, valid) {
+            return errors[0] ? false : (valid ? true : null)
+        },
+
+        $parseResponseError(refs, errors) {
+            Object.keys(this.errors).forEach(key => {
+                if(refs[key] && typeof refs[key].setErrors === "function") {
+                    refs[key].setErrors([errors[key]])
+                }
+            })
         }
     }
 }
