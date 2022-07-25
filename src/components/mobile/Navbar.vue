@@ -1,22 +1,22 @@
 <template>
     <div class="mobile-navbar">
         <div class="mobile-navbar--item">
-            <div class="d-flex flex-column justify-content-center align-items-center text-cursor" @click="$router.push({name: 'dashboard'})">
+            <router-link class="d-flex flex-column justify-content-center align-items-center text-cursor text-decoration-none" :to="{name: 'dashboard'}">
                 <div class="h4 mb-0 text-white"><q-icon icon="ant-design:dashboard-filled"/></div>
-                <div class="title">Dashboard</div>
-            </div>
+                <div class="title text-white">Dashboard</div>
+            </router-link>
         </div>
         <div class="mobile-navbar--item">
-            <div class="d-flex flex-column justify-content-center align-items-center text-cursor" @click="$router.push({name: 'projects'})">
+            <router-link  class="d-flex flex-column justify-content-center align-items-center text-cursor text-decoration-none" :to="{name: 'projects'}">
                 <div class="h4 mb-0 text-white"><q-icon icon="ic:sharp-view-list"/></div>
-                <div class="title">Projects</div>
-            </div>
+                <div class="title text-white">Projects</div>
+            </router-link>
         </div>
         <div class="mobile-navbar--item">
-            <div class="d-flex flex-column justify-content-center align-items-center text-cursor" @click="$router.push({name: 'profile'})">
+            <router-link class="d-flex flex-column justify-content-center align-items-center text-cursor text-decoration-none" :to="{name: 'profile'}">
                 <div class="h4 mb-0 text-white"><q-icon icon="ic:sharp-account-circle"/></div>
-                <div class="title">Account</div>
-            </div>
+                <div class="title text-white">Account</div>
+            </router-link>
         </div>
     </div>
 </template>
@@ -46,5 +46,9 @@
             line-height: 1.5rem;
         }
     }
+}
+
+.router-link-exact-active {
+    font-weight: bold;
 }
 </style>
