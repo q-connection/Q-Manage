@@ -14,9 +14,9 @@
             <div v-if="not_working_users.length > 0">
                 <div class="d-flex">
                     <h5>Not working today</h5>
-                    <img src="/images/icons/down.png" :class="[{'not-show': !isNotWorkingUsers},'ml-auto', 'icon-down']"  @click="isNotWorkingUsers=!isNotWorkingUsers" />
+                    <img src="/images/icons/down.png" :class="[{'not-show': !isShowWorkingUsers},'ml-auto', 'icon-down']"  @click="isShowWorkingUsers=!isShowWorkingUsers" />
                 </div>
-                <div class="user-notworking-wrapper" v-show="isNotWorkingUsers">
+                <div class="user-notworking-wrapper" v-show="isShowWorkingUsers">
                     <div class="notworking-item" v-for="(u, index) in not_working_users" :key="index">
                         {{ u }}
                     </div>
@@ -37,7 +37,7 @@ import { mapState } from 'vuex'
 export default {
     data: () => ({
         not_working_users: [],
-        isNotWorkingUsers: true,
+        isShowWorkingUsers: true,
     }),
 
     computed: {
