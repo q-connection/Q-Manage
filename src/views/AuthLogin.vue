@@ -41,10 +41,7 @@ import StickyFooter from '@/components/StickyFooter.vue'
                 const login = await this.$store.dispatch('login', this.formData)
 
                 if(login) {
-                    this.$showAlert({type: 'success', message: 'Đăng nhập thành công', timeout: 2000})
-                    setTimeout(() => {
-                        this.$router.push({name: 'dashboard'})
-                    }, 1500)
+                    this.$router.push({name: 'dashboard'})
                 } else {
                     this.$showAlert({type: 'danger', message: 'Username or password is not correct'})
                 }
