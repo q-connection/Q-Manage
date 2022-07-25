@@ -1,9 +1,9 @@
 <template>
-    <div>
+    <div class="position-relative">
+        <Header/>
         <div class="page-content">
             <slot/>
         </div>
-        <NotificationFixedButton/>
         <ProjectFixedButton/>
         <Navbar/>
     </div>
@@ -12,15 +12,16 @@
 <script>
     import Navbar from '@/components/mobile/Navbar.vue'
     import ProjectFixedButton from '@/components/mobile/ProjectFixedButton.vue'
-    import NotificationFixedButton from '@/components/mobile/NotificationFixedButton.vue'
+    import Header from '@/components/mobile/Header.vue'
 
     export default {
-        components: {Navbar, ProjectFixedButton, NotificationFixedButton}
+        components: {Navbar, ProjectFixedButton, Header}
     }
 </script>
 
 <style lang="scss" scoped>
 .page-content {
-    padding-top: 20px
+    padding-top: 68px;
+    margin-bottom: 40px;
 }
 </style>

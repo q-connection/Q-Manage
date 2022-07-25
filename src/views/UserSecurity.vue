@@ -1,11 +1,11 @@
 <template>
     <b-container fluid>
         <b-row>
-            <b-col cols="12" xl=3 lg=2>
+            <b-col cols=12 xl=3 lg=2 v-if="!$device.mobile">
                 <user-info-block/>
-            </b-col>
+            </b-col>            
             <b-col cols="12" xl=4 lg=6>
-                <b-card title="Change Password">
+                <b-card title="Change Password" :class="{mobile: $device.mobile === true}">
                     <validation-observer ref="changePwForm" v-slot="{handleSubmit}">
                         <b-form @submit.prevent="handleSubmit(onSubmit)">
                             <b-row>

@@ -1,11 +1,11 @@
 <template>
     <b-container fluid>
         <b-row>
-            <b-col cols="12" xl=3 lg=2>
+            <b-col cols=12 xl=3 lg=2 v-if="!$device.mobile">
                 <user-info-block/>
             </b-col>
             <b-col cols="12" xl=9 lg=10>
-                <b-card class="mb-5" :title="$user.fullname">
+                <b-card class="mb-5 card-profile" :class="{mobile: $device.mobile === true}" :title="$user.fullname">
                     <validation-observer ref="profileForm" v-slot="{handleSubmit}">
                         <b-form @submit.prevent="handleSubmit(onSubmit)">
                             <b-tabs content-class="mt-3" fill>

@@ -1,3 +1,37 @@
 .card {
     border-radius: 10px;
+
+    &.mobile {
+        border: 0;
+        
+        .card-body {
+            padding: 0
+        }
+    }
+}
+
+.card-profile {
+    .nav-tabs {
+        flex-wrap: nowrap;
+        max-width: calc(100% - 5px);
+        overflow-x: auto;
+        overflow-y: hidden;
+        border-bottom: 1px solid var(--primary);
+
+        .nav-item {
+            max-width: 180px;
+            flex: none;
+            
+            .nav-link, .nav-link.active {
+                border-radius: 10px 10px 0px 0px;
+                border: 1px solid var(--primary);
+                font-weight: 500;
+            }
+
+            .nav-link.active {
+                color: #fff;
+                background-color: var(--primary);
+            }
+        }
+    }
 }
