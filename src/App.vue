@@ -6,7 +6,7 @@
         <idle-screen />
         <alert-custom />
         <vue-progress-bar/>
-        <b-modal id="modal-organization" hide-footer size="lg">
+        <b-modal id="modal-organization" hide-footer size="xl">
             <template #modal-title>
                 Organizational Chart
             </template>
