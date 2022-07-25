@@ -21,6 +21,7 @@
 
 <style lang="scss" scoped>
 .page-content {
-    padding-top: 20px
+    padding-top: 20px;
+    margin-bottom: 20px;
 }
 </style>

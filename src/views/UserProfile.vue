@@ -1,9 +1,6 @@
 <template>
     <b-container fluid>
         <b-row>
-            <b-col cols="12" xl=3 lg=2>
-                <user-info-block/>
-            </b-col>
             <b-col cols="12" xl=9 lg=10>
                 <b-card class="mb-5" :title="$user.fullname">
                     <validation-observer ref="profileForm" v-slot="{handleSubmit}">
