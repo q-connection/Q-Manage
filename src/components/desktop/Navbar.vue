@@ -184,4 +184,8 @@ export default {
         }
     }
 }
+
+.router-link-exact-active {
+    font-weight: bold;
+}
 </style>
