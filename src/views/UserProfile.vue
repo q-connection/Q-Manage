@@ -235,10 +235,11 @@
                             <b-td>{{ contract.contract_start_date }}</b-td>
                             <b-td>{{ contract.contract_end_date }}</b-td>
                             <b-td>{{ $formatCurrency(contract.contract_salary) }}</b-td>
-                            <b-td class="text-center">
-                                <div class="text-primary text-cursor" @click="viewContract(contract.id)">
-                                    <b-icon icon="download"/>
+                            <b-td class="text-center" :id="`contract_${contract.id}`">
+                                <div class="text-primary text-cursor download" @click="viewContract(contract.id)">
+                                    <b-icon id="download" icon="download"/>
                                 </div>
+                                <b-spinner class="loading d-none" small/>
                             </b-td>
                         </b-tr>
                     </b-tbody>
@@ -412,13 +413,21 @@
             },
 
             async viewContract(id) {
+                const elem = document.getElementById('contract_' + id)
+
                 try {
+                    elem.querySelector('.loading').classList.remove('d-none')
+                    elem.querySelector('.download').classList.add('d-none')
+
                     const { data } = await this.$http.get("employee/view-contract/" + id, {responseType: 'blob'})
                     window.open(URL.createObjectURL(data))
                 } catch (err) {
                     console.log(err)
                     
                     this.$showAlert({type: 'danger', message: "Something went wrong, please try again later."})
+                } finally {
+                    elem.querySelector('.download').classList.remove('d-none')
+                    elem.querySelector('.loading').classList.add('d-none')                    
                 }
             }
         }
