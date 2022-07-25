@@ -1,0 +1,46 @@
+@import 'vue-select/dist/vue-select.css';
+
+.form-control {
+    background: #FFFFFF;
+    border: 1px solid #F59300;
+    border-radius: 10px;
+    min-height: 60px;
+
+    &::placeholder {
+        color: #999999;
+        font-family: 'Inter';
+        font-style: italic;
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 20px;                
+    }
+}
+
+.b-form-datepicker {
+    .btn {
+       min-width: auto
+    }
+
+    label.form-control {
+        line-height: 2.75rem
+    }
+}
+
+.v-select {
+    .vs__dropdown-toggle {
+        background: #FFFFFF;
+        // border: 1px solid #F59300;
+        border-radius: 10px;
+        min-height: 60px;
+
+        .vs__search {
+            
+        }
+    }
+
+    &.vs--disabled {
+        .vs__dropdown-toggle {
+            background: var(--vs-disabled-bg);
+        }
+    }
+}
