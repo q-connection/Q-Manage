@@ -1,7 +1,7 @@
 <template>
     <div class="dashboard-user-info mb-3">
         <div class="user-avatar shadow-sm">
-            <img src="/images/default-avatar.png"/>
+            <img src="/images/default-avatar.png" />
         </div>
         <div class="user-info">
             <h5 class="mb-1">{{ user.fullname }}</h5>
@@ -12,8 +12,11 @@
             <div>Check-out at: <b class="text-danger">{{ formatTime(user.today_check_out_at) }}</b></div>
             <hr>
             <div v-if="not_working_users.length > 0">
-                <h5>Not working today</h5>
-                <div class="user-notworking-wrapper">
+                <div class="d-flex">
+                    <h5>Not working today</h5>
+                    <img src="/images/icons/down.png" :class="[{'not-show': !isShowWorkingUsers},'ml-auto', 'icon-down']"  @click="isShowWorkingUsers=!isShowWorkingUsers" />
+                </div>
+                <div class="user-notworking-wrapper" v-show="isShowWorkingUsers">
                     <div class="notworking-item" v-for="(u, index) in not_working_users" :key="index">
                         {{ u }}
                     </div>
@@ -29,45 +32,46 @@
 </template>
 
 <script>
-    import {mapState} from 'vuex'
+import { mapState } from 'vuex'
 
-    export default {
-        data: () => ({
-            not_working_users: []
-        }),
+export default {
+    data: () => ({
+        not_working_users: [],
+        isShowWorkingUsers: true,
+    }),
 
-        computed: {
-            ...mapState({
-                user: state => state.user || {}
-            })
+    computed: {
+        ...mapState({
+            user: state => state.user || {}
+        })
+    },
+
+    async mounted() {
+        await this.fetchNotWorkingUsers()
+    },
+
+    methods: {
+        async fetchNotWorkingUsers() {
+            try {
+                const { data } = await this.$http.get('employee/not-working-today')
+
+                if (!data.error) {
+                    this.not_working_users = data.data.map((x) => x.name)
+                }
+            } catch (err) {
+                console.log(err)
+            }
         },
 
-        async mounted() {
-            await this.fetchNotWorkingUsers()
-        },
-        
-        methods: {
-            async fetchNotWorkingUsers() {
-                try {
-                    const { data } = await this.$http.get('employee/not-working-today')
+        formatTime(time) {
+            if (!time || time == 'N/A') {
+                return 'N/A';
+            }
 
-                    if(!data.error) {
-                        this.not_working_users = data.data.map((x) => x.name)
-                    }
-                } catch (err) {
-                    console.log(err)
-                }
-            },
-
-            formatTime(time) {
-                if(!time || time == 'N/A') {
-                    return 'N/A';
-                }
-
-                return this.$mm(time).format('HH:mm')
-            }            
+            return this.$mm(time).format('HH:mm')
         }
     }
+}
 </script>
 
 <style lang="scss" scoped>
