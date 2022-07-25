@@ -1,44 +1,44 @@
 <template>
-<div>
-    <div class="dashboard-user-info mb-3" :class="{mobile: $device.mobile === true}">
-        <div class="user-avatar shadow-sm">
-            <img src="/images/default-avatar.png" />
+    <div>
+        <div class="dashboard-user-info mb-3" :class="{ mobile: $device.mobile === true }">
+            <div class="user-avatar shadow-sm">
+                <img src="/images/default-avatar.png" />
+            </div>
+            <div class="user-info">
+                <h5 class="mb-1">{{ user.fullname }}</h5>
+                <div>Department: <b>{{ user.department_name }}</b></div>
+                <div>Position: <b>{{ user.role_name }}</b></div>
+                <div>Point: <b>{{ user.point || 0 }}</b></div>
+                <div>Check-in at: <b class="text-danger">{{ formatTime(user.today_check_in_at) }}</b></div>
+                <div>Check-out at: <b class="text-danger">{{ formatTime(user.today_check_out_at) }}</b></div>
+                <hr v-if="!$device.mobile">
+                <user-notworking v-if="!$device.mobile" />
+            </div>
         </div>
-        <div class="user-info">
-            <h5 class="mb-1">{{ user.fullname }}</h5>
-            <div>Department: <b>{{ user.department_name }}</b></div>
-            <div>Position: <b>{{ user.role_name }}</b></div>
-            <div>Point: <b>{{ user.point || 0 }}</b></div>
-            <div>Check-in at: <b class="text-danger">{{ formatTime(user.today_check_in_at) }}</b></div>
-            <div>Check-out at: <b class="text-danger">{{ formatTime(user.today_check_out_at) }}</b></div>
-            <hr v-if="!$device.mobile">
-            <user-notworking v-if="!$device.mobile"/>
-        </div>
+        <notification-main class="mb-3" v-if="$device.mobile" />
     </div>
-    <notification-main class="mb-3" v-if="$device.mobile"/>
-</div>
 </template>
 
 <script>
-    import { mapState } from 'vuex'
+import { mapState } from 'vuex'
 
-    export default {
-        computed: {
-            ...mapState({
-                user: state => state.user || {}
-            })
-        },
+export default {
+    computed: {
+        ...mapState({
+            user: state => state.user || {}
+        })
+    },
 
-        methods: {
-            formatTime(time) {
-                if (!time || time == 'N/A') {
-                    return 'N/A';
-                }
-
-                return this.$mm(time).format('HH:mm')
+    methods: {
+        formatTime(time) {
+            if (!time || time == 'N/A') {
+                return 'N/A';
             }
+
+            return this.$mm(time).format('HH:mm')
         }
     }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -62,6 +62,14 @@
 
     .user-info {
         padding-left: .5rem;
+
+        .title-notworking {
+            font-style: normal;
+            font-weight: 600;
+            font-size: 18px;
+            line-height: 22px;
+        }
+
     }
 
     &.mobile {
@@ -70,5 +78,12 @@
         align-items: center;
         flex-direction: column;
     }
+}
+
+.organizational-chart {
+    font-style: italic;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 19px;
 }
 </style>
