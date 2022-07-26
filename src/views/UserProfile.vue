@@ -241,10 +241,12 @@
                             <b-td>{{ contract.contract_end_date }}</b-td>
                             <b-td>{{ $formatCurrency(contract.contract_salary) }}</b-td>
                             <b-td class="text-center" :id="`contract_${contract.id}`">
-                                <div class="text-primary text-cursor download" @click="viewContract(contract.id)">
+                                <a :href="contract.document_url" class="h5 text-primary text-cursor download" v-if="contract.document_url">
                                     <b-icon id="download" icon="download"/>
+                                </a>
+                                <div class="h5 text-danger">
+                                    <b-icon icon="x"/>
                                 </div>
-                                <b-spinner class="loading d-none" small/>
                             </b-td>
                         </b-tr>
                     </b-tbody>
@@ -463,5 +465,13 @@
     background: #fff;
     width: 100%;
     box-shadow: 0 -3px 5px rgba(0, 0, 0, .1);
+}
+
+.contract-wrapper {
+    tr {
+        td {
+            vertical-align: middle;
+        }
+    }
 }
 </style>
