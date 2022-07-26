@@ -10,7 +10,7 @@
 
     .auth-form {
         width: 27.3rem;
-        height: 31.25rem;
+        min-height: 28rem;
         max-width: 90%;
         max-height: 90%;
         background: #fff;
@@ -36,11 +36,11 @@
 
         .btn-primary {
             width: 250px;
-            height: 60px;
+            height: 45px;
             color: #fff;
             font-weight: 700;
             font-style: 'normal';
-            font-size: 20px;
+            font-size: 16px;
             line-height: 20px;
             margin-top: 35px
         }
