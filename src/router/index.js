@@ -3,9 +3,12 @@ import VueRouter from 'vue-router'
 import lodash from 'lodash'
 import store from '@/store'
 
+//Routes
+import hm_routes from './hm-management'
+
 Vue.use(VueRouter)
 
-const routes = [
+const base_routes = [
     {
         path: '/404',
         name: 'not_found',
@@ -49,6 +52,8 @@ const routes = [
         component: () => import('@/views/AuthReset.vue')     
     },  
 ]
+
+const routes = base_routes.concat(hm_routes)
 
 const router = new VueRouter({
     mode: 'history',

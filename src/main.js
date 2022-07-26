@@ -31,6 +31,7 @@ import DefaultLayout from '@/layouts/desktop/DefaultLayout.vue'
 import BlankLayout from '@/layouts/desktop/BlankLayout.vue'
 import DefaultMobileLayout from '@/layouts/mobile/DefaultLayout.vue'
 import BlankMobileLayout from '@/layouts/mobile/BlankLayout.vue'
+import VueBootstrap4Table from 'vue-bootstrap4-table'
 
 Vue.config.productionTip = false
 Vue.use(device)
@@ -58,6 +59,7 @@ Vue.component('ValidationProvider', ValidationProvider);
 Vue.component('ValidationObserver', ValidationObserver);
 Vue.component('QIcon', Icon);
 Vue.component('b-select2', vSelect)
+Vue.component('QTable', VueBootstrap4Table)
 
 const componentContext = require.context('./components/', true, /\.vue$/i, 'lazy');
 componentContext.keys().forEach((componentFilePath) => {

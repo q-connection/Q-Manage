@@ -34,6 +34,23 @@
                     </b-dropdown-item>
                 </b-nav-item-dropdown>
                 <b-nav-item href="#">Recently Viewed</b-nav-item>
+                <b-nav-item-dropdown no-caret>
+                    <template #button-content>
+                        HM Management
+                    </template>
+                    <b-dropdown-item :to="{name: 'hm-employees'}">
+                        <span>Employees</span>
+                    </b-dropdown-item>
+                    <b-dropdown-item href="#">
+                        <span>Departments</span>
+                    </b-dropdown-item>
+                    <b-dropdown-item href="#">
+                        <span>Positions</span>
+                    </b-dropdown-item>
+                    <b-dropdown-item href="#">
+                        <span>Notifications</span>
+                    </b-dropdown-item>
+                </b-nav-item-dropdown>
                 <b-nav-item href="#">
                     <span class="h2">
                         <q-icon icon="bxs:message-square-add"/>
