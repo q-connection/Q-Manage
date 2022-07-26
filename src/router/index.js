@@ -5,6 +5,7 @@ import store from '@/store'
 
 //Routes
 import hm_routes from './hm-management'
+import project_routes from './project-management'
 
 Vue.use(VueRouter)
 
@@ -51,9 +52,15 @@ const base_routes = [
         meta: { layout: 'blank', requiresGuest: true },
         component: () => import('@/views/AuthReset.vue')     
     },  
+    {
+        path: '/projects',
+        name: 'projects',
+        meta: { layout: 'default', requiresAuth: true },
+        component: () => import('@/views/Projects.vue')     
+    },  
 ]
 
-const routes = base_routes.concat(hm_routes)
+const routes = base_routes.concat(hm_routes,project_routes)
 
 const router = new VueRouter({
     mode: 'history',
