@@ -30,7 +30,7 @@
                                 </validation-provider>
                             </b-row>
                             <div class="d-flex justify-content-end">
-                                <form-button type="submit" variant="primary" :disabled="isSubmitting" :loading="isSubmitting" loading-without-hidden-text>
+                                <form-button :block="$device.mobile" type="submit" variant="primary" :disabled="isSubmitting" :loading="isSubmitting" loading-without-hidden-text>
                                     SUBMIT
                                 </form-button>
                             </div>
