@@ -160,7 +160,7 @@ export default {
     .form-control {
         width: 370px;
         border: 0;
-        min-height: 42px;
+        min-height: 36px;
 
         &:disabled, &[readonly] {        
             background-color: #fff;
@@ -170,9 +170,9 @@ export default {
     .btn {
         position: absolute;
         top: 50%;
-        right: 8px;
+        right: 4px;
         transform: translateY(-50%);
-        border-radius: 5px;
+        border-radius: 8px;
         color: #fff;
         padding: .20rem .5rem;
         min-width: auto;
