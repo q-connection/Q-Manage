@@ -27,7 +27,7 @@
 
     &.fixed {
         position: fixed;
-        top: 80px;
+        top: 65px;
         left: 0;
         width: 100%;
         z-index: 1;

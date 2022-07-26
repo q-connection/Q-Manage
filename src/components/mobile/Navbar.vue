@@ -2,20 +2,20 @@
     <div class="mobile-navbar">
         <div class="mobile-navbar--item">
             <router-link class="d-flex flex-column justify-content-center align-items-center text-cursor text-decoration-none" :to="{name: 'dashboard'}">
-                <div class="h4 mb-0 text-white"><q-icon icon="ant-design:dashboard-filled"/></div>
-                <div class="title text-white">Dashboard</div>
+                <div class="icon h4 mb-0"><q-icon icon="ant-design:dashboard-filled"/></div>
+                <div class="title">Dashboard</div>
             </router-link>
         </div>
         <div class="mobile-navbar--item">
             <router-link  class="d-flex flex-column justify-content-center align-items-center text-cursor text-decoration-none" :to="{name: 'projects'}">
-                <div class="h4 mb-0 text-white"><q-icon icon="ic:sharp-view-list"/></div>
-                <div class="title text-white">Projects</div>
+                <div class="icon h4 mb-0"><q-icon icon="ic:sharp-view-list"/></div>
+                <div class="title">Projects</div>
             </router-link>
         </div>
         <div class="mobile-navbar--item">
             <router-link class="d-flex flex-column justify-content-center align-items-center text-cursor text-decoration-none" :to="{name: 'profile'}">
-                <div class="h4 mb-0 text-white"><q-icon icon="ic:sharp-account-circle"/></div>
-                <div class="title text-white">Account</div>
+                <div class="icon h4 mb-0"><q-icon icon="ic:sharp-account-circle"/></div>
+                <div class="title">Account</div>
             </router-link>
         </div>
     </div>
@@ -33,22 +33,61 @@
     bottom: 0;
     left: 0;
     min-height: 59px;
-    background-color: var(--primary);
-    color: #fff;
     display: flex;
     width: 100%;
 
     .mobile-navbar--item {
         width: 33.3%;
-        padding: .5rem;
 
-        .title {
-            line-height: 1.5rem;
+        a {
+            position: relative;
+            padding: .5rem;
+            background-color: var(--white);
+
+            .icon, .title {
+                color: var(--primary);
+                opacity: .5
+            }
+
+            .title {
+                line-height: 1.5rem;
+            }            
+
+            &.router-link-exact-active {
+                .icon, .title {
+                    transition: .25s;
+                    opacity: 1;
+                }
+            }          
+            
+            &::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 5px;
+                -webkit-box-shadow: 0px -4px 5px rgba(50, 50, 50, 0.1);
+                -moz-box-shadow: 0px -4px 5px rgba(50, 50, 50, 0.1);
+                box-shadow: 0px -4px 5px rgba(50, 50, 50, 0.1);
+            }
         }
-    }
-}
 
-.router-link-exact-active {
-    font-weight: bold;
+        &:first-child > a {
+            border-top-left-radius: 10px;
+
+            &::before {
+                border-top-left-radius: 10px;
+            }
+        }
+
+        &:last-child > a {
+            border-top-right-radius: 10px;
+
+            &::before {
+                border-top-right-radius: 10px;
+            }            
+        }        
+    }
 }
 </style>
