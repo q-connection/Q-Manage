@@ -1,6 +1,6 @@
 <template>
     <b-container fluid>
-        <b-row>
+        <b-row class="mb-3">
             <b-col cols=12 xl=3 lg=2 v-if="!$device.mobile">
                 <user-info-block/>
             </b-col>
@@ -189,7 +189,7 @@
                                     </b-row>
                                 </b-tab>
                             </b-tabs>
-                            <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex justify-content-between align-items-center" v-if="!$device.mobile">
                                 <div>
                                     <div class="mb-1">
                                         <a href="javascript:;" @click="showContractDetail">
@@ -208,7 +208,12 @@
                                 <form-button type="submit" variant="primary" :disabled="!$hasPermission('employee.edit') || isSubmitting" :loading="isSubmitting" loading-without-hidden-text>
                                     SAVE
                                 </form-button> 
-                            </div>       
+                            </div>   
+                            <div v-else>
+                                <form-button :block="true" type="submit" variant="primary" :disabled="!$hasPermission('employee.edit') || isSubmitting" :loading="isSubmitting" loading-without-hidden-text>
+                                    SAVE
+                                </form-button>                                                                
+                            </div>    
                         </b-form>
                     </validation-observer>                           
                 </b-card>
@@ -245,7 +250,21 @@
                     </b-tbody>
                 </b-table-simple>
             </div>
-        </b-modal>        
+        </b-modal>  
+        <div class="fixed-content" v-if="$device.mobile">
+            <div class="mb-1">
+                <a href="javascript:;" @click="showContractDetail">
+                    <q-icon icon="clarity:contract-solid" style="font-size: 18px"/>
+                    Contract
+                </a>
+            </div>
+            <div>
+                <router-link :to="{name: 'secutiry'}">
+                    <q-icon icon="teenyicons:password-solid" style="font-size: 18px"/>
+                    Change password
+                </router-link>
+            </div>
+        </div>               
     </b-container>
 </template>
 
@@ -435,5 +454,14 @@
 </script>
 
 <style lang="scss" scoped>
-
+.fixed-content {
+    position: fixed;
+    bottom: 55px;
+    left: 0;
+    height: 90px;
+    padding: .75rem;
+    background: #fff;
+    width: 100%;
+    box-shadow: 0 -3px 5px rgba(0, 0, 0, .1);
+}
 </style>

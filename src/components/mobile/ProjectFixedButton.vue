@@ -1,6 +1,6 @@
 <template>
     <div class="project-fixed-button">
-        <b-icon icon="plus-square-fill" variant="primary"/>
+        <q-icon icon="bxs:message-square-add"/>
     </div>
 </template>
 
@@ -15,6 +15,7 @@
     position: fixed;
     bottom: 5rem;
     right: .75rem;
-    font-size: 42px
+    font-size: 42px;
+    color: var(--primary)
 }
 </style>

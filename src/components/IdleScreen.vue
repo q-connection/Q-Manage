@@ -2,7 +2,7 @@
     <div class="idle-screen fade" :class="{show: $store.state.idleLoading == true}">
         <div class="idle-screen--logo">
             <img src="/images/logo.png"/>
-            <b-spinner variant="warning"/>
+            <b-spinner variant="primary"/>
         </div>
     </div>
 </template>

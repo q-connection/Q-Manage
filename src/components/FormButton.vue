@@ -1,5 +1,5 @@
 <template>
-    <b-button :type="type" :variant="variant" :disabled="disabled" :size="size" @click="($event) => $emit('click', $event)">
+    <b-button :type="type" :variant="variant" :disabled="disabled" :size="size" @click="($event) => $emit('click', $event)" :block="block">
         <div v-if="!loading">
             <slot name="icon"/>
             <slot/>
@@ -45,6 +45,11 @@
             },
 
             loadingWithoutHiddenText: {
+                type: Boolean,
+                default: false
+            },
+
+            block: {
                 type: Boolean,
                 default: false
             }
