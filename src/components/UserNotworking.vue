@@ -1,10 +1,10 @@
 <template>
     <div>
         <div id="user-notworking" v-if="not_working_users.length > 0">
-            <div class="d-flex justify-content-between align-items-center mb-3">
+            <div class="d-flex justify-content-between align-items-center mb-1">
                 <h5 class="mb-0 title-notworking">Not working today</h5>
                 <div class="text-cursor">
-                    <span class="h4 text-primary" @click="toggleList">
+                    <span class="h5 text-primary" @click="toggleList">
                         <b-icon icon="chevron-up" v-if="is_show_list"></b-icon>
                         <b-icon icon="chevron-down" v-else></b-icon>
                     </span>
@@ -60,12 +60,10 @@ export default {
 .title-notworking {
     font-style: normal;
     font-weight: 600;
-    font-size: 18px;
-    line-height: 22px;
+    font-size: 16px;
 }
 
 .user-notworking-wrapper {
-    margin-top: 10px;
     max-height: 160px;
     overflow: auto;
     transition: .25s;
@@ -93,15 +91,18 @@ export default {
     .notworking-item {
         padding: .25rem .5rem;
         font-size: 18px;
-        background: #F5F5F5;
         border-bottom: 1px solid #d9d9d9;
         margin-bottom: 5px;
 
 
         .user-name-notworking {
             font-weight: 400;
-            font-size: 16px;
+            font-size: 14px;
             line-height: 19px;
+        }
+
+        &:hover {
+            background: #F5F5F5;
         }
     }
 

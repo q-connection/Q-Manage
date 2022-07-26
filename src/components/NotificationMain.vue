@@ -34,7 +34,7 @@
     }
 
     .notifications-content {
-        background: rgba(245, 147, 0, 0.05);      
+        background: #F5F5F5;      
         padding: .15rem; 
     }
 }
