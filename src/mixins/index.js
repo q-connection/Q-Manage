@@ -53,6 +53,19 @@ export default {
                     refs[key].setErrors([errors[key]])
                 }
             })
+        },
+
+        $objToFormData(obj) {
+            let formData = new FormData()
+            const keys = Object.keys(obj)
+
+            for(let i = 0; i < keys.length; i++) {
+                if(obj[keys[i]]) {
+                    formData.append(keys[i], obj[keys[i]])
+                }
+            }
+
+            return formData
         }
     }
 }

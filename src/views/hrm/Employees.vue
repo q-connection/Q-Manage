@@ -2,9 +2,6 @@
     <b-container fluid>
         <b-row>
             <b-col cols=12>
-                <page-breadcrumb class="mb-3" :items="breadcrumb_items"/>
-            </b-col>
-            <b-col cols=12>
                 <q-table 
                     id="q-table" 
                     :rows="rows" 

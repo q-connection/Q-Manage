@@ -5,7 +5,7 @@
                 <h1>Oops!</h1>
                 <h2>403 - You don't have permission to access this page</h2>
             </div>
-            <router-link :to="{name: 'dashboard'}">Back to Homepage</router-link>
+            <router-link :to="{name: 'dashboard'}">Back to Dashboard</router-link>
         </div>
     </div>
 </template>

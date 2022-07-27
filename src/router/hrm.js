@@ -17,7 +17,7 @@ export default [
     },
     {
         path: '/hrm/announcements',
-        name: 'hrm-annoucements',
+        name: 'hrm-announcements',
         meta: { layout: 'default', requiresAuth: true, requiresPermission: 'announcements.index' },
         component: () => import('@/views/hrm/Announcements.vue')
     },

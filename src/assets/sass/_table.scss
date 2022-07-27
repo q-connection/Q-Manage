@@ -1,3 +1,36 @@
+.b-pagination {
+    .page-item {
+        .page-link {
+            font-size: 0.875rem;
+            color: #333;
+            font-weight: 600;
+            height: 36px;
+            line-height: 1.5;
+        }
+
+        &:first-child, &:last-child, &:nth-child(2), &:nth-last-child(2) {
+            .page-link {
+                font-size: 1.25rem;
+                line-height: .6;  
+            }          
+        }
+
+        &:first-child {
+            .page-link {
+                border-top-left-radius: 10px;
+                border-bottom-left-radius: 10px;
+            }
+        }        
+
+        &:last-child {
+            .page-link {
+                border-top-right-radius: 10px;
+                border-bottom-right-radius: 10px;
+            }
+        }        
+    }
+}
+
 #q-table {
     .btn {
         min-width: auto;
@@ -9,5 +42,61 @@
 
     .form-control {
         min-height: auto;
+    }
+}
+
+#table-announcements {    
+    border-spacing: 0;
+    border-collapse: separate;
+
+    thead {
+        tr {
+            td {
+                vertical-align: middle;
+                border: none;
+            }
+        }
+    }
+
+    tbody {
+        tr {
+            td {
+                vertical-align: middle;
+
+                &:first-child {
+                    border-left: 1px solid #dee2e6;
+                }
+
+                &:last-child {
+                    border-right: 1px solid #dee2e6;
+                }
+            }
+
+            &:first-child {
+                td {
+                    &:first-child {
+                        border-top-left-radius: 10px;
+                    }
+
+                    &:last-child {
+                        border-top-right-radius: 10px;
+                    }
+                }
+            }            
+
+            &:last-child {
+                td {
+                    &:first-child {
+                        border-bottom-left-radius: 10px;
+                    }
+
+                    &:last-child {
+                        border-bottom-right-radius: 10px;
+                    }
+
+                    border-bottom: 1px solid #dee2e6; 
+                }
+            }            
+        }
     }
 }

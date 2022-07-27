@@ -128,18 +128,18 @@
         flex-wrap: nowrap;
         overflow-x: auto;
         overflow-y: hidden;
+        border-bottom: 1px solid var(--gray);
 
         .nav-item {
             flex: none;
             .nav-link {
                 font-weight: bold;
                 color: #333;
-                border-bottom: 1px solid var(--gray);
 
                 &.active {
                     background: transparent;
                     border-color: transparent;
-                    border-bottom: 3px solid var(--primary);
+                    border-bottom: 4px solid var(--primary);
                 }
             }
         }

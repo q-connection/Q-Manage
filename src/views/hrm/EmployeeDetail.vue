@@ -1,14 +1,10 @@
 <template>
     <b-container fluid>
         <b-row>
-            <b-col cols=12>
-                <page-breadcrumb class="mb-3" :items="breadcrumb_items"/>
-            </b-col>
             <b-col cols=12 xl=6 lg=6>
                 <user-profile-form 
                     :user="user" 
                     :is-submitting="isSubmitting" 
-                    title="User Profile"
                     @submit="onSubmit"
                 />
             </b-col>

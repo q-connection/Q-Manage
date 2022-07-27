@@ -6,10 +6,17 @@ import store from '@/store'
 //Routes
 import hm_routes from './hrm'
 import project_routes from './project-management'
+import anno_routes from './announcements'
 
 Vue.use(VueRouter)
 
 const base_routes = [
+    {
+        path: '/500',
+        name: 'server_error',
+        meta: { layout: 'blank'},
+        component: () => import('@/views/errors/ServerError.vue')        
+    },
     {
         path: '/404',
         name: 'not_found',
@@ -66,7 +73,7 @@ const base_routes = [
     },  
 ]
 
-const routes = base_routes.concat(hm_routes, project_routes)
+const routes = base_routes.concat(hm_routes, project_routes, anno_routes)
 
 const router = new VueRouter({
     mode: 'history',
