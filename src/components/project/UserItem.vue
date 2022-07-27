@@ -1,36 +1,73 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
-    <b-col class="customer-item">
-        <b-img src="https://picsum.photos/200" rounded="circle" alt="Circle image"></b-img>
+    <b-row class="user-item">
+        <div @click="incrementYear">
+            <QIcon icon="ant-design:delete-outlined" class="delete-user" color="white" width="21" height="21" />
+        </div>
+
+        <b-img src="https://picsum.photos/200" class="avatar" rounded="circle" alt="Circle image"></b-img>
+
         <b-col>
             <div class="full-name">
-                {{ customer?.name }}
+                {{ user?.full_name }}
             </div>
             <div class="email">
-                {{ customer?.name }}
+                {{ user?.email }}
             </div>
             <div class="username">
-                {{ customer?.name }}
+                {{ user?.username }}
             </div>
         </b-col>
-    </b-col>
+    </b-row>
 </template>
 <script>
 export default {
 
     props: {
-        customer: {
+        user: {
             type: Object,
             // eslint-disable-next-line vue/require-valid-default-prop
             default: {}
         }
+    },
+    methods: {
+        incrementYear() {
+            this.$emit('removePeople', this.user?.id)
+        }
+
+    },
+    mounted() {
+        console.log('user', this.user)
     }
 }
 </script>
 <style lang="scss" scoped>
-.customer-item {
+.user-item {
+    height: 53px;
     background: rgba(240, 176, 29, 0.21);
     border-radius: 26.5px;
+    border-radius: 26.5px;
+    margin-top: 25px;
+
+    &:not(last-of-type,first-of-type) {
+        margin-right: 25px;
+    }
+
+
+    .delete-user {
+        position: absolute;
+        top: 20px;
+        right: 55px;
+        background-color: #fa4032;
+        border-radius: 10px;
+        cursor: pointer;
+    }
+
+    .avatar {
+        width: 50px;
+        height: 50px;
+        border: 1px solid #F59300;
+    }
 
     .full-name {
         font-style: normal;
