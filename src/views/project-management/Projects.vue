@@ -40,6 +40,7 @@
                                 <div class="upload-image">
                                     <QIcon icon="ic:twotone-drive-folder-upload" class="icon-upload" color="#f0b01d"
                                         width="40" height="31" />
+                                           <!-- <b-form-file class="input-upload-image" :model="image" accept="image/*"></b-form-file> -->
                                 </div>
                             </b-col>
                             <b-col md="8" class="project-info">
@@ -181,12 +182,21 @@ export default {
         padding: 20px;
         height: 10px;
         z-index: 1088;
+        .input-upload-image{
 
-        /* Some padding */
-        &.icon-upload {
-            position: absolute;
-            bottom: 10px;
         }
+
+    }
+
+    /* Some padding */
+    .icon-upload {
+        position: absolute;
+        bottom: 10px;
+        margin-left: auto;
+        margin-right: auto;
+        left: 0;
+        right: 0;
+        text-align: center;
     }
 
     .project-info {
