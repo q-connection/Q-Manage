@@ -5,7 +5,7 @@
         </div>
         <div class="breadcrumb-navigation">
             <div v-for="(item, index) in items" :key="index" class="breadcrumb-item">
-                <router-link :to="{name: item.to || 'dashboard'}" :class="{active: index === items.length - 1}">{{ item.title }}</router-link>
+                <router-link :to="{name: item.to || 'dashboard', params: item.params}" :class="{active: index === items.length - 1}">{{ item.title }}</router-link>
             </div>
         </div>
     </div>
@@ -39,6 +39,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
     padding: 1rem;
     background: #fff;
     border-radius: 10px;

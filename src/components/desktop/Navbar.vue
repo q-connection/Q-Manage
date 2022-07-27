@@ -34,21 +34,21 @@
                     </b-dropdown-item>
                 </b-nav-item-dropdown>
                 <b-nav-item href="#">Recently Viewed</b-nav-item>
-                <b-nav-item-dropdown no-caret>
+                <b-nav-item-dropdown no-caret v-if="$hasPermission('hrm.index')">
                     <template #button-content>
-                        HM Management
+                        HRM
                     </template>
-                    <b-dropdown-item :to="{name: 'hm-employees'}">
+                    <b-dropdown-item :to="{name: 'hrm-employees'}" v-if="$hasPermission('employee.index')">
                         <span>Employees</span>
                     </b-dropdown-item>
-                    <b-dropdown-item href="#">
+                    <b-dropdown-item :to="{name: 'hrm-annoucements'}" v-if="$hasPermission('announcements.index')">
+                        <span>Announcements</span>
+                    </b-dropdown-item>                    
+                    <b-dropdown-item href="#" v-if="$hasPermission('department.index')">
                         <span>Departments</span>
                     </b-dropdown-item>
-                    <b-dropdown-item href="#">
+                    <b-dropdown-item href="#" v-if="$hasPermission('position.index')">
                         <span>Positions</span>
-                    </b-dropdown-item>
-                    <b-dropdown-item href="#">
-                        <span>Notifications</span>
                     </b-dropdown-item>
                 </b-nav-item-dropdown>
                 <b-nav-item href="#">

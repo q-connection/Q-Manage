@@ -31,7 +31,7 @@ import DefaultLayout from '@/layouts/desktop/DefaultLayout.vue'
 import BlankLayout from '@/layouts/desktop/BlankLayout.vue'
 import DefaultMobileLayout from '@/layouts/mobile/DefaultLayout.vue'
 import BlankMobileLayout from '@/layouts/mobile/BlankLayout.vue'
-import VueBootstrap4Table from 'vue-bootstrap4-table'
+import VueBootstrap4Table from '@/modules/vue-bootstrap4-table'
 
 Vue.config.productionTip = false
 Vue.use(device)

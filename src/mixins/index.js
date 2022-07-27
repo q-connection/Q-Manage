@@ -1,6 +1,7 @@
 import $http from '@/axios'
 import moment from 'moment'
 import currencyFormatter from 'currency-formatter'
+import lodash from 'lodash'
 
 export default {
     computed: {
@@ -19,6 +20,10 @@ export default {
 
         $userPermissions() {
             return this.$user.permissions
+        },
+
+        $lodash() {
+            return lodash
         }
     },
 

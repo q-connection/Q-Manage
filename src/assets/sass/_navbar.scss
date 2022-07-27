@@ -119,3 +119,29 @@
         }
     }
 }
+
+.hrm-tabs {
+    background: #F6F8FA;
+    padding: .5rem 0 0 0;
+
+    .nav-tabs {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        overflow-y: hidden;
+
+        .nav-item {
+            flex: none;
+            .nav-link {
+                font-weight: bold;
+                color: #333;
+                border-bottom: 1px solid var(--gray);
+
+                &.active {
+                    background: transparent;
+                    border-color: transparent;
+                    border-bottom: 3px solid var(--primary);
+                }
+            }
+        }
+    }
+}

@@ -4,7 +4,7 @@ import lodash from 'lodash'
 import store from '@/store'
 
 //Routes
-import hm_routes from './hm-management'
+import hm_routes from './hrm'
 
 Vue.use(VueRouter)
 
@@ -14,6 +14,12 @@ const base_routes = [
         name: 'not_found',
         meta: { layout: 'blank'},
         component: () => import('@/views/errors/NotFound.vue')        
+    },
+    {
+        path: '/403',
+        name: 'unauthorized',
+        meta: { layout: 'blank'},
+        component: () => import('@/views/errors/Unauthorized.vue')        
     },
     {
         path: '/',
@@ -82,7 +88,17 @@ router.beforeEach(async (to, from, next) => {
                 if(!isLoggedIn) {
                     next({name: 'login'});
                 } else {
-                    next()
+                    if(to.matched.some((record) => record.meta.requiresPermission)) {
+                        const hasPermission = store.dispatch('checkPermission', to.meta.requiresPermission)
+
+                        if(!hasPermission) {
+                            next({name: 'unauthorized'})
+                        } else {
+                            next()
+                        }
+                    } else {
+                        next()
+                    }
                 }
             } else {
                 next({name: 'login'});
