@@ -50,9 +50,14 @@
                         <b-checkbox :checked="selected.includes(anno.id)" @change="toggleSelect(anno.id)"/>
                     </b-td>
                     <b-td width="2%" class="px-0" v-if="!onlyView">
-                        <span class="h5 text-danger">
-                            <q-icon icon="zondicons:announcement"/>
-                        </span>
+                        <div class="float-right">
+                            <span class="h5 text-warning" v-if="anno.high_priority">
+                                <q-icon icon="ant-design:star-filled"/>
+                            </span>
+                            <span class="h5 text-danger">
+                                <q-icon icon="zondicons:announcement"/>
+                            </span>
+                        </div>
                     </b-td>
                     <b-td width="5%" class="text-cursor" @click="$router.push({name: 'view-announcement', params: {id: anno.id}})" v-else>
                         <div class="rounded overflow-hidden">
@@ -76,6 +81,11 @@
                         <span class="h4 text-warning text-cursor" @click="newTab(anno.id)">
                             <b-icon icon="eye-fill"/>
                         </span>                                
+                    </b-td>
+                    <b-td width="5%" v-else>
+                        <span class="h3 text-warning" v-if="anno.high_priority">
+                            <q-icon icon="ant-design:star-filled"/>
+                        </span>
                     </b-td>
                 </b-tr>
                 <b-tr v-if="announcements.length <= 0">

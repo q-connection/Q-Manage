@@ -3,9 +3,9 @@
         <div class="text-primary">
             <q-icon icon="ant-design:question-circle"/>
         </div>
-        <div class="text-primary">
+        <router-link class="text-primary" :to="{name: 'announcements'}">
             <q-icon icon="clarity:bell-solid"/>
-        </div>
+        </router-link>
     </div>
 </template>
 
