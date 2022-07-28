@@ -2,40 +2,137 @@
     <b-container fluid>
         <b-row>
             <b-col cols=12>
-                <q-table 
-                    id="q-table" 
-                    :rows="rows" 
-                    :columns="columns" 
-                    :config="config" 
-                    :actions="actions" 
-                    @on-change-query="onChangeQuery" 
-                    @on-create="() => $router.push({name: 'hrm-employees-create'})"
-                    :total-rows="total_rows"
+                <table-default
+                    :columns="columns"
+                    :config="tableConfig"
+                    :show-columns="false"
+                    searchable
                 >
-                    <template slot="actions" slot-scope="props">
-                        <b-button size="sm" variant="info" :to="{name: 'hrm-employees-detail', params: {id: props.row.id}}">
-                            <b-icon icon="pencil-square"/>
+                    <template slot="tableHeadActions">
+                        <b-button variant="outline-primary" size="sm" class="p-2">
+                            Add
                         </b-button>
                     </template>
-                    <template slot="pagination-per-page" slot-scope="{perPageHandler, per_page_options, per_page}">
-                        <b-dropdown class="ml-3" :text="per_page.toString()">
-                            <b-dropdown-item v-for="(option, index) in per_page_options" :key="index" @click="perPageHandler(option)" :active="option == per_page">
-                                {{ option }}
-                            </b-dropdown-item>
-                        </b-dropdown>
+                    <template slot="row-id" slot-scope="{row}">
+                        <div class="employee-avatar">
+                            <img :src="row.avatar_id ? row.avatar_url : null"/>
+                            <div class="overlay">
+                                {{ row.username }}
+                            </div>
+                        </div>
                     </template>
-                    <template slot="sort-asc-icon">
-                        <b-icon icon="sort-down-alt"></b-icon>
+                    <template slot="row-fullname" slot-scope="{row}">
+                        <div>
+                            <div class="font-weight-bold">{{ row.fullname }} ({{ row.role_name }})</div>
+                            <div class="text-dark small">
+                                <b-icon icon="telephone-fill"/>
+                                {{ row.phone }}
+                            </div>
+                            <div class="text-dark small">
+                                <b-icon icon="envelope-fill"/>
+                                {{ row.email }}
+                            </div>
+                        </div>
                     </template>
-                    <template slot="sort-desc-icon">
-                        <b-icon icon="sort-down"></b-icon>
+                    <template slot="row-actions" slot-scope="{row}">
+                        <span class="h3 text-warning text-cursor" @click="previewEmp(row)">
+                            <b-icon icon="eye-fill"/>
+                        </span>
                     </template>
-                    <template slot="no-sort-icon">
-                        <b-icon icon="sort-down-alt"></b-icon>
-                    </template>
-                </q-table>
+                </table-default>
             </b-col>
         </b-row>
+        <b-modal id="emp-modal" size="xl" hide-header hide-footer>
+            <div class="p-3" v-if="selectedEmp">
+                <modal-custom-header modal-id="emp-modal" :title="getModalTitle"/>
+                <b-row>
+                    <b-col cols=12 xl=3 lg=3>
+                        <div class="avatar-modal">
+                            <form-image-upload :preview-url="selectedEmp.avatar ? selectedEmp.avatar_url : null" readonly/>
+                        </div>
+                    </b-col>
+                    <b-col cols=12 xl=9 lg=9>
+                        <b-row>
+                            <b-col cols=12 xl=7 lg=7>
+                                <div class="d-flex mb-2 text-break flex-wrap">
+                                    <div class="font-weight-bold text-title">Date Of Birth:</div>
+                                    <div>{{ selectedEmp.dob }}</div>
+                                </div>
+                            </b-col>
+                            <b-col cols=12 xl=5 lg=5>
+                                <div class="d-flex mb-2 text-break flex-wrap">
+                                    <div class="font-weight-bold text-title">Department:</div>
+                                    <div>{{ selectedEmp.departments ? selectedEmp.departments[0].name : 'N/A' }}</div>
+                                </div>
+                            </b-col>
+                            <b-col cols=12 xl=7 lg=7>
+                                <div class="d-flex mb-2 text-break flex-wrap">
+                                    <div class="font-weight-bold text-title">Phone Number:</div>
+                                    <div>{{ selectedEmp.phone || 'N/A' }}</div>
+                                </div>
+                            </b-col>
+                            <b-col cols=12 xl=5 lg=5>
+                                <div class="d-flex mb-2 text-break flex-wrap">
+                                    <div class="font-weight-bold text-title">Title:</div>
+                                    <div>{{ selectedEmp.role_name }}</div>
+                                </div>
+                            </b-col>
+                            <b-col cols=12 xl=7 lg=7>
+                                <div class="d-flex mb-2 text-break flex-wrap">
+                                    <div class="font-weight-bold text-title">Email:</div>
+                                    <div>{{ selectedEmp.email || 'N/A' }}</div>
+                                </div>
+                            </b-col>
+                            <b-col cols=12 xl=5 lg=5>
+                                <div class="d-flex mb-2 text-break flex-wrap">
+                                    <div class="font-weight-bold text-title">Contract:</div>
+                                    <div class="text-break text-warning">
+                                        <span v-if="selectedEmp.contract_type == 'freelancer'">Freelancer staff</span>
+                                        <span v-if="selectedEmp.contract_type == 'official'">Official staff</span>
+                                        <span v-if="selectedEmp.contract_type == 'probation'">Probation staff</span>
+                                        <br/>
+                                        ({{ selectedEmp.contract_start_date }} - {{ selectedEmp.contract_end_date }})
+                                    </div>
+                                </div>
+                            </b-col>
+                            <b-col cols=12 xl=6 lg=6>
+                                <div class="d-flex mb-2 text-break flex-wrap">
+                                    <div class="font-weight-bold text-title">ID Number:</div>
+                                    <div>{{ selectedEmp.id_number || 'N/A' }}</div>
+                                </div>
+                            </b-col>
+                            <b-col cols=12>
+                                <div class="d-flex mb-2 text-break flex-wrap">
+                                    <div class="font-weight-bold text-title">Permanent Address:</div>
+                                    <div>{{ selectedEmp.permanent_full_address || 'N/A' }}</div>
+                                </div>
+                            </b-col>
+                            <b-col cols=12>
+                                <div class="d-flex mb-2 text-break flex-wrap">
+                                    <span class="font-weight-bold text-title">Residence Address:</span>
+                                    {{ selectedEmp.residence_full_address || 'N/A' }}
+                                </div>
+                            </b-col>
+                            <b-col cols=12>
+                                <div class="d-flex mb-2 text-break flex-wrap">
+                                    <span class="font-weight-bold text-title">Bank account information:</span>
+                                    {{ selectedEmp.bank_account || 'N/A' }} -
+                                    {{ selectedEmp.bank_name || 'N/A' }} -
+                                    {{ selectedEmp.bank_branch || 'N/A' }}
+                                </div>
+                            </b-col>
+                            <b-col cols=12>
+                                <div class="float-right">
+                                    <b-button variant="primary" style="min-width: 250px" :to="{name: 'hrm-employees-detail', params: {id: selectedEmp.id}}">
+                                        EDIT
+                                    </b-button>
+                                </div>
+                            </b-col>
+                        </b-row>
+                    </b-col>
+                </b-row>
+            </div>
+        </b-modal>
     </b-container>
 </template>
 
@@ -47,104 +144,107 @@
                 {to: 'dashboard', title: 'Dashboard'},
                 {to: 'hrm-employees', title: 'Employees'},
             ],
-            rows: [],
-            columns: [
-                {
-                    label: "ID",
-                    name: "id",
-                    sort: true,
-                    uniqueId: true 
-                },
-                {
-                    label: "Name",
-                    name: "fullname",
-                    sort: true,
-                },
-                {
-                    label: "Email",
-                    name: "email",                
-                    sort: true,
-                },
-                {
-                    label: "Phone",
-                    name: "phone",                    
-                    sort: true,
-                },
-                {
-                    label: "ID Number",
-                    name: "id_number",                  
-                    sort: true,
-                },
-                {
-                    label: "Contract Type",
-                    name: "contract_type",                  
-                    sort: true,
-                },
-                {
-                    label: "Contract End Date",
-                    name: "contract_end_date",                  
-                    sort: true,
-                },
-                {
-                    label: "Department",
-                    name: "departments.0.name",
-                },
-                {
-                    label: "Position",
-                    name: "roles.0.name",
-                },
-                {
-                    label: 'Actions',
-                    name: "actions"
-                }
-            ],
-            config: {
-                checkbox_rows: true,
-                rows_selectable: true,
-                card_title: "List Employees",
-                server_mode: true,
-                per_page: 10,
-                per_page_options: [5, 10, 20, 30, 50, 100],
+            tableConfig: {
+                url: 'employee/list'
             },
-            queryParams: {
-                sort: [],
-                filters: [],
-                global_search: "",
-                per_page: 10,
-                page: 1,
-            },
-            actions: [
-                {
-                    btn_text: "Create",
-                    event_name: "on-create",
-                    class: "btn btn-primary"              
-                }
-            ],            
-            total_rows: 0,                        
+            selectedEmp: null                
         }),
 
-        methods: {
-            async onChangeQuery(queryParams) {
-                this.queryParams = queryParams;
-                await this.fetchEmployees();
+        computed: {
+            columns() {
+                return [
+                    {
+                        label: "ID",
+                        name: "id",
+                        width: '5%',
+                        rowClass: 'text-cursor',
+                        rowClicked: row => this.onRowClick(row)
+                    },
+                    {
+                        label: "Name",
+                        name: "fullname",
+                        sort: true,
+                        width: '90%',
+                        rowClass: 'text-cursor',
+                        rowClicked: row => this.onRowClick(row)
+                    },
+                    {
+                        label: 'Actions',
+                        name: "actions",
+                        width: '5%'
+                    }
+                ]  
             },
 
-            async fetchEmployees() {
-                try {
-                    const { data } = await this.$http.get('employee/list', {params: this.queryParams})
+            getModalTitle() {
+                const emp = this.selectedEmp
 
-                    if(!data.error) {
-                        this.rows = data.data.data
-                        this.total_rows = data.data.total
-                    }
-                } catch (err) {
-                    console.log(err)
-                }
+                if(!emp) return 'N/A'
+
+                return `${emp.fullname} (<span class="text-warning">${emp.username}</span>)`
+            }
+        },
+
+        methods: {
+            previewEmp(emp) {
+                this.selectedEmp = emp
+                this.$bvModal.show('emp-modal')
+            },
+
+            onRowClick(row) {
+                this.$router.push({name: 'hrm-employees-detail', params: {id: row.id}})    
             }
         }
     }
 </script>
 
 <style lang="scss" scoped>
+.employee-avatar {
+    position: relative;
+    width: 70px;
+    height: 60px;
+    overflow: hidden;
+    border-radius: 10px;
+    background-image: url(/public/images/avatar-placeholder.png);
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-position: top center;
+    border: 1px solid var(--light);
 
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        -o-object-fit: cover;
+        border-radius: 10px;
+    }
+
+    .overlay {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 20px;
+        text-align: center;
+        font-size: 10px;
+        color: #fff;
+        font-weight: 600;
+        background: rgba(55, 55, 55, 0.77);
+        line-height: 2;
+        max-width: 100%;
+        text-overflow: ellipsis;
+        -o-text-overflow: ellipsis;
+    }
+}
+
+.avatar-modal {
+    min-width: 185px;
+    height: 200px;
+    overflow: hidden;
+    margin-bottom: .75rem;
+}
+
+.text-title {
+    min-width: 195px
+}
 </style>
