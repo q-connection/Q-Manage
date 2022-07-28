@@ -1,7 +1,8 @@
 <template>
     <div class="position-relative">
         <Header/>
-        <div class="page-content">
+        <hrm-tabs class="pt-4" v-if="inHrmRoutes"/>
+        <div class="page-content" :class="{hrm: inHrmRoutes}">
             <slot/>
         </div>
         <ProjectFixedButton/>
@@ -15,7 +16,12 @@
     import Header from '@/components/mobile/Header.vue'
 
     export default {
-        components: {Navbar, ProjectFixedButton, Header}
+        components: {Navbar, ProjectFixedButton, Header},
+        computed: {
+            inHrmRoutes() {
+                return this.$route.name.indexOf('hrm') !== -1
+            }
+        }        
     }
 </script>
 
@@ -23,5 +29,9 @@
 .page-content {
     padding-top: 68px;
     margin-bottom: 40px;
+
+    &.hrm {
+        padding-top: 30px;
+    }
 }
 </style>

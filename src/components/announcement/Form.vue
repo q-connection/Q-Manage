@@ -39,18 +39,27 @@
                             </validation-provider>
                         </b-col>       
                         <b-col cols=12>
-                            <div class="float-right">
-                                <form-button 
-                                    type="submit" 
-                                    variant="primary" 
-                                    style="min-width: 250px" 
-                                    :loading="isSubmitting" 
-                                    :disabled="isSubmitting"
-                                    loading-without-hidden-text
-                                >
-                                    SAVE
-                                </form-button>
-                            </div>
+                            <b-row class="align-items-center">
+                                <b-col cols=12 xl=4 lg=4>
+                                    <b-form-checkbox v-model="formData.high_priority" :value="true" :unchecked-value="false">
+                                        High Priority
+                                    </b-form-checkbox>       
+                                </b-col>      
+                                <b-col cols=12 xl=8 lg=8>        
+                                    <div class="float-right">
+                                        <form-button 
+                                            type="submit" 
+                                            variant="primary" 
+                                            style="min-width: 250px" 
+                                            :loading="isSubmitting" 
+                                            :disabled="isSubmitting"
+                                            loading-without-hidden-text
+                                        >
+                                            SAVE
+                                        </form-button>
+                                    </div>
+                                </b-col>
+                            </b-row>
                         </b-col>                 
                     </b-row>
                 </b-col>
@@ -82,7 +91,8 @@
                 upload_type: 'announcements',
                 title: '',
                 description: '',
-                files: null
+                files: null,
+                high_priority: false
             }
         }),
 
@@ -122,7 +132,7 @@
 <style lang="scss" scoped>
 .thumbnail {
     min-width: 185px;
-    min-height: 185px;
+    height: 185px;
     border-radius: 10px;
     overflow: hidden;
 }

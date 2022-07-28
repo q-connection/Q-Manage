@@ -20,7 +20,7 @@
                 </div>
             </b-form>
         </div>
-        <sticky-footer/>
+        <sticky-footer position="fixed"/>
     </div>
 </template>
 

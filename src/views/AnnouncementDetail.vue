@@ -36,7 +36,7 @@
                 <h4>Other announcements</h4>
                 <b-row>
                     <b-col cols=12 xl=3 lg=3 v-for="(item, index) in other_announcements" :key="index">
-                        <div class="announcement-item" :class="{mobile: $device.mobile === true}">
+                        <div class="announcement-item" :class="{mobile: $device.mobile === true}" @click="handleOtherAnnoClicked(item.id)">
                             <div class="thumbnail">
                                 <img :src="item.thumbnail ? item.thumbnail_url : '/images/image-placeholder.png'">
                             </div>
@@ -81,9 +81,10 @@
         },
 
         methods: {
-            async fetchAnnocement() {
+            async fetchAnnocement(id = null) {
                 try {
-                    const { data } = await this.$http.get('annoucements/' + this.$route.params.id)
+                    const anno_id = id || this.$route.params.id
+                    const { data } = await this.$http.get('announcements/' + anno_id)
 
                     if(!data.error) {
                         this.anno = data.data
@@ -103,9 +104,10 @@
                 }
             },
 
-            async fetchOtherAnnocements() {
+            async fetchOtherAnnocements(id = null) {
                 try {
-                    const { data } = await this.$http.get('annoucements', {params: {execpt: this.$route.params.id, page: 1, per_page: 4}})
+                    const anno_id = id || this.$route.params.id
+                    const { data } = await this.$http.get('announcements', {params: {execpt: anno_id, page: 1, per_page: 4}})
 
                     if(!data.error) {
                         this.other_announcements = data.data.data
@@ -123,6 +125,18 @@
                 const splited = link.split('/')
 
                 return splited[splited.length - 1]
+            },
+
+            async handleOtherAnnoClicked(id) {
+                if(id == this.$route.params.id) return
+
+                this.$router.replace({name: 'view-announcement', params: {id}})       
+                this.isLoading = true
+                this.anno = {}
+                this.other_announcements = []
+
+                await this.fetchAnnocement(id)
+                await this.fetchOtherAnnocements(id)
             }
         }
     }
@@ -130,6 +144,8 @@
 
 <style lang="scss" scoped>
 .announcement-item {
+    cursor: pointer;
+
     .thumbnail {
         width: 100%;
         height: 200px;

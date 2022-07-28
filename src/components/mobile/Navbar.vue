@@ -13,10 +13,10 @@
             </router-link>
         </div>
         <div class="mobile-navbar--item" v-if="$hasPermission('hrm.index') && $hasPermission('employee.index')">
-            <div class="item d-flex flex-column justify-content-center align-items-center text-cursor text-decoration-none" :class="{'router-link-exact-active': inHrmRoutes === true}">
+            <router-link :to="{name: 'hrm-employees'}" class="item d-flex flex-column justify-content-center align-items-center text-cursor text-decoration-none" :class="{'router-link-exact-active': inHrmRoutes === true}">
                 <div class="icon h4 mb-0"><q-icon icon="healthicons:human-resoruces"/></div>
                 <div class="title">HRM</div>
-            </div>
+            </router-link>
         </div>
         <div class="mobile-navbar--item">
             <router-link class="d-flex flex-column justify-content-center align-items-center text-cursor text-decoration-none" :to="{name: 'profile'}">

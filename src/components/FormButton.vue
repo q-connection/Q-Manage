@@ -6,11 +6,11 @@
         </div>
         <div v-else>
             <div v-if="loadingWithoutHiddenText">
-                <b-spinner type="grow" variant="white" label="Loading..." :small="this.size != 'lg'"></b-spinner>
+                <b-spinner type="grow" :variant="loadingVariant" label="Loading..." :small="this.size != 'lg'"></b-spinner>
                 <slot/>
             </div>
             <div v-else>
-                <b-spinner type="grow" variant="white" label="Loading..." :small="this.size != 'lg'"></b-spinner>
+                <b-spinner type="grow" :variant="loadingVariant" label="Loading..." :small="this.size != 'lg'"></b-spinner>
             </div>
         </div>
     </b-button>
@@ -52,6 +52,14 @@
             block: {
                 type: Boolean,
                 default: false
+            }
+        },
+
+        computed: {
+            loadingVariant() {
+                const variant = this.variant || ''
+
+                return variant.indexOf('outline-') !== -1 ? variant.replace('outline-') : 'white'
             }
         }
     }
