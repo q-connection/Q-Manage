@@ -14,12 +14,7 @@
         </b-row>
         <b-modal id="modal-announcement" size="xl" hide-header hide-footer @hide="modalData = null">
             <div class="p-3">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h5 class="mb-0">CREATE / EDIT</h5>
-                    <span class="h3 text-danger text-cursor" @click="$bvModal.hide('modal-announcement')">
-                        <b-icon icon="x-circle"/>
-                    </span>
-                </div>
+                <modal-custom-header modal-id="modal-announcement" title="CREATE / EDIT"/>
                 <FormAnnouncements :data="modalData" @submit="handleSubmit" :isSubmitting="isSubmitting"/>
             </div>
         </b-modal>

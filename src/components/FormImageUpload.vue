@@ -4,9 +4,12 @@
         <div class="preview">
             <img :src="preview"/>
         </div>
-        <div class="overlay" v-show="!readonly || !disabled">
-            <b-button size="sm" variant="warning" @click="$refs.file.click()">
+        <div class="overlay">
+            <b-button class="text-white h3 mb-0" size="sm" variant="warning" @click="$refs.file.click()" v-if="!readonly && !disabled">
                 <b-icon icon="upload"/>
+            </b-button>
+            <b-button class="text-white h3 mb-0" size="sm" variant="warning" v-else-if="readonly" readonly>
+                <b-icon icon="eye"/>
             </b-button>
         </div>
     </div>

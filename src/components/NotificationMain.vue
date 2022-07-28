@@ -1,9 +1,12 @@
 
 <template>
     <div class="notifications" :class="{fixed}">
-        <div class="notifications-content">
+        <div class="notifications-content" v-if="anno">
             <marquee>
-                Đây là nội dung thông báo mới
+                <router-link :to="{name: 'view-announcement', params: {id: anno.id}}">
+                    <q-icon icon="zondicons:announcement"/>
+                    {{ anno.title || '' }}
+                </router-link>
             </marquee>
         </div>
     </div>
@@ -15,6 +18,28 @@
             fixed: {
                 type: Boolean,
                 default: false
+            }
+        },
+
+        data: () => ({
+            anno: null
+        }),
+
+        async mounted() {
+            await this.fetchAnnouncement()
+        },
+
+        methods: {
+            async fetchAnnouncement() {
+                try {
+                    const { data } = await this.$http.get('announcements/latest')
+
+                    if(!data.error) {
+                        this.anno = data.data
+                    }
+                } catch (err) {
+                    console.log(err)
+                }
             }
         }
     }
