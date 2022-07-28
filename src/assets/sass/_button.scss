@@ -4,9 +4,17 @@
     font-size: 20px;
     line-height: 20px;
     min-width: 120px;
-    height: 45px;    
+    min-height: 45px;    
+    border-radius: 10px;
 
     &.btn-primary {
         color: #fff
+    }
+
+    &.btn-sm {
+        font-size: 0.875rem;
+        line-height: 1.25;
+        min-width: 60px;
+        min-height: 22.5px;
     }
 }

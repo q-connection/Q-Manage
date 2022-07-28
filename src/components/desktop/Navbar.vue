@@ -34,23 +34,7 @@
                     </b-dropdown-item>
                 </b-nav-item-dropdown>
                 <b-nav-item href="#">Recently Viewed</b-nav-item>
-                <b-nav-item-dropdown no-caret>
-                    <template #button-content>
-                        HM Management
-                    </template>
-                    <b-dropdown-item :to="{name: 'hm-employees'}">
-                        <span>Employees</span>
-                    </b-dropdown-item>
-                    <b-dropdown-item href="#">
-                        <span>Departments</span>
-                    </b-dropdown-item>
-                    <b-dropdown-item href="#">
-                        <span>Positions</span>
-                    </b-dropdown-item>
-                    <b-dropdown-item href="#">
-                        <span>Notifications</span>
-                    </b-dropdown-item>
-                </b-nav-item-dropdown>
+                <b-nav-item v-if="$hasPermission('hrm.index') && $hasPermission('employee.index')" :to="{name: 'hrm-employees'}">HRM</b-nav-item>
                 <b-nav-item href="#">
                     <span class="h2">
                         <q-icon icon="bxs:message-square-add"/>
@@ -59,8 +43,8 @@
                 <b-nav-form>
                     <div class="attendance-wrapper">
                         <b-form-input :value="getTime" readonly></b-form-input>
-                        <form-button variant="primary" v-if="user.today_check_in_at && !user.today_check_out_at" @click="onCheckout" :disabled="isLoggingTime" :loading="isLoggingTime">Check Out</form-button>
-                        <form-button variant="primary" v-else @click="onCheckin" :disabled="isLoggingTime" :loading="isLoggingTime">Check In</form-button>
+                        <form-button variant="primary" v-if="user.today_check_in_at && !user.today_check_out_at" @click="onCheckout" :disabled="isLoggingTime" :loading="isLoggingTime" size="sm">Check Out</form-button>
+                        <form-button variant="primary" v-else @click="onCheckin" :disabled="isLoggingTime" :loading="isLoggingTime" size="sm">Check In</form-button>
                     </div>
                 </b-nav-form>                
             </b-navbar-nav>

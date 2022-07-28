@@ -4,17 +4,30 @@ import lodash from 'lodash'
 import store from '@/store'
 
 //Routes
-import hm_routes from './hm-management'
+import hm_routes from './hrm'
 import project_routes from './project-management'
+import anno_routes from './announcements'
 
 Vue.use(VueRouter)
 
 const base_routes = [
     {
+        path: '/500',
+        name: 'server_error',
+        meta: { layout: 'blank'},
+        component: () => import('@/views/errors/ServerError.vue')        
+    },
+    {
         path: '/404',
         name: 'not_found',
         meta: { layout: 'blank'},
         component: () => import('@/views/errors/NotFound.vue')        
+    },
+    {
+        path: '/403',
+        name: 'unauthorized',
+        meta: { layout: 'blank'},
+        component: () => import('@/views/errors/Unauthorized.vue')        
     },
     {
         path: '/',
@@ -60,7 +73,7 @@ const base_routes = [
     },  
 ]
 
-const routes = base_routes.concat(hm_routes,project_routes)
+const routes = base_routes.concat(hm_routes, project_routes, anno_routes)
 
 const router = new VueRouter({
     mode: 'history',
@@ -89,7 +102,17 @@ router.beforeEach(async (to, from, next) => {
                 if(!isLoggedIn) {
                     next({name: 'login'});
                 } else {
-                    next()
+                    if(to.matched.some((record) => record.meta.requiresPermission)) {
+                        const hasPermission = store.dispatch('checkPermission', to.meta.requiresPermission)
+
+                        if(!hasPermission) {
+                            next({name: 'unauthorized'})
+                        } else {
+                            next()
+                        }
+                    } else {
+                        next()
+                    }
                 }
             } else {
                 next({name: 'login'});

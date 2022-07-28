@@ -1,8 +1,20 @@
 @import 'vue-select/dist/vue-select.css';
 
+.label-required {
+    font-weight: 500;
+    position: relative;
+
+    &::after {
+        position: absolute;
+        content: "*";
+        color: var(--danger);
+        padding-left: 5px;
+    }
+}
+
 .form-control {
     background: #FFFFFF;
-    border: 1px solid #F59300;
+    border: 1px solid var(--primary);
     border-radius: 10px;
     min-height: 45px;
 
@@ -13,6 +25,52 @@
         font-weight: 400;
         font-size: 14px;
         line-height: 20px;                
+    }
+
+    &.form-control-sm {
+        min-height: 35px;
+    }
+}
+
+.b-form-file {
+    min-height: 45px;
+
+    .custom-file-input, .custom-file-label  {
+        height: 45px;
+    }
+
+    .custom-file-label {
+        padding-top: .75rem;
+        border-radius: 10px;
+        border: 1px solid var(--primary);
+        
+        &::after {
+            height: 45px;
+            padding-top: .5rem;
+            border: none;
+            background-color: transparent;
+            font-size: 18px;
+        }
+    }
+
+    &.pdf {
+        .custom-file-label {
+            &::after {
+                font-weight: 900;
+                font-family: "Font Awesome 6 Free";
+                content: "\f1c1"!important;
+                color: var(--primary)           
+            }
+        }
+    }
+}
+
+.input-group {
+    .input-group-text {
+        border-radius: 10px;
+        background-color: transparent;
+        border-left-color: transparent;
+        border: 1px solid var(--primary);
     }
 }
 

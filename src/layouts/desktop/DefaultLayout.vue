@@ -2,7 +2,8 @@
     <div class="position-relative">
         <DesktopNavbar/>
         <notification-main fixed/>
-        <div class="page-content">
+        <hrm-tabs v-if="inHrmRoutes"/>
+        <div class="page-content" :class="{hrm: inHrmRoutes === true}">
             <slot/>
         </div>
         <sticky-footer/>
@@ -17,7 +18,13 @@
         components: {
             DesktopNavbar,
             StickyFooter
-        }        
+        },
+
+        computed: {
+            inHrmRoutes() {
+                return this.$route.name.indexOf('hrm') !== -1
+            }
+        }
     }
 </script>
 
@@ -25,5 +32,13 @@
 .page-content {
     padding-top: 60px;
     padding-bottom: 60px;
+
+    &.hrm {
+        padding-top: 30px
+    }
+}
+
+.hrm-tabs {
+    margin-top: 2rem;
 }
 </style>

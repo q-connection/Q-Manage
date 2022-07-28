@@ -1,5 +1,5 @@
 <template>
-    <div class="mobile-navbar">
+    <div class="mobile-navbar" :class="{hrm: $hasPermission('hrm.index') && $hasPermission('employee.index')}">
         <div class="mobile-navbar--item">
             <router-link class="d-flex flex-column justify-content-center align-items-center text-cursor text-decoration-none" :to="{name: 'dashboard'}">
                 <div class="icon h4 mb-0"><q-icon icon="ant-design:dashboard-filled"/></div>
@@ -12,6 +12,12 @@
                 <div class="title">Projects</div>
             </router-link>
         </div>
+        <div class="mobile-navbar--item" v-if="$hasPermission('hrm.index') && $hasPermission('employee.index')">
+            <div class="item d-flex flex-column justify-content-center align-items-center text-cursor text-decoration-none" :class="{'router-link-exact-active': inHrmRoutes === true}">
+                <div class="icon h4 mb-0"><q-icon icon="healthicons:human-resoruces"/></div>
+                <div class="title">HRM</div>
+            </div>
+        </div>
         <div class="mobile-navbar--item">
             <router-link class="d-flex flex-column justify-content-center align-items-center text-cursor text-decoration-none" :to="{name: 'profile'}">
                 <div class="icon h4 mb-0"><q-icon icon="ic:sharp-account-circle"/></div>
@@ -23,7 +29,12 @@
 
 <script>
     export default {
-        name: 'MobileNavbar'
+        name: 'MobileNavbar',
+        computed: {
+            inHrmRoutes() {
+                return this.$route.name.indexOf('hrm') !== -1
+            }
+        }
     }
 </script>
 
@@ -35,11 +46,16 @@
     min-height: 59px;
     display: flex;
     width: 100%;
+    z-index: 99;
 
     .mobile-navbar--item {
-        width: 33.3%;
+        width: calc(100% / 3);
 
-        a {
+        &.hrm {
+            width: calc(100% / 4);
+        }
+
+        a, .item {
             position: relative;
             padding: .5rem;
             background-color: var(--white);

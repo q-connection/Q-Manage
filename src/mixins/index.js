@@ -1,6 +1,7 @@
 import $http from '@/axios'
 import moment from 'moment'
 import currencyFormatter from 'currency-formatter'
+import lodash from 'lodash'
 
 export default {
     computed: {
@@ -19,6 +20,10 @@ export default {
 
         $userPermissions() {
             return this.$user.permissions
+        },
+
+        $lodash() {
+            return lodash
         }
     },
 
@@ -48,6 +53,19 @@ export default {
                     refs[key].setErrors([errors[key]])
                 }
             })
+        },
+
+        $objToFormData(obj) {
+            let formData = new FormData()
+            const keys = Object.keys(obj)
+
+            for(let i = 0; i < keys.length; i++) {
+                if(obj[keys[i]]) {
+                    formData.append(keys[i], obj[keys[i]])
+                }
+            }
+
+            return formData
         }
     }
 }

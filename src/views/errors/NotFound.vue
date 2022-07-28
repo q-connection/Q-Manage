@@ -5,7 +5,7 @@
                 <h1>Oops!</h1>
                 <h2>404 - The Page can't be found</h2>
             </div>
-            <router-link :to="{name: 'dashboard'}">Go to Homepage</router-link>
+            <router-link :to="{name: 'dashboard'}">Back to Dashboard</router-link>
         </div>
     </div>
 </template>

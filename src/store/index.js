@@ -110,6 +110,16 @@ export default new Vuex.Store({
 
             return data
         },
+
+        checkPermission({state}, permission) {
+            let has_permission = false
+            const permissions = state.user ? state.user.permissions : {}
+            if(permissions[permission]) {
+                has_permission = true
+            }
+
+            return has_permission
+        }
     },
     modules: {
     }
