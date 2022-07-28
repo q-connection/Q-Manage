@@ -1,69 +1,110 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
-    <b-list-group class="group-list-project">
-        <b-list-group-item class="d-flex justify-content-between align-items-center list-project"
-            v-for="(p, index) in list" :key="project - index">
-            <b-row :class="['item', { 'issue-attach': is_show_issues }]">
-                <slot name="icon" />
-                <div class="project-info">
-                    <div class="project-name">
-                        {{ p.name }}
-                    </div>
-                    <div class="create-at">
-                        {{ p.formatted_created_at }} by {{ p.created_by }}
-                    </div>
+    <div>
+        <b-row>
+            <b-col>
+                <b-list-group class="group-list-project">
+                    <b-list-group-item class="d-flex justify-content-between align-items-center list-project"
+                        v-for="(p, index) in list" :key="index">
+                        <b-row :class="['item', { 'issue-attach': is_show_issues }]">
+                            <slot name="icon" />
+                            <div class="project-info">
+                                <div class="project-name">
+                                    {{ p.name }}
+                                </div>
+                                <div class="create-at">
+                                    {{ p.formatted_created_at }} by {{ p.created_by }}
+                                </div>
 
-                    <div class="issue">
-                        <label>
-                            Task: <span class="text-success">{{ task }}</span>
-                        </label>
-                        <label>
-                            Bug:<span class="text-danger">{{ task }}</span>
-                        </label>
-                    </div>
+                                <div class="issue" v-show="isShowIssues">
+                                    <label>
+                                        Task: <span class="text-success">{{ task }}</span>
+                                    </label>
+                                    <label>
+                                        Bug:<span class="text-danger">{{ task }}</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <slot name="badges" />
+                        </b-row>
+                        <b-row class="list-avatar">
+                            <div v-for="(c, avatarIndex) in p.customers" :key="avatarIndex">
+                                <b-img class="avatar" :src="getAvatar(c.avatar)" rounded="circle" alt="Circle image">
+                                </b-img>
+                            </div>
+                        </b-row>
+                    </b-list-group-item>
+                </b-list-group>
+            </b-col>
+        </b-row>
+        <b-row>
+            <b-col>
+                <div class="float-right">
+                    <b-pagination first-class="custom-pagination-first" last-class="custom-pagination-last"
+                        v-model="queryParams.page" :total-rows="total_rows" :per-page="queryParams.per_page"
+                        aria-controls="table-announcements">
+                        <template #prev-text>
+                            <b-icon icon="chevron-left" />
+                        </template>
+                        <template #next-text>
+                            <b-icon icon="chevron-right" />
+                        </template>
+                    </b-pagination>
                 </div>
-                <slot name="badges" />
-            </b-row>
-            <b-row class="list-avatar">
-                <div v-for="(c, avatarIndex) in p.customers" :key="avatar - avatarIndex">
-                    <b-img class="avatar" :src="getAvatar(c.avatar)" rounded="circle" alt="Circle image"></b-img>
-                </div>
-            </b-row>
-        </b-list-group-item>
-    </b-list-group>
+            </b-col>
+        </b-row>
+
+    </div>
 </template>
 
 <script>
 export default {
     data: () => ({
         list: [],
+        q: '',
         task: 10,
-        bug: 0
+        bug: 0,
+        queryParams: {
+            per_page: 1,
+            page: 1,
+            search: ''
+        }
     }),
     props: {
-        is_show_issues: {
+        isShowIssues: {
             type: Boolean,
-            default: true
+            default: false
         },
+        keySearch: {
+            type: String,
+            default: "",
+        }
     },
     methods: {
         async fetchProjects() {
-            await this.project(`project`);
+            try {
+                const { data } = await this.$http.get(`projects`, { params: this.queryParams });
+                if (!data.error) {
+                    this.list = data.data
+                }
+            } catch (err) {
+                console.log(err)
+            }
         },
         getAvatar(avatar) {
             return avatar ? avatar : '/images/default-user-avatar.png'
         }
     },
-    async mounted() {
-        try {
-            const { data } = await this.$http.get('projects')
-
-            if (!data.error) {
-                this.list = data.data
-            }
-        } catch (err) {
-            console.log(err)
+    watch: {
+        'keySearch': function (val) {
+            this.q = val
+            this.queryParams.search = this.q
+            this.fetchProjects()
         }
+    },
+    mounted() {
+        this.q = this.keySearch
+        this.fetchProjects()
     },
 
 }
@@ -157,6 +198,10 @@ export default {
         }
 
     }
-
+}
+</style>
+<style>
+.custom-pagination-first,.custom-pagination-last {
+    display: none;
 }
 </style>
