@@ -11,7 +11,7 @@
         props: {
             position: {
                 type: String,
-                default: 'fixed'
+                default: 'relative'
             }
         }
     }

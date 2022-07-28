@@ -123,6 +123,7 @@
 .thumbnail {
     min-width: 185px;
     min-height: 185px;
+    max-height: 185px;
     border-radius: 10px;
     overflow: hidden;
 }

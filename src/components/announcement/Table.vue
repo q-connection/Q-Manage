@@ -3,20 +3,32 @@
         <b-table-simple id="table-announcements" hover responsive>
             <b-thead>
                 <b-tr>
-                    <b-td width="5%">
-                        <b-form-checkbox :checked="selected.length == announcements.length" @change="toggleSelectAll">
+                    <b-td width="5%" v-if="!onlyView">
+                        <b-form-checkbox :checked="selected.length == announcements.length && announcements.lenth > 0" @change="toggleSelectAll">
                             All
                         </b-form-checkbox>
                     </b-td>
                     <b-td colspan="3" class="px-0">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="d-flex">
+                        <div 
+                            class="d-flex align-items-center" 
+                            :class="{'justify-content-between': onlyView === false, 'justify-content-end': onlyView === true}"
+                        >
+                            <div class="d-flex" v-if="!onlyView">
                                 <b-button class="mr-2 p-2" variant="outline-primary" size="sm" @click="$emit('onCreate', $event)" v-if="$hasPermission('announcement.create')">
                                     Create
                                 </b-button>
-                                <b-button class="p-2" variant="outline-danger" size="sm" @click="onDelete" v-if="$hasPermission('announcement.destroy')">
+                                <form-button 
+                                    class="p-2" 
+                                    variant="outline-danger" 
+                                    size="sm" 
+                                    @click="onDelete" 
+                                    v-if="$hasPermission('announcement.destroy')"
+                                    :loading="deleteLoading"
+                                    :disabled="deleteLoading"
+                                    loading-without-hidden-tetxt
+                                >
                                     Delete
-                                </b-button>
+                                </form-button>
                             </div>
                             <div>
                                 <form-input-group class="d-none d-xl-block d-lg-block">
@@ -34,20 +46,33 @@
             </b-thead>
             <b-tbody>
                 <b-tr v-for="(anno, index) in announcements" :key="index">
-                    <b-td width="5%">
+                    <b-td width="5%" v-if="!onlyView">
                         <b-checkbox :checked="selected.includes(anno.id)" @change="toggleSelect(anno.id)"/>
                     </b-td>
-                    <b-td width="2%" class="px-0">
+                    <b-td width="2%" class="px-0" v-if="!onlyView">
                         <span class="h5 text-danger">
                             <q-icon icon="zondicons:announcement"/>
                         </span>
                     </b-td>
-                    <b-td width="88%" class="text-cursor" @click="$emit('onEdit', anno)">
+                    <b-td width="5%" class="text-cursor" @click="$router.push({name: 'view-announcement', params: {id: anno.id}})" v-else>
+                        <div class="rounded overflow-hidden">
+                            <img :src="anno.thumbnail_url || '/images/image-placeholder.png'" style="width: 72px; height: 57px; object-fit: cover">
+                        </div>
+                    </b-td>
+                    <b-td width="88%" class="text-cursor" @click="$emit('onEdit', anno)" v-if="!onlyView">
                         <div class="text-break font-weight-bold">
                             {{ anno.title }}
                         </div>
                     </b-td>
-                    <b-td width="5%">
+                    <b-td width="95%" class="text-cursor" @click="$router.push({name: 'view-announcement', params: {id: anno.id}})" v-else>
+                        <div class="text-break font-weight-bold">
+                            {{ anno.title }}
+                        </div>
+                        <div class="mt-3 small d-none d-xl-block d-lg-block">
+                            {{ $mm(anno.created_at).format('LLLL') }}
+                        </div>                        
+                    </b-td>
+                    <b-td width="5%" v-if="!onlyView">
                         <span class="h4 text-warning text-cursor" @click="newTab(anno.id)">
                             <b-icon icon="eye-fill"/>
                         </span>                                
@@ -89,10 +114,18 @@
 <script>
     export default {
         name: 'TableAnnouncements',
+        props: {
+            onlyView: {
+                type: Boolean,
+                default: false
+            }
+        },
+
         data: () => ({
             total_rows: 3,
             announcements: [],
             selected: [],
+            deleteLoading: false,
             queryParams: {
                 per_page: 10,
                 page: 1,
@@ -117,7 +150,7 @@
         methods: {
             async fetchAnnouncements() {
                 try {
-                    const { data } = await this.$http.get('annoucements', {params: this.queryParams})
+                    const { data } = await this.$http.get('announcements', {params: this.queryParams})
 
                     if(!data.error) {
                         this.announcements = data.data.data
@@ -130,6 +163,7 @@
 
             async refresh(sync = false) {
                 if(sync) {
+                    this.selected = []
                     await this.fetchAnnouncements()
                 }
             },
@@ -150,6 +184,10 @@
                 }
             },
 
+            toggleDeleteLoading(loading = false) {
+                this.deleteLoading = loading
+            },
+
             onDelete() {
                 if(this.selected.length <= 0) {
                     this.$showAlert({type: 'danger', message: 'Please select at least 1 item'})
@@ -157,7 +195,7 @@
                     return
                 }
 
-                this.$emit('onDelete', {items: this.selected, refresh: this.refresh})
+                this.$emit('onDelete', {items: this.selected, refresh: this.refresh, loading: this.toggleDeleteLoading})
             },
 
             newTab(id) {

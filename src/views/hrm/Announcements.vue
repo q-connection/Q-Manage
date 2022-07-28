@@ -46,8 +46,21 @@
                 this.$bvModal.show('modal-announcement')
             },
 
-            handleDeleteClicked() {
+            async handleDeleteClicked({items, refresh, loading}) {
+                try {
+                    loading(true)
+                    const { data } = await this.$http.post('announcements/delete', {items})
 
+                    if(!data.error) {
+                        this.$showAlert({type: 'success', message: "Deleted select items successfully"})
+                        await refresh(true)
+                    }
+                } catch (err) {
+                    console.log(err)
+                    this.$showAlert({type: 'danger', message: "Something went wrong"})
+                } finally {
+                    loading(false)
+                }
             },
 
             handleEditClicked(data) {
@@ -61,9 +74,9 @@
                     let resp = {}
 
                     if(this.modalData) {
-                        resp = await this.$http.post('annoucements/' + this.modalData.id, formData)
+                        resp = await this.$http.post('announcements/' + this.modalData.id, formData)
                     } else {
-                        resp = await this.$http.post('annoucements', formData)
+                        resp = await this.$http.post('announcements', formData)
                     }
 
                     const data = resp.data

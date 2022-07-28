@@ -51,7 +51,7 @@
 
             <!-- Right aligned nav items -->
             <b-navbar-nav class="ml-auto">
-                <b-nav-item href="#">
+                <b-nav-item :to="{name: 'announcements'}">
                     <span class="h3">
                         <q-icon icon="clarity:bell-solid"/>
                     </span>                    
