@@ -14,7 +14,7 @@
         </b-row>
         <b-row>
             <b-col>
-                <Projects is-show-issues :key-search="key_search">
+                <Projects is-show-pagination is-show-issues :key-search="key_search">
                     <b-img slot="icon" class="project-image" src="https://picsum.photos/200/300" rounded
                         alt="Rounded image">
                     </b-img>
@@ -273,7 +273,6 @@ export default {
             }
         },
         async searchData(val) {
-            console.log('val',val)
             this.key_search = val
         }
     },

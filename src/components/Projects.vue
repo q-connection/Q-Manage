@@ -6,14 +6,14 @@
                 <b-list-group class="group-list-project">
                     <b-list-group-item class="d-flex justify-content-between align-items-center list-project"
                         v-for="(p, index) in list" :key="index">
-                        <b-row :class="['item', { 'issue-attach': is_show_issues }]">
+                        <b-row :class="['item', { 'issue-attach': isShowIssues }]">
                             <slot name="icon" />
                             <div class="project-info">
                                 <div class="project-name">
-                                    {{ p.name }}
+                                    {{ p?.name }}
                                 </div>
                                 <div class="create-at">
-                                    {{ p.formatted_created_at }} by {{ p.created_by }}
+                                    {{ p?.formatted_created_at }} by {{ p?.created_by }}
                                 </div>
 
                                 <div class="issue" v-show="isShowIssues">
@@ -39,7 +39,7 @@
         </b-row>
         <b-row>
             <b-col>
-                <div class="float-right">
+                <div class="float-right" style="margin-top: 27px" v-show="isShowPagination">
                     <b-pagination first-class="custom-pagination-first" last-class="custom-pagination-last"
                         v-model="queryParams.page" :total-rows="total_rows" :per-page="queryParams.per_page"
                         aria-controls="table-announcements">
@@ -61,18 +61,22 @@
 export default {
     data: () => ({
         list: [],
-        q: '',
         task: 10,
         bug: 0,
+        total_rows: 0,
         queryParams: {
             per_page: 1,
-            page: 1,
-            search: ''
+            page: 10,
+            q: ''
         }
     }),
     props: {
         isShowIssues: {
             type: Boolean,
+            default: false
+        },
+        isShowPagination:{
+           type: Boolean,
             default: false
         },
         keySearch: {
@@ -85,7 +89,9 @@ export default {
             try {
                 const { data } = await this.$http.get(`projects`, { params: this.queryParams });
                 if (!data.error) {
-                    this.list = data.data
+                    this.list = data.data.data
+                    this.total_rows = data.data.total
+
                 }
             } catch (err) {
                 console.log(err)
@@ -97,13 +103,16 @@ export default {
     },
     watch: {
         'keySearch': function (val) {
-            this.q = val
-            this.queryParams.search = this.q
+            this.queryParams.q = val
+            this.fetchProjects()
+        },
+        'queryParams.page': function (p) {
+            this.queryParams.page = p
             this.fetchProjects()
         }
     },
     mounted() {
-        this.q = this.keySearch
+        this.queryParams.q = this.keySearch
         this.fetchProjects()
     },
 
@@ -120,7 +129,7 @@ export default {
         border: 1px solid #E0E0E0;
 
         .item {
-            margin: 22px auto 14px 44px;
+            margin: 15px auto 14px 44px;
 
             &.issue-attach {
                 margin: 8px auto 8px 35px !important;
@@ -201,7 +210,8 @@ export default {
 }
 </style>
 <style>
-.custom-pagination-first,.custom-pagination-last {
+.custom-pagination-first,
+.custom-pagination-last {
     display: none;
 }
 </style>

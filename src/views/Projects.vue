@@ -1,6 +1,6 @@
 <template>
     <Dashboard>
-        <Projects>
+        <Projects >
             <QIcon slot="icon" icon="la:dot-circle" class="icon" width="24" height="24" />
             <b-badge slot="badges" pill variant="success" class="badges-status">Task</b-badge>
         </Projects>
