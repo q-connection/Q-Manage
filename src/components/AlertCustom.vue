@@ -1,9 +1,10 @@
 <template>
     <div class="alert-wrapper fade" :style="{width: clientWidth, height: clientHeight}" :class="{show: isActive === true}">
-        <div class="alert-wrapper--dialog">
-            <div class="alert-wrapper--dialog__content">
-                <div class="alert-icon text-info mb-2" v-if="type == 'confirm'">
-                    <q-icon icon="bi:shield-lock-fill" style="font-size: 65px"/>
+        <div class="alert-wrapper--dialog" v-if="isActive">
+            <div class="alert-wrapper--dialog__content" :style="`width: ${alert_width}`">
+                <div class="alert-icon text-warning mb-2" v-if="type == 'confirm'">
+                    <q-icon icon="bi:shield-lock-fill" style="font-size: 65px" v-if="!icon"/>
+                    <q-icon :icon="icon" style="font-size: 65px" v-if="icon"/>
                 </div>                
                 <div class="alert-title">
                     {{ title }}
@@ -12,13 +13,13 @@
                 <div class="alert-icon" v-if="type != 'confirm'">
                     <img :src="`/images/icons/${type}.png`">
                 </div>
-                <b-form @submit.prevent="onCallback" v-if="this.type == 'confirm'">
-                    <b-form-group label="Password" :invalid-feedback="confirmErrorMsg" :state="confirmErrorMsg">
+                <b-form @submit.prevent="onCallback" v-if="this.type == 'confirm' && this.require_password">
+                    <b-form-group :invalid-feedback="confirmErrorMsg" :state="confirmErrorMsg">
                         <b-input type="password" placeholder="Enter your password" :state="confirmErrorMsg" v-model="password" required/>
                     </b-form-group>
                     <div class="alert-confirm--buttons">
                         <div class="p-2">
-                            <b-button variant="secondary" size="sm" @click="isActive = false">
+                            <b-button variant="secondary" @click="isActive = false">
                                 Cancel
                             </b-button>
                         </div>
@@ -29,6 +30,18 @@
                         </div>
                     </div>
                 </b-form>
+                <div class="alert-confirm--buttons" v-else-if="this.type == 'confirm' && !this.require_password">
+                    <div class="p-2">
+                        <b-button variant="secondary" @click="isActive = false">
+                            Cancel
+                        </b-button>
+                    </div>
+                    <div class="p-2">
+                        <form-button variant="success" @click="onCallback" :disabled="isConfirming" :loading="isConfirming">
+                            Confirm
+                        </form-button>
+                    </div>
+                </div>                
             </div>
         </div>
     </div>   
@@ -46,7 +59,10 @@
             callback: null,
             isConfirming: false,
             password: '',
-            confirmErrorMsg: null
+            confirmErrorMsg: null,
+            require_password: false,
+            alert_width: '360px',
+            icon: null
         }),
 
         computed: {
@@ -60,12 +76,22 @@
         },
 
         created() {
-            this.$root.$on('SHOW_ALERT', (type = 'success', message = '', title = 'Successfully!', timeout = 3500, callback = null) => {
+            this.$root.$on('SHOW_ALERT', (
+                type = 'success', 
+                message = '', 
+                title = 'Successfully!', 
+                timeout = 3500, 
+                callback = null, 
+                require_password = false, 
+                icon = null
+            ) => {
                 this.title = title
                 this.message = message
                 this.type = type
                 this.isActive = true
                 this.callback = callback
+                this.require_password = require_password
+                this.icon = icon
 
                 if(type != 'confirm') {
                     setTimeout(() => {

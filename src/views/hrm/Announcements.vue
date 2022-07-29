@@ -41,21 +41,28 @@
                 this.$bvModal.show('modal-announcement')
             },
 
-            async handleDeleteClicked({items, refresh, loading}) {
-                try {
-                    loading(true)
-                    const { data } = await this.$http.post('announcements/delete', {items})
+            async handleDeleteClicked({items, refresh}) {
+                this.$showAlert({
+                    type: 'confirm', 
+                    title: "Warning!", 
+                    icon: 'ant-design:warning-filled',
+                    message: 'Do you really want to delete these records?<br/>This process cannot be undone.',
+                    callback: async ({dismiss}) => {
+                        try {
+                            const { data } = await this.$http.post('announcements/delete', {items})
 
-                    if(!data.error) {
-                        this.$showAlert({type: 'success', message: "Deleted select items successfully"})
-                        await refresh(true)
+                            if(!data.error) {
+                                this.$showAlert({type: 'success', message: "Deleted select items successfully"})
+                                await refresh(true)
+                            } else {
+                                dismiss(true)
+                            }
+                        } catch (err) {
+                            console.log(err)
+                            this.$showAlert({type: 'danger', message: "Something went wrong"})
+                        }
                     }
-                } catch (err) {
-                    console.log(err)
-                    this.$showAlert({type: 'danger', message: "Something went wrong"})
-                } finally {
-                    loading(false)
-                }
+                })
             },
 
             handleEditClicked(data) {

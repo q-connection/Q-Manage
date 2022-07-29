@@ -129,6 +129,7 @@
                     type: 'confirm', 
                     title: "View Contract", 
                     message: 'Enter your password and click CONFIRM to view contract detail',
+                    require_password: true,
                     callback: async ({dismiss, password}) => {
                         try {
                             const { data } = await this.$http.post("employee/contracts", {password})
