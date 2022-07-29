@@ -137,7 +137,9 @@
                                     v-slot="{ errors, valid }">
                                     <input type="hidden" v-model="formData.list_customer_selected"
                                         :state="$isValid(errors, valid)" />
-                                    <div class="small text-danger">{{ errors[0] }}</div>
+                                    <div class="small text-danger" v-if="formData.form_customer_selected.length == 0">{{
+                                            errors[0]
+                                    }}</div>
                                 </validation-provider>
                             </b-col>
                         </b-row>
@@ -422,6 +424,7 @@ export default {
 }
 
 .btn-open-modal {
+    margin-bottom: 13px;
     &:hover {
         background: #FFFFFF;
     }
