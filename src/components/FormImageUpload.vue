@@ -4,13 +4,13 @@
         <div class="preview">
             <img :src="preview"/>
         </div>
-        <div class="overlay">
-            <b-button class="text-white h3 mb-0" size="sm" variant="warning" @click="$refs.file.click()" v-if="!readonly && !disabled">
+        <div class="overlay" @click="onClickUpload" :class="{readonly}">
+            <span class="h2 mt-1" v-if="!readonly">
                 <b-icon icon="upload"/>
-            </b-button>
-            <b-button class="text-white h3 mb-0" size="sm" variant="warning" v-else-if="readonly" readonly>
-                <b-icon icon="eye"/>
-            </b-button>
+            </span>
+            <span class="h2 mt-1" v-else>
+                <q-icon icon="ant-design:eye-filled"/>
+            </span>
         </div>
     </div>
 </template>
@@ -74,6 +74,14 @@
 
                 const file = event.target.files[0]
                 this.$emit('input', file)
+            },
+
+            onClickUpload() {
+                if(this.disabled || this.readonly) {
+                    return
+                }
+
+                this.$refs.file.click()                
             }
         }
     }
@@ -114,6 +122,18 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        cursor: pointer;
+        color: var(--primary);
+        line-height: 2;
+        
+        &:not(.readonly):hover {
+            background-color: rgba(240, 176, 29, 0.6);
+            color: #fff
+        }
+
+        &.readonly {
+            cursor: auto;
+        }
     }
 }
 </style>

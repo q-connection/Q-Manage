@@ -39,6 +39,10 @@
                 color: rgb(102, 102, 102);
                 display: flex;
                 width: 100%;
+
+                .task-title {
+                    font-size: 14px
+                }
             }
 
             .b-dropdown-form {

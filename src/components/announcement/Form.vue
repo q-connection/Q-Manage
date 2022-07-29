@@ -132,7 +132,7 @@
 <style lang="scss" scoped>
 .thumbnail {
     min-width: 185px;
-    height: 185px;
+    height: 238px;
     border-radius: 10px;
     overflow: hidden;
 }

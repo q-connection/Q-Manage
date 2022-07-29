@@ -26,11 +26,11 @@
                     </b-dropdown-form>
                     <b-dropdown-item href="#">
                         <b-icon class="mr-1" icon="record-circle" variant="primary"/>
-                        <span>[TASK] Login</span>
+                        <span class="task-title">[TASK] Login</span>
                     </b-dropdown-item>
                     <b-dropdown-item href="#">
                         <b-icon class="mr-1" icon="record-circle" variant="primary"/>
-                        <span>[TASK] Register</span>
+                        <span class="task-title">[TASK] Register</span>
                     </b-dropdown-item>
                 </b-nav-item-dropdown>
                 <b-nav-item href="#">Recently Viewed</b-nav-item>
