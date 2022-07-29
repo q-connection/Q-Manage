@@ -264,6 +264,11 @@ export default {
                 if (!data.error) {
                     this.$showAlert({ type: 'success', message: 'Create Project successfully!' })
                     this.$refs.refCreateProject.reset()
+                    this.formData.list_customer_selected = []
+                    this.formData.form_customer_selected = []
+                    this.formData.thumbnail = '/images/default-user-avatar.png'
+                    this.urlImage = '/images/default-user-avatar.png'
+
                 }
             } catch (err) {
                 console.log(err)
@@ -425,6 +430,7 @@ export default {
 
 .btn-open-modal {
     margin-bottom: 13px;
+
     &:hover {
         background: #FFFFFF;
     }
