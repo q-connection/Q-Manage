@@ -7,6 +7,7 @@
                     :config="tableConfig"
                     :show-columns="false"
                     searchable
+                    hover
                 >
                     <template slot="tableHeadActions">
                         <b-button variant="outline-primary" size="sm" class="p-2">
@@ -56,74 +57,77 @@
                             <b-col cols=12 xl=7 lg=7>
                                 <div class="d-flex mb-2 text-break flex-wrap">
                                     <div class="font-weight-bold text-title">Date Of Birth:</div>
-                                    <div>{{ selectedEmp.dob }}</div>
+                                    <div class="text-value">{{ selectedEmp.dob }}</div>
                                 </div>
                             </b-col>
                             <b-col cols=12 xl=5 lg=5>
-                                <div class="d-flex mb-2 text-break flex-wrap">
-                                    <div class="font-weight-bold text-title">Department:</div>
-                                    <div>{{ selectedEmp.departments ? selectedEmp.departments[0].name : 'N/A' }}</div>
+                                <div class="d-flex mb-2 flex-wrap">
+                                    <div class="font-weight-bold text-title" style="min-width: 120px">Department:</div>
+                                    <div class="text-value">{{ selectedEmp.departments ? selectedEmp.departments[0].name : 'N/A' }}</div>
                                 </div>
                             </b-col>
                             <b-col cols=12 xl=7 lg=7>
                                 <div class="d-flex mb-2 text-break flex-wrap">
                                     <div class="font-weight-bold text-title">Phone Number:</div>
-                                    <div>{{ selectedEmp.phone || 'N/A' }}</div>
+                                    <div class="text-value">{{ selectedEmp.phone || 'N/A' }}</div>
                                 </div>
                             </b-col>
                             <b-col cols=12 xl=5 lg=5>
-                                <div class="d-flex mb-2 text-break flex-wrap">
-                                    <div class="font-weight-bold text-title">Title:</div>
-                                    <div>{{ selectedEmp.role_name }}</div>
+                                <div class="d-flex mb-2 flex-wrap">
+                                    <div class="font-weight-bold text-title" style="min-width: 120px">Title:</div>
+                                    <div class="text-value">{{ selectedEmp.role_name }}</div>
                                 </div>
                             </b-col>
                             <b-col cols=12 xl=7 lg=7>
                                 <div class="d-flex mb-2 text-break flex-wrap">
                                     <div class="font-weight-bold text-title">Email:</div>
-                                    <div>{{ selectedEmp.email || 'N/A' }}</div>
+                                    <div class="text-value">{{ selectedEmp.email || 'N/A' }}</div>
                                 </div>
                             </b-col>
                             <b-col cols=12 xl=5 lg=5>
-                                <div class="d-flex mb-2 text-break flex-wrap">
-                                    <div class="font-weight-bold text-title">Contract:</div>
-                                    <div class="text-break text-warning">
+                                <div class="d-flex mb-2 flex-wrap">
+                                    <div class="font-weight-bold text-title" style="min-width: 120px">Contract:</div>
+                                    <div class="text-break text-warning position-relative pb-4 pb-xl-0 pb-lg-0 pb-sm-3">
                                         <span v-if="selectedEmp.contract_type == 'freelancer'">Freelancer staff</span>
                                         <span v-if="selectedEmp.contract_type == 'official'">Official staff</span>
                                         <span v-if="selectedEmp.contract_type == 'probation'">Probation staff</span>
-                                        <br/>
-                                        ({{ selectedEmp.contract_start_date }} - {{ selectedEmp.contract_end_date }})
+                                        <div class="position-absolute" style="width: 200px">
+                                            ({{ selectedEmp.contract_start_date || 'N/A' }} - {{ selectedEmp.contract_end_date || 'N/A' }})
+                                        </div>
                                     </div>
                                 </div>
                             </b-col>
                             <b-col cols=12 xl=6 lg=6>
                                 <div class="d-flex mb-2 text-break flex-wrap">
                                     <div class="font-weight-bold text-title">ID Number:</div>
-                                    <div>{{ selectedEmp.id_number || 'N/A' }}</div>
+                                    <div class="text-value">{{ selectedEmp.id_number || 'N/A' }}</div>
                                 </div>
                             </b-col>
                             <b-col cols=12>
                                 <div class="d-flex mb-2 text-break flex-wrap">
                                     <div class="font-weight-bold text-title">Permanent Address:</div>
-                                    <div>{{ selectedEmp.permanent_full_address || 'N/A' }}</div>
+                                    <div class="text-value">{{ selectedEmp.permanent_full_address || 'N/A' }}</div>
                                 </div>
                             </b-col>
                             <b-col cols=12>
                                 <div class="d-flex mb-2 text-break flex-wrap">
-                                    <span class="font-weight-bold text-title">Residence Address:</span>
-                                    {{ selectedEmp.residence_full_address || 'N/A' }}
+                                    <div class="font-weight-bold text-title">Residence Address:</div>
+                                    <div class="text-value">{{ selectedEmp.residence_full_address || 'N/A' }}</div>
                                 </div>
                             </b-col>
                             <b-col cols=12>
                                 <div class="d-flex mb-2 text-break flex-wrap">
-                                    <span class="font-weight-bold text-title">Bank account information:</span>
-                                    {{ selectedEmp.bank_account || 'N/A' }} -
-                                    {{ selectedEmp.bank_name || 'N/A' }} -
-                                    {{ selectedEmp.bank_branch || 'N/A' }}
+                                    <div class="font-weight-bold text-title">Bank account information:</div>
+                                    <div  class="text-value">
+                                        {{ selectedEmp.bank_account || 'N/A' }} -
+                                        {{ selectedEmp.bank_name || 'N/A' }} -
+                                        {{ selectedEmp.bank_branch || 'N/A' }}
+                                    </div>
                                 </div>
                             </b-col>
                             <b-col cols=12>
                                 <div class="float-right">
-                                    <b-button variant="primary" style="min-width: 250px" :to="{name: 'hrm-employees-detail', params: {id: selectedEmp.id}}">
+                                    <b-button variant="primary" style="min-width: 250px; font-size: 16px; line-height: 2" :to="{name: 'hrm-employees-detail', params: {id: selectedEmp.id}}">
                                         EDIT
                                     </b-button>
                                 </div>
@@ -239,12 +243,23 @@
 
 .avatar-modal {
     min-width: 185px;
-    height: 200px;
+    height: 195px;
     overflow: hidden;
     margin-bottom: .75rem;
 }
 
 .text-title {
     min-width: 195px
+}
+
+.text-value {
+    max-width: 100%;
+    word-break: break-all;
+}
+
+@media only screen and (max-width: 990px) {
+    .text-title {
+        width: 100%;
+    }
 }
 </style>

@@ -6,10 +6,10 @@
             </b-col>
             <b-col cols=12>
                 <b-card class="my-3" v-if="!isLoading">
-                    <b-card-title>{{ anno.title }}</b-card-title>
+                    <h5>{{ anno.title }}</h5>
                     <b-card-sub-title>{{ $mm(anno.created_at).format('LLLL') }}</b-card-sub-title>
                     <div class="mt-3" v-if="anno.files">
-                        <a :href="anno.files" target="_blank" class="text-primary h5">
+                        <a :href="anno.files" target="_blank" class="text-primary h6">
                             <q-icon icon="et:attachments"/>
                             {{ getSplitedFile(anno.files) }}
                         </a>
