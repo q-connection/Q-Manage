@@ -78,6 +78,10 @@
 
             onClickUpload() {
                 if(this.disabled || this.readonly) {
+                    this.$viewerApi({
+                        images: [this.preview]
+                    })
+
                     return
                 }
 
@@ -126,7 +130,7 @@
         color: var(--primary);
         line-height: 2;
         
-        &:not(.readonly):hover {
+        &:hover {
             background-color: rgba(240, 176, 29, 0.6);
             color: #fff
         }
