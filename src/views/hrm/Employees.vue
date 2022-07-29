@@ -242,7 +242,7 @@
 
 .avatar-modal {
     min-width: 185px;
-    height: 215px;
+    height: 195px;
     overflow: hidden;
     margin-bottom: .75rem;
 }
