@@ -47,8 +47,8 @@
             <b-col>
                 <div class="float-right" style="margin-top: 27px" v-show="isShowPagination && list.length > 0">
                     <b-pagination first-class="custom-pagination-first" last-class="custom-pagination-last"
-                        v-model="queryParams.page" :total-rows="total_rows" :per-page="queryParams.per_page"
-                        aria-controls="table-announcements">
+                        next-class="custom-bg-np" prev-class="custom-bg-np" v-model="queryParams.page"
+                        :total-rows="total_rows" :per-page="queryParams.per_page" aria-controls="table-announcements">
                         <template #prev-text>
                             <b-icon icon="chevron-left" />
                         </template>
@@ -168,6 +168,7 @@ export default {
                     font-weight: 500;
                     font-size: 14px;
                     line-height: 12px;
+                    color: #666666;
                 }
 
                 .issue {
@@ -210,9 +211,14 @@ export default {
     }
 }
 </style>
-<style>
+<style lang="scss">
 .custom-pagination-first,
 .custom-pagination-last {
     display: none;
+}
+.custom-bg-np {
+    .page-link {
+        background-color: #F5F5F5 !important;
+    }
 }
 </style>
