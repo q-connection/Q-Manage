@@ -7,6 +7,7 @@
                     :config="tableConfig"
                     :show-columns="false"
                     searchable
+                    hover
                 >
                     <template slot="tableHeadActions">
                         <b-button variant="outline-primary" size="sm" class="p-2">
@@ -60,8 +61,8 @@
                                 </div>
                             </b-col>
                             <b-col cols=12 xl=5 lg=5>
-                                <div class="d-flex mb-2 text-break flex-wrap">
-                                    <div class="font-weight-bold text-title">Department:</div>
+                                <div class="d-flex mb-2 flex-wrap">
+                                    <div class="font-weight-bold text-title" style="min-width: 120px">Department:</div>
                                     <div class="text-value">{{ selectedEmp.departments ? selectedEmp.departments[0].name : 'N/A' }}</div>
                                 </div>
                             </b-col>
@@ -72,8 +73,8 @@
                                 </div>
                             </b-col>
                             <b-col cols=12 xl=5 lg=5>
-                                <div class="d-flex mb-2 text-break flex-wrap">
-                                    <div class="font-weight-bold text-title">Title:</div>
+                                <div class="d-flex mb-2 flex-wrap">
+                                    <div class="font-weight-bold text-title" style="min-width: 120px">Title:</div>
                                     <div class="text-value">{{ selectedEmp.role_name }}</div>
                                 </div>
                             </b-col>
@@ -84,14 +85,14 @@
                                 </div>
                             </b-col>
                             <b-col cols=12 xl=5 lg=5>
-                                <div class="d-flex mb-2 text-break flex-wrap">
-                                    <div class="font-weight-bold text-title">Contract:</div>
+                                <div class="d-flex mb-2 flex-wrap">
+                                    <div class="font-weight-bold text-title" style="min-width: 120px">Contract:</div>
                                     <div class="text-break text-warning position-relative pb-4 pb-xl-0 pb-lg-0 pb-sm-3">
                                         <span v-if="selectedEmp.contract_type == 'freelancer'">Freelancer staff</span>
                                         <span v-if="selectedEmp.contract_type == 'official'">Official staff</span>
                                         <span v-if="selectedEmp.contract_type == 'probation'">Probation staff</span>
-                                        <div class="position-absolute">
-                                            ({{ selectedEmp.contract_start_date }} - {{ selectedEmp.contract_end_date }})
+                                        <div class="position-absolute" style="width: 200px">
+                                            ({{ selectedEmp.contract_start_date || 'N/A' }} - {{ selectedEmp.contract_end_date || 'N/A' }})
                                         </div>
                                     </div>
                                 </div>

@@ -22,16 +22,17 @@
                                     </router-link>
                                 </div>
                             </div>
-
+                            <!-- 
                             <form-button type="submit" variant="primary" :disabled="!$hasPermission('employee.edit') || isSubmitting" :loading="isSubmitting" loading-without-hidden-text>
                                 SAVE
-                            </form-button> 
+                            </form-button>  
+                            -->
                         </div>   
-                        <div v-else>
+                        <!-- <div v-else>
                             <form-button :block="true" type="submit" variant="primary" :disabled="!$hasPermission('employee.edit') || isSubmitting" :loading="isSubmitting" loading-without-hidden-text>
                                 SAVE
                             </form-button>                                                                
-                        </div> 
+                        </div>  -->
                     </template>
                 </user-profile-form>
             </b-col>

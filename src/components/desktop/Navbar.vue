@@ -5,9 +5,20 @@
         <b-collapse id="nav-collapse" is-nav>
             <b-navbar-nav>
                 <b-nav-item :to="{name: 'dashboard'}">Dashboard</b-nav-item>
-                <b-nav-item-dropdown class="project-dropdown" no-caret>
+                <b-nav-item-dropdown 
+                    ref="projectDropdown" 
+                    class="project-dropdown" 
+                    no-caret
+                >
                     <template #button-content>
-                        Projects
+                        <div @mouseenter="projectDropdownHovered">
+                            <router-link 
+                                :to="{name: 'projects'}" 
+                                class="text-white text-decoration-none"
+                            >
+                                Projects
+                            </router-link>
+                        </div>
                     </template>
                     <b-dropdown-item class="project-names" href="javascript:;" active>
                         <div class="project-title active">
@@ -34,7 +45,13 @@
                     </b-dropdown-item>
                 </b-nav-item-dropdown>
                 <b-nav-item href="#">Recently Viewed</b-nav-item>
-                <b-nav-item v-if="$hasPermission('hrm.index') && $hasPermission('employee.index')" :to="{name: 'hrm-employees'}">HRM</b-nav-item>
+                <b-nav-item 
+                    v-if="$hasPermission('hrm.index') && $hasPermission('employee.index')" 
+                    :to="{name: 'hrm-employees'}"
+                    :active="inHrmRoutes"
+                >
+                    HRM
+                </b-nav-item>
                 <b-nav-item href="#">
                     <span class="h2">
                         <q-icon icon="bxs:message-square-add"/>
@@ -106,7 +123,11 @@ export default {
 
         getTime() {
             return this.$mm().format('LLLL')
-        }
+        },
+
+        inHrmRoutes() {
+            return this.$route.name.indexOf('hrm') !== -1
+        }     
     },
     methods: {
         async onLogout() {
@@ -152,7 +173,13 @@ export default {
             }
         },
 
+        projectDropdownHovered() {
+            this.$refs.projectDropdown.show()
+        },
 
+        projectDropdownBlur() {
+            this.$refs.projectDropdown.hide(true)
+        }
     }
 };
 </script>

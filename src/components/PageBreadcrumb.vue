@@ -1,8 +1,5 @@
 <template>
-    <div class="breadcrumb-wrapper shadow-sm">
-        <div class="breadcrumb-title text-break">
-            {{ breadcrumbTitle }}
-        </div>
+    <div class="breadcrumb-wrapper">
         <div class="breadcrumb-navigation">
             <div v-for="(item, index) in items" :key="index" class="breadcrumb-item text-truncate">
                 <router-link :to="{name: item.to || 'dashboard', params: item.params}" :class="{active: index === items.length - 1}">{{ item.title }}</router-link>
@@ -40,10 +37,7 @@
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
-    padding: 1rem;
-    background: #fff;
-    border-radius: 10px;
-    border: 1px solid var(--light);
+    padding: 1rem 1rem 1rem 0;
 
     .breadcrumb-title {
         font-size: 16px;
@@ -55,12 +49,13 @@
         max-width: 100%;
 
         .breadcrumb-item a{
-            color: var(--gray);
-            max-width: 150px;
+            font-weight: 400;
+            color: var(--primary);  
 
             &.active {
-                font-weight: bold;
-                color: var(--primary)
+                color: var(--gray);
+                max-width: 150px;
+                pointer-events: none;
             }
         }
     }
