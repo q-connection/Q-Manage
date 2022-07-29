@@ -8,8 +8,7 @@
                 <dashboard-statistics />
                 <div class="row">
                     <div class="col-12"  v-if="!$device.mobile">
-                        <Projects get-all>
-                            <QIcon slot="icon" icon="la:dot-circle" class="icon" width="24" height="24" />
+                        <Projects get-all is-show-icon>
                             <b-badge slot="badges" pill variant="success" class="badges-status">Task</b-badge>
                         </Projects>
                     </div>

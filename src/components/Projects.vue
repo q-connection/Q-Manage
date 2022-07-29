@@ -6,8 +6,15 @@
                 <b-list-group class="group-list-project" v-if="list.length > 0">
                     <b-list-group-item class="d-flex justify-content-between align-items-center list-project"
                         v-for="(p, index) in list" :key="index">
-                        <b-row :class="['item', { 'issue-attach': isShowIssues }]">
-                            <slot name="icon" />
+                        <b-row :class="['item', { 'issue-attach': isShowIssues, mobile: $device.mobile === true }]">
+                            <slot name="icon" v-bind:src="inmage" />
+                            <div v-if="isShowImage">
+                                <b-img class="project-image" :src="p?.thumbnail" rounded alt="Rounded image">
+                                </b-img>
+                            </div>
+                            <div v-if="isShowIcon">
+                                <QIcon slot="icon" icon="la:dot-circle" class="icon" width="24" height="24" />
+                            </div>
                             <div class="project-info">
                                 <div class="project-name">
                                     <div style="display: flex;">
@@ -28,10 +35,19 @@
                                 </div>
                             </div>
                         </b-row>
-                        <b-row class="list-avatar">
-                            <div v-for="(c, avatarIndex) in p.customers" :key="avatarIndex">
+                        <b-row class="list-avatar" v-if="!$device.mobile && $layout != 'mobile'">
+                            <div v-for="(c, avatarIndex) in p.customers.slice(0, 4)" :key="avatarIndex">
                                 <b-img class="avatar" :src="getAvatar(c.avatar)" rounded="circle" alt="Circle image">
                                 </b-img>
+                            </div>
+                        </b-row>
+                        <b-row class="list-avatar" :class="{ mobile: $device.mobile === true || $layout == 'mobile' }"
+                            v-else>
+                            <div>
+                                <QIcon icon="fa-solid:user-friends" color="#f0b01d" width="26" height="18" />
+                            </div>
+                            <div class="amount-project">
+                                {{ p.customers.length > 5 ? '5+' : p.customers.length }}
                             </div>
                         </b-row>
                     </b-list-group-item>
@@ -64,6 +80,8 @@
 <script>
 export default {
     data: () => ({
+        innerWidth: 0,
+        innerHeight: 0,
         list: [],
         task: 10,
         bug: 0,
@@ -76,6 +94,14 @@ export default {
     }),
     props: {
         isShowIssues: {
+            type: Boolean,
+            default: false
+        },
+        isShowIcon: {
+            type: Boolean,
+            default: false
+        },
+        isShowImage: {
             type: Boolean,
             default: false
         },
@@ -118,11 +144,12 @@ export default {
             this.fetchProjects()
         }
     },
-    mounted() {
+    async mounted() {
         if (this.getAll) this.queryParams.per_page = 10000
         this.queryParams.q = this.keySearch
-        this.fetchProjects()
-    },
+        await this.fetchProjects()
+    }
+
 }
 </script>
 <style lang="scss" scoped>
@@ -184,6 +211,28 @@ export default {
                     }
                 }
             }
+
+            &.mobile {
+                margin: 8px auto 8px 21px !important;
+
+                .project-info {
+                    .project-name {
+                        font-size: 14px;
+                    }
+
+                    .create-at {
+                        font-size: 10px;
+
+                        &.issue {
+                            font-size: 10px;
+                        }
+                    }
+                }
+
+                .project-image {
+                    margin-right: 15px;
+                }
+            }
         }
 
         .project-image {
@@ -206,6 +255,19 @@ export default {
                     margin-right: 32px;
                 }
             }
+
+
+            &.mobile {
+                margin-right: 25px;
+
+                .amount-project {
+                    margin-left: 6.5px;
+                    font-weight: 600;
+                    font-size: 14px;
+                    line-height: 17px;
+                    color: #F0B01D;
+                }
+            }
         }
 
     }
@@ -216,6 +278,7 @@ export default {
 .custom-pagination-last {
     display: none;
 }
+
 .custom-bg-np {
     .page-link {
         background-color: #F5F5F5 !important;
