@@ -1,15 +1,20 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
     <b-container fluid>
+        <b-row>
+            <b-col class="title-page">
+                Projects
+            </b-col>
+        </b-row>
         <b-row class="d-flex justify-content-between">
             <b-col md="10">
-                <form-button variant="outline-warning text-warning" type="submit" :disabled="isConfirming"
+                <form-button variant="outline-warning text-warning btn-open-modal" type="submit" :disabled="isConfirming"
                     :loading="isConfirming" @click="$bvModal.show('bv-modal-create-project')">
                     Create
                 </form-button>
             </b-col>
             <b-col>
-                <Search @searchData="searchData"  class="ml-auto" />
+                <Search @searchData="searchData" class="ml-auto" />
             </b-col>
         </b-row>
         <b-row>
@@ -408,14 +413,23 @@ export default {
         }
     }
 
-
     .btn-submit {
         width: 255.45px;
         height: 45px;
         margin-top: 10px;
     }
-
-
+}
+.btn-open-modal{
+    &:hover{
+        background: #FFFFFF;
+    }
+}
+.title-page {
+    font-size: 16px;
+    font-family: 'Inter';
+    line-height: 17px;
+    font-weight: 600;
+    margin-bottom: 30px;
 }
 </style>
 

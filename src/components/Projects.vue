@@ -3,19 +3,21 @@
     <div>
         <b-row>
             <b-col>
-                <b-list-group class="group-list-project">
+                <b-list-group class="group-list-project" v-if="list.length > 0">
                     <b-list-group-item class="d-flex justify-content-between align-items-center list-project"
                         v-for="(p, index) in list" :key="index">
                         <b-row :class="['item', { 'issue-attach': isShowIssues }]">
                             <slot name="icon" />
                             <div class="project-info">
                                 <div class="project-name">
-                                    {{ p?.name }}
+                                    <div style="display: flex;">
+                                        {{ p?.name }}
+                                        <slot name="badges" />
+                                    </div>
                                 </div>
                                 <div class="create-at">
                                     {{ p?.formatted_created_at }} by {{ p?.created_by }}
                                 </div>
-
                                 <div class="issue" v-show="isShowIssues">
                                     <label>
                                         Task: <span class="text-success">{{ task }}</span>
@@ -25,7 +27,6 @@
                                     </label>
                                 </div>
                             </div>
-                            <slot name="badges" />
                         </b-row>
                         <b-row class="list-avatar">
                             <div v-for="(c, avatarIndex) in p.customers" :key="avatarIndex">
@@ -33,6 +34,11 @@
                                 </b-img>
                             </div>
                         </b-row>
+                    </b-list-group-item>
+                </b-list-group>
+                <b-list-group v-else-if="queryParams.q != ''">
+                    <b-list-group-item class="text-center align-items-center list-project">
+                        <div> No matching records found</div>
                     </b-list-group-item>
                 </b-list-group>
             </b-col>
@@ -53,10 +59,8 @@
                 </div>
             </b-col>
         </b-row>
-
     </div>
 </template>
-
 <script>
 export default {
     data: () => ({
@@ -65,8 +69,8 @@ export default {
         bug: 0,
         total_rows: 0,
         queryParams: {
-            per_page: 1,
-            page: 10,
+            per_page: 10,
+            page: 1,
             q: ''
         }
     }),
@@ -75,14 +79,18 @@ export default {
             type: Boolean,
             default: false
         },
-        isShowPagination:{
-           type: Boolean,
+        isShowPagination: {
+            type: Boolean,
             default: false
         },
         keySearch: {
             type: String,
             default: "",
-        }
+        },
+        getAll: {
+            type: Boolean,
+            default: false,
+        },
     },
     methods: {
         async fetchProjects() {
@@ -91,7 +99,6 @@ export default {
                 if (!data.error) {
                     this.list = data.data.data
                     this.total_rows = data.data.total
-
                 }
             } catch (err) {
                 console.log(err)
@@ -112,13 +119,12 @@ export default {
         }
     },
     mounted() {
+        if (this.getAll) this.queryParams.per_page = 10000
         this.queryParams.q = this.keySearch
         this.fetchProjects()
     },
-
 }
 </script>
-
 <style lang="scss" scoped>
 .group-list-project {
     border-radius: 10px;
@@ -140,37 +146,33 @@ export default {
                 margin-top: 5px;
             }
 
-            .badges-status {
-                min-width: 24px;
-                height: 18px;
-                border-radius: 10px;
-                font-weight: 700;
-                font-size: 10px;
-                line-height: 12px;
-            }
-
             .project-info {
-                margin-right: 13px;
-
                 .project-name {
-                    font-style: normal;
                     font-weight: 600;
-                    font-size: 14px;
+                    font-size: 16px;
                     line-height: 17px;
                     margin-bottom: 2px;
                 }
 
-                .create-at {
-                    font-style: normal;
-                    font-weight: 500;
+                .badges-status {
+                    margin-left: 13px;
+                    min-width: 24px;
+                    height: 18px;
+                    border-radius: 10px;
+                    font-weight: 700;
                     font-size: 10px;
+                    line-height: 12px;
+                }
+
+                .create-at {
+                    font-weight: 500;
+                    font-size: 14px;
                     line-height: 12px;
                 }
 
                 .issue {
                     display: flex;
                     margin-top: 6px;
-                    font-style: normal;
                     font-weight: 500;
                     font-size: 10px;
                     line-height: 12px;
@@ -183,10 +185,9 @@ export default {
             }
         }
 
-
         .project-image {
             width: 44px;
-            height: 44px;
+            height: 46px; //cũ 44px
             margin-right: 28px;
             border-radius: 5px;
         }

@@ -34,11 +34,7 @@ export default {
         removePeople() {
             this.$emit('removePeople', this.user?.id)
         }
-
     },
-    mounted() {
-        console.log('user', this.user)
-    }
 }
 </script>
 <style lang="scss" scoped>
