@@ -5,7 +5,7 @@ import store from '@/store'
 
 //Routes
 import hm_routes from './hrm'
-import project_routes from './project-management'
+import project_routes from './project'
 import anno_routes from './announcements'
 
 Vue.use(VueRouter)
@@ -64,12 +64,6 @@ const base_routes = [
         name: 'reset-password',
         meta: { layout: 'blank', requiresGuest: true },
         component: () => import('@/views/AuthReset.vue')     
-    },  
-    {
-        path: '/projects',
-        name: 'projects',
-        meta: { layout: 'default', requiresAuth: true },
-        component: () => import('@/views/Projects.vue')     
     },  
 ]
 
