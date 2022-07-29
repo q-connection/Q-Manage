@@ -32,7 +32,7 @@
                             </div>
                             <div>
                                 <form-input-group class="d-none d-xl-block d-lg-block">
-                                    <b-form-input style="min-width: 285px; min-height: 40px" placeholder="Search..." v-model.lazy="queryParams.search"></b-form-input>
+                                    <b-form-input class="border-light" style="min-width: 285px; min-height: 40px" placeholder="Search..." v-model.lazy="queryParams.search"></b-form-input>
                                     <template #append>
                                         <span class="h3">
                                             <q-icon icon="bx:search-alt"/>
@@ -57,7 +57,7 @@
                     <b-td width="91%" class="text-cursor px-0" @click="$emit('onEdit', anno)" v-if="!onlyView">
                         <div class="text-break font-weight-bold d-flex">
                             <div class="d-flex justify-content-end mr-2" style="width: 40px">
-                                <span class="h5 text-warning" v-if="anno.high_priority">
+                                <span class="h5 text-warning mr-1" v-if="anno.high_priority">
                                     <q-icon icon="ant-design:star-filled"/>
                                 </span>
                                 <span class="h5 text-danger">
@@ -76,9 +76,10 @@
                         </div>                        
                     </b-td>
                     <b-td width="5%" v-if="!onlyView">
-                        <span class="h4 text-warning text-cursor" @click="newTab(anno.id)">
-                            <b-icon icon="eye-fill"/>
-                        </span>                                
+                        <div class="d-flex align-items-center">
+                            <form-button-icon class="mr-1" variant="success" icon="icon-park-outline:email-push" @click="onPushMail($event, anno.id)"/>
+                            <form-button-icon variant="warning" icon="bi:eye-fill" @click="newTab(anno.id)"/>   
+                        </div>                            
                     </b-td>
                     <b-td width="5%" v-else>
                         <span class="h3 text-warning" v-if="anno.high_priority">
@@ -209,6 +210,28 @@
             newTab(id) {
                 let routeData = this.$router.resolve({name: 'view-announcement', params: {id}});
                 window.open(routeData.href, '_blank');                
+            },
+
+            async onPushMail({toggleLoading}, id) {
+                try {
+                    toggleLoading(true)
+                    const { data } = await this.$http.post('announcements/send-mail/' + id)
+
+                    if(!data.error) {
+                        this.$showAlert({
+                            type: 'success',
+                            message: 'Sent mail to employees successfully'
+                        })
+                    }
+                } catch (err) {
+                    console.log(err)
+                    this.$showAlert({
+                        type: 'danger',
+                        message: 'Something went wrong, please try again later'
+                    })                    
+                } finally {
+                    toggleLoading(false)
+                }
             }
         }
     }

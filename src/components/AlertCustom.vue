@@ -1,6 +1,7 @@
 <template>
     <div class="alert-wrapper fade" :style="{width: clientWidth, height: clientHeight}" :class="{show: isActive === true}">
-        <div class="alert-wrapper--dialog" v-if="isActive">
+        <div class="alert-wrapper--dialog">
+            <div class="alert-wrapper--bg" @click="isActive = false"></div>
             <div class="alert-wrapper--dialog__content" :style="`width: ${alert_width}`">
                 <div class="alert-icon text-warning mb-2" v-if="type == 'confirm'">
                     <q-icon icon="bi:shield-lock-fill" style="font-size: 65px" v-if="!icon"/>
@@ -19,26 +20,26 @@
                     </b-form-group>
                     <div class="alert-confirm--buttons">
                         <div class="p-2">
-                            <b-button variant="secondary" @click="isActive = false">
-                                Cancel
+                            <b-button variant="outline-secondary" @click="isActive = false">
+                                No
                             </b-button>
                         </div>
                         <div class="p-2">
-                            <form-button variant="success" type="submit" :disabled="isConfirming" :loading="isConfirming">
-                                Confirm
+                            <form-button variant="outline-danger" type="submit" :disabled="isConfirming" :loading="isConfirming">
+                                Yes
                             </form-button>
                         </div>
                     </div>
                 </b-form>
                 <div class="alert-confirm--buttons" v-else-if="this.type == 'confirm' && !this.require_password">
                     <div class="p-2">
-                        <b-button variant="secondary" @click="isActive = false">
-                            Cancel
+                        <b-button variant="outline-secondary" @click="isActive = false">
+                            No
                         </b-button>
                     </div>
                     <div class="p-2">
-                        <form-button variant="success" @click="onCallback" :disabled="isConfirming" :loading="isConfirming">
-                            Confirm
+                        <form-button variant="outline-danger" @click="onCallback" :disabled="isConfirming" :loading="isConfirming">
+                            Yes
                         </form-button>
                     </div>
                 </div>                
@@ -71,7 +72,7 @@
             },
 
             clientHeight() {
-                return (this.innerHeight || window.innerHeight) + 'px'
+                return (this.innerHeight || window.innerHeight) + 50 + 'px'
             }
         },
 
@@ -83,7 +84,8 @@
                 timeout = 3500, 
                 callback = null, 
                 require_password = false, 
-                icon = null
+                icon = null,
+                alert_width = '360px'
             ) => {
                 this.title = title
                 this.message = message
@@ -92,6 +94,7 @@
                 this.callback = callback
                 this.require_password = require_password
                 this.icon = icon
+                this.alert_width = alert_width
 
                 if(type != 'confirm') {
                     setTimeout(() => {
@@ -131,7 +134,6 @@
 <style lang="scss" scoped>
     .alert-wrapper {
         position: fixed;
-        background: rgba(0, 0, 0, 0.1);
         z-index: 9999;
         top: 0;
         left: 0;
@@ -164,7 +166,17 @@
             transition: transform .3s ease-out;
             transition: transform .3s ease-out,-webkit-transform .3s ease-out;
             -webkit-transform: translate(0,-50px);
-            transform: translate(0,-50px);            
+            transform: translate(0,-50px);           
+            
+            .alert-wrapper--bg {
+                background: rgba(0, 0, 0, 0.1);
+                position: absolute;
+                z-index: -1;
+                width: 100%;
+                height: 100%;
+                top: 0;
+                left: 0
+            }
 
             .alert-wrapper--dialog__content {
                 position: absolute;
@@ -176,7 +188,7 @@
                 border-radius: 1rem;
                 width: 360px;
                 min-height: 210px;
-                max-width: 80%;
+                max-width: 90%;
                 max-height: 400px;
 
                 .alert-title {

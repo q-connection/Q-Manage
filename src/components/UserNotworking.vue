@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-show="false">
         <div id="user-notworking" v-if="not_working_users.length > 0">
             <div class="d-flex justify-content-between align-items-center mb-1">
                 <h5 class="mb-0 title-notworking">Not working today</h5>

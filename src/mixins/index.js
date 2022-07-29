@@ -28,9 +28,9 @@ export default {
     },
 
     methods: {
-        $showAlert({type = 'success', message = '', title = '', timeout = 3000, callback = null, require_password = false, icon = null}) {
+        $showAlert({type = 'success', message = '', title = '', timeout = 3000, callback = null, require_password = false, icon = null, alert_width = '360px'}) {
             const default_title = type == 'success' ? 'Successfully!' : 'Oops!'
-            this.$root.$emit('SHOW_ALERT', type, message, title ? title : default_title, timeout, callback, require_password, icon)
+            this.$root.$emit('SHOW_ALERT', type, message, title ? title : default_title, timeout, callback, require_password, icon, alert_width)
         },
 
         $formatCurrency(amount, code = 'VND') {
