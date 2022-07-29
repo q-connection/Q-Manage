@@ -39,7 +39,7 @@
                                 <b-img :src="urlImage" width="185" height="185" rounded alt="Rounded image">
                                 </b-img>
                                 <div class="upload-image">
-                                    <QIcon icon="ic:twotone-drive-folder-upload" class="icon-upload" color="black"
+                                    <QIcon icon="ic:twotone-drive-folder-upload" class="icon-upload" color="yellow"
                                         width="40" height="31" />
                                     <b-form-file class="input-upload-image" @change="onFileChange"
                                         v-model="formData.thumbnail" accept="image/*">
