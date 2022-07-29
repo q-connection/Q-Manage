@@ -8,8 +8,8 @@
         </b-row>
         <b-row class="d-flex justify-content-between">
             <b-col md="10">
-                <form-button variant="outline-warning text-warning btn-open-modal" type="submit" :disabled="isConfirming"
-                    :loading="isConfirming" @click="$bvModal.show('bv-modal-create-project')">
+                <form-button variant="outline-warning text-warning btn-open-modal" type="submit"
+                    :disabled="isConfirming" :loading="isConfirming" @click="$bvModal.show('bv-modal-create-project')">
                     Create
                 </form-button>
             </b-col>
@@ -39,7 +39,7 @@
             </template>
             <div class="d-block">
                 <validation-observer ref="profileForm" v-slot="{ handleSubmit }">
-                    <b-form @submit.prevent="handleSubmit(onSubmit)">
+                    <b-form @submit.prevent="handleSubmit(onSubmit)" ref="refCreateProject">
                         <b-row>
                             <b-col md="3" class="project-image">
                                 <b-img :src="urlImage" width="185" height="185" rounded alt="Rounded image">
@@ -53,7 +53,7 @@
                                             v-model="formData.thumbnail" accept="image/*"
                                             :state="$isValid(errors, valid)">
                                         </b-form-file>
-                                        <b-row style="margin-top: -20px;">
+                                        <b-row style="margin-top: -20px;margin-bottom: 10px;">
                                             <div class="small text-danger text-break">{{ errors[0] }}</div>
                                         </b-row>
                                     </validation-provider>
@@ -257,10 +257,11 @@ export default {
                 for (var key in this.formData) {
                     formData.append(key, this.formData[key]);
                 }
-                formData.append('form_customer_selected[]', this.formData['form_customer_selected'])
+
                 const { data } = await this.$http.post('projects', formData)
                 if (!data.error) {
                     this.$showAlert({ type: 'success', message: 'Create Project successfully!' })
+                    this.$refs.refCreateProject.reset()
                 }
             } catch (err) {
                 console.log(err)
@@ -419,11 +420,13 @@ export default {
         margin-top: 10px;
     }
 }
-.btn-open-modal{
-    &:hover{
+
+.btn-open-modal {
+    &:hover {
         background: #FFFFFF;
     }
 }
+
 .title-page {
     font-size: 16px;
     font-family: 'Inter';
