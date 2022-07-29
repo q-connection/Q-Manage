@@ -45,7 +45,7 @@
         </b-row>
         <b-row>
             <b-col>
-                <div class="float-right" style="margin-top: 27px" v-show="isShowPagination">
+                <div class="float-right" style="margin-top: 27px" v-show="isShowPagination && list.length > 0">
                     <b-pagination first-class="custom-pagination-first" last-class="custom-pagination-last"
                         v-model="queryParams.page" :total-rows="total_rows" :per-page="queryParams.per_page"
                         aria-controls="table-announcements">

@@ -99,7 +99,7 @@
                         </b-row>
                         <b-row class="add-people">
                             <b-col md="6">
-                                <b-form-group label="Collaborators" label-for="input-1">
+                                <b-form-group label-class="collaborator-name" label="Collaborators">
                                     <div class="d-flex">
                                         <b-select2 v-model="customer_selected" class="search-customer"
                                             placeholder="Search by employee ID or email" :options="list_customer"
@@ -430,6 +430,7 @@ export default {
 
 .btn-open-modal {
     margin-bottom: 13px;
+    font-size: 14px;
 
     &:hover {
         background: #FFFFFF;
@@ -448,6 +449,10 @@ export default {
 <style>
 .custom-content {
     padding: 30px;
+}
+
+.collaborator-name {
+    font-weight: 500;
 }
 
 .custom-header {
