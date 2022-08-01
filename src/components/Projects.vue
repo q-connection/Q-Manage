@@ -52,9 +52,9 @@
                         </b-row>
                     </b-list-group-item>
                 </b-list-group>
-                <b-list-group v-else-if="queryParams.q != ''">
+                <b-list-group v-else-if="queryParams.q != '' || list.length <= 0">
                     <b-list-group-item class="text-center align-items-center list-project">
-                        <div> No matching records found</div>
+                        <div>No records to show.</div>
                     </b-list-group-item>
                 </b-list-group>
             </b-col>
@@ -131,7 +131,7 @@ export default {
             }
         },
         getAvatar(avatar) {
-            return avatar ? avatar : '/images/default-user-avatar.png'
+            return avatar ? avatar : '/images/default-avatar-user.png'
         }
     },
     watch: {

@@ -7,7 +7,6 @@
             </b-col>
         </b-row>
         <div class="d-flex">
-            <!-- sm="12" md="12" lg="10"  -->
             <form-button variant="outline-warning text-warning btn-open-modal " :class="{ mobile: $layout == 'mobile' }"
                 type="submit" :disabled="isConfirming" :loading="isConfirming"
                 @click="$bvModal.show('bv-modal-create-project')">
@@ -17,7 +16,7 @@
         </div>
         <b-row>
             <b-col>
-                <Projects is-show-pagination is-show-issues is-show-image :key-search="key_search"/>
+                <Projects is-show-pagination is-show-issues is-show-image :key-search="key_search" />
             </b-col>
         </b-row>
         <b-modal id="bv-modal-create-project" header-class="custom-header" content-class="custom-content" hide-footer
@@ -35,15 +34,15 @@
                 <validation-observer ref="profileForm" v-slot="{ handleSubmit }">
                     <b-form @submit.prevent="handleSubmit(onSubmit)" ref="refCreateProject">
                         <b-row>
-                            <b-col md="3" sm="12" class="project-image">
-                                <b-img :src="urlImage" width="185" height="185" rounded alt="Rounded image">
-                                </b-img>
+                            <b-col lg="3" md="5" sm="12" class="project-image">
+                                <b-img :src="urlImage" width="185" height="185" rounded alt="Rounded image"></b-img>
                                 <div class="upload-image">
-                                    <QIcon icon="ic:twotone-drive-folder-upload" class="icon-upload" color="yellow"
-                                        width="40" height="31" />
+                                    <div class="icon-upload">
+                                        <QIcon icon="ic:sharp-drive-folder-upload" color="#f0b01d" width="40"
+                                            height="41" />
+                                    </div>
                                     <b-form-file class="input-upload-image" @change="onFileChange"
-                                        v-model="formData.thumbnail" accept="image/*">
-                                    </b-form-file>
+                                        v-model="formData.thumbnail" accept="image/*" />
                                 </div>
                                 <div>
                                     <validation-provider rules="ext:jpg,jpeg,png|size:3072" name="thumbnail"
@@ -54,8 +53,8 @@
                                     </validation-provider>
                                 </div>
                             </b-col>
-                            <b-col md="9" sm="12">
-                                <b-row md="8" sm="12">
+                            <b-col lg="9" md="7" sm="12">
+                                <b-row>
                                     <b-col>
                                         <validation-provider rules="required|max:255" name="project name" ref="name"
                                             v-slot="{ errors, valid }">
@@ -174,6 +173,7 @@
 import Projects from '@/components/Projects.vue';
 import Search from '@/components/Search.vue';
 import UserItem from '@/components/project/UserItem.vue';
+const PathImageDefaultUpload = "/images/projects/default-image-upload.png";
 export default {
     components: { Projects, Search, UserItem },
     data() {
@@ -183,7 +183,7 @@ export default {
             customer_selected: '',
             isConfirming: false,
             isSubmitting: false,
-            urlImage: '/images/default-user-avatar.png',
+            urlImage: PathImageDefaultUpload,
             customerFilter: (option, label, search) => {
                 let temp = search.toLowerCase();
                 return option.full_name.toLowerCase().indexOf(temp) > -1 ||
@@ -195,7 +195,7 @@ export default {
                 status: 'published',
                 list_customer_selected: [],
                 form_customer_selected: [],
-                thumbnail: '/images/default-user-avatar.png',
+                thumbnail: PathImageDefaultUpload,
 
             }
         }
@@ -268,8 +268,8 @@ export default {
                     this.$refs.refCreateProject.reset()
                     this.formData.list_customer_selected = []
                     this.formData.form_customer_selected = []
-                    this.formData.thumbnail = '/images/default-user-avatar.png'
-                    this.urlImage = '/images/default-user-avatar.png'
+                    this.formData.thumbnail = PathImageDefaultUpload
+                    this.urlImage = PathImageDefaultUpload
 
                 }
             } catch (err) {
@@ -343,19 +343,19 @@ export default {
             background: rgba(240, 176, 29, 0.35);
             width: 185px;
             padding: 20px;
-            height: 10px;
+            height: 57px;
         }
 
         /* Some padding */
         .icon-upload {
             position: absolute;
-            bottom: 5px;
+            bottom: 12px;
             margin-left: auto;
             margin-right: auto;
             left: 0;
             right: 0;
             text-align: center;
-            // background-color: #f0b01d;
+            cursor: pointer;
         }
 
         .input-upload-image {
