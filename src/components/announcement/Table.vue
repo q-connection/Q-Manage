@@ -215,26 +215,35 @@
                 window.open(routeData.href, '_blank');                
             },
 
-            async onPushMail({toggleLoading}, id) {
-                try {
-                    toggleLoading(true)
-                    const { data } = await this.$http.post('announcements/send-mail/' + id)
+            onPushMail({toggleLoading}, id) {
+                this.$showAlert({
+                    type: 'confirm',
+                    title: "Warning!",
+                    message: 'Really, do you want to send this email? There is no reversing this process.',
+                    callback: async ({dismiss}) => {
+                        try {
+                            toggleLoading(true)
+                            const { data } = await this.$http.post('announcements/send-mail/' + id)
 
-                    if(!data.error) {
-                        this.$showAlert({
-                            type: 'success',
-                            message: 'Sent mail to employees successfully'
-                        })
+                            if(!data.error) {
+                                dismiss(true)
+
+                                this.$showAlert({
+                                    type: 'success',
+                                    message: 'Sent mail to employees successfully'
+                                })
+                            }
+                        } catch (err) {
+                            console.log(err)
+                            this.$showAlert({
+                                type: 'danger',
+                                message: 'Something went wrong, please try again later'
+                            })                    
+                        } finally {
+                            toggleLoading(false)
+                        }
                     }
-                } catch (err) {
-                    console.log(err)
-                    this.$showAlert({
-                        type: 'danger',
-                        message: 'Something went wrong, please try again later'
-                    })                    
-                } finally {
-                    toggleLoading(false)
-                }
+                })
             }
         }
     }
