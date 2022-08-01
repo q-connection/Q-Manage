@@ -51,7 +51,7 @@
                     </b-td>
                     <b-td width="5%" class="text-cursor" @click="$router.push({name: 'view-announcement', params: {id: anno.id}})" v-else>
                         <div class="rounded overflow-hidden">
-                            <img :src="anno.thumbnail_url || '/images/image-placeholder.png'" style="width: 72px; height: 57px; object-fit: cover">
+                            <img :src="anno.thumbnail_url || '/images/image-placeholder.png'" style="width: 72px; height: 72px; object-fit: cover">
                         </div>
                     </b-td>
                     <b-td width="91%" class="text-cursor px-0" @click="$emit('onEdit', anno)" v-if="!onlyView">
@@ -70,6 +70,9 @@
                     <b-td width="95%" class="text-cursor" @click="$router.push({name: 'view-announcement', params: {id: anno.id}})" v-else>
                         <div class="text-break font-weight-bold">
                             {{ anno.title }}
+                        </div>
+                        <div class="small mt-1">
+                            {{ anno.short_description || '' }}
                         </div>
                         <div class="mt-3 small d-none d-xl-block d-lg-block">
                             {{ $mm(anno.created_at).format('LLLL') }}
