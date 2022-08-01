@@ -1,65 +1,40 @@
 <template>
     <div>
-        <div class="dashboard-statistics" :class="{mobile: $device.mobile === true}">
-            <div class="row" v-if="!$device.mobile">
-                <div class="col-12 col-xl-4 col-lg-4">
-                    <div class="d-flex align-items-center p-3" style="cursor: pointer" @click="$router.push({name: 'projects'})">
-                        <img src="/images/icons/projects.png"/>
-                        <div class="statistic-content ml-3">
-                            <h4 class="mb-1">PROJECTS</h4>
+        <div class="dashboard-statistics" :class="{mobile}">
+            <div class="row">
+                <div class="col-4 p-0">
+                    <div class="dashboard-item" style="cursor: pointer" @click="$router.push({name: 'projects'})">
+                        <div class="statistics-icon">
+                            <q-icon icon="bi:folder-check"/>
+                        </div>
+                        <div class="statistic-content">
+                            <div>PROJECTS</div>
                             <div>4 projects</div>
                         </div>
                     </div>
                 </div>
-                <div class="col-12 col-xl-4 col-lg-4">
-                    <div class="d-flex align-items-center p-3" style="cursor: pointer" @click="$router.push({name: 'tasks'})">
-                        <img src="/images/icons/tasks.png"/>
-                        <div class="statistic-content ml-3">
-                            <h4 class="mb-1">TASKS</h4>
+                <div class="col-4 p-0">
+                    <div class="dashboard-item" style="cursor: pointer" @click="$router.push({name: 'tasks'})">
+                        <div class="statistics-icon">
+                            <q-icon icon="fluent:clipboard-task-list-rtl-24-regular"/>
+                        </div>
+                        <div class="statistic-content">
+                            <div>TASKS</div>
                             <div>11 tasks</div>
                         </div>
                     </div>
                 </div>
-                <div class="col-12 col-xl-4 col-lg-4">
-                    <div class="d-flex align-items-center p-3" style="cursor: pointer" @click="$router.push({name: 'bugs'})">
-                        <img src="/images/icons/bugs.png"/>
-                        <div class="statistic-content ml-3">
-                            <h4 class="mb-1">BUGS</h4>
+                <div class="col-4 p-0">
+                    <div class="dashboard-item" style="cursor: pointer" @click="$router.push({name: 'bugs'})">
+                        <div class="statistics-icon">
+                            <q-icon icon="fluent:bug-prohibited-20-regular"/>
+                        </div>
+                        <div class="statistic-content">
+                            <div>BUGS</div>
                             <div>4 bugs</div>
                         </div>
                     </div>
                 </div>                      
-            </div>
-            <div class="row" v-else>
-                <div class="col-4">
-                    <div class="p-2 text-cursor text-center" style="cursor: pointer" @click="$router.push({name: 'projects'})">
-                        <div>
-                            <img src="/images/icons/projects.png"/>
-                        </div>
-                        <div class="statistic-content mt-2">
-                            <div class="font-weight-bold">PROJECTS</div>
-                            <div class="statistics-subtitle">4 projects</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-4">
-                    <div class="p-2 text-cursor text-center" style="cursor: pointer" @click="$router.push({name: 'tasks'})">
-                        <img src="/images/icons/tasks.png"/>
-                        <div class="statistic-content mt-2">
-                            <div class="font-weight-bold">TASKS</div>
-                            <div class="statistics-subtitle">11 tasks</div>
-                        </div>                        
-                    </div>                  
-                </div>
-                <div class="col-4">
-                    <div class="p-2 text-cursor text-center" style="cursor: pointer" @click="$router.push({name: 'bugs'})">
-                        <img src="/images/icons/bugs.png"/>
-                        <div class="statistic-content mt-2">
-                            <div class="font-weight-bold">BUGS</div>
-                            <div class="statistics-subtitle">4 bugs</div>
-                        </div>
-                    </div>                      
-                </div>
             </div>
         </div>
     </div>
@@ -67,31 +42,90 @@
 
 <script>
     export default {
-        
+        computed: {
+            mobile() {
+                return this.$device.mobile
+            }
+        }
     }
 </script>
 
 <style lang="scss" scoped>
 .dashboard-statistics {
-    background-color: #F5F5F5;
-    border-radius: 10px;
-    padding: .5rem;
+    padding: .75rem;
     margin-bottom: .75rem;
 
-    img {
-        height: 63px;
-        width: 76px;
-        object-fit: contain;
-    }
+    .row {
+        .col-4 {
+            &:first-child {
+                .dashboard-item {
+                    border-top-left-radius: 10px;
+                    border-bottom-left-radius: 10px;
+                }
+            }
 
-    &.mobile {
-        img {
-            height: 32px;
-            width: 38px
+            &:last-child {
+                .dashboard-item {
+                    border-top-right-radius: 10px;
+                    border-bottom-right-radius: 10px;
+                }
+            }     
+        }    
+    }       
+    
+    .dashboard-item {
+        background-color: #F5F5F5;
+        display: flex;
+        align-items: center;
+
+        .statistics-icon {
+            font-size: 76px;
+            color: var(--primary);
+            padding-left: 30px;
+            padding-right: 24px;
         }
 
-        .statistics-subtitle {
-            font-size: 12px
+        .statistic-content{
+            div {
+                &:first-child {
+                    font-size: 20px;
+                    font-weight: 700;
+                }
+                &:last-child {
+                    font-size: 14px;
+                }
+            }
+        }
+
+        &:hover {
+            background-color: rgba(224, 224, 224, 1);
+        }
+    }    
+
+    &.mobile {
+        
+        .dashboard-item {
+            flex-direction: column;
+            justify-content: center;
+
+            .statistic-content {
+                text-align: center;
+
+                div {
+                    &:first-child {
+                        font-size: 16px;
+                        font-weight: 600;
+                    }
+                    &:last-child {
+                        font-size: 12px;
+                        padding-bottom: .75rem;
+                    }
+                }
+            }
+
+            .statistics-icon {
+                font-size: 36px
+            }
         }
     }
 }

@@ -162,7 +162,9 @@ export default {
         border: 1px solid #E0E0E0;
 
         .item {
-            margin: 15px auto 14px 44px;
+            display: flex;
+            align-items: center;
+            padding: 15px 0 14px 44px;
 
             &.issue-attach {
                 margin: 8px auto 8px 35px !important;
@@ -243,6 +245,8 @@ export default {
         }
 
         .list-avatar {
+            display: flex;
+            align-items: center;
             margin: 0px;
 
             .avatar {

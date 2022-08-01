@@ -110,3 +110,32 @@
         }
     }
 }
+
+.custom-radio {
+    padding-left: 2.15rem;
+    line-height: 1.5rem;
+
+    .custom-control-label {
+        &::before {
+            height: 26px;
+            width: 26px;
+            left: -2.25rem;
+            top: -0.1rem;
+        }
+
+        &::after {
+            height: 26px;
+            width: 26px;
+            left: -2.25rem;
+            top: -0.125rem;
+        }
+    }
+
+    .custom-control-input:checked ~ .custom-control-label::after {
+        background-image: url("data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 width=%2712%27 height=%2712%27 viewBox=%27-4 -4 8 8%27><circle r=%273%27 fill=%27%23F0B01D%27/></svg>")
+    }
+
+    .custom-control-input:checked ~ .custom-control-label::before {
+        background-color: #fff;
+    }
+} 

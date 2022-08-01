@@ -15,6 +15,7 @@ import { messages } from 'vee-validate/dist/locale/en.json';
 import { Icon } from '@iconify/vue2';
 import vSelect from 'vue-select'
 import VueViewer from 'v-viewer'
+import VueLazyload from 'vue-lazyload'
 
 Object.keys(rules).forEach(rule => {
     extend(rule, rules[rule]);
@@ -52,6 +53,7 @@ Vue.use(progressBar, {
     inverse: false
 })
 Vue.use(VueViewer)
+Vue.use(VueLazyload)
 
 Vue.component('default-desktop-layout', DefaultLayout)
 Vue.component('blank-desktop-layout', BlankLayout)
