@@ -264,6 +264,8 @@
             },
 
             async onAvatarUpload({file, uploading}) {
+                if(!file) return
+                
                 try {
                     uploading(true)
                     const formData = new FormData()
