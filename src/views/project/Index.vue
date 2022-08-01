@@ -18,7 +18,7 @@
         <b-modal id="bv-modal-create-project" header-class="custom-header" content-class="custom-content" hide-footer
             size="xl" hide-header-close>
             <template #modal-title>
-                <div class="d-flex justify-content-between align-items-center mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
                     <h5 class="mb-0"> CREATE PROJECT</h5>
                     <span @click="$bvModal.hide('bv-modal-create-project')" style="cursor:pointer">
                         <QIcon icon="carbon:close-filled" class="close-modal float-right close-modal-custom"
@@ -26,7 +26,7 @@
                     </span>
                 </div> 
             </template>
-            <div class="d-block">
+            <div class="d-block" :class="{ mobile: $device.mobile === true }">
                 <validation-observer ref="profileForm" v-slot="{ handleSubmit }">
                     <b-form @submit.prevent="handleSubmit(onSubmit)" ref="refCreateProject">
                         <b-row>
@@ -61,7 +61,7 @@
                                             </b-form-group>
                                         </validation-provider>
                                     </b-col>
-                                    <b-col>
+                                    <b-col md="4" sm="12">
                                         <b-form-group label="Status" label-class="label-required">
                                             <b-form-radio-group 
                                                 id="radio-group-2"
@@ -80,8 +80,9 @@
                                             v-slot="{ errors, valid }">
                                             <b-form-group label="Description" :invalid-feedback="errors[0]"
                                                 label-class="label-required">
-                                                <b-form-textarea id="textarea-large" size="lg" placeholder="Description"
-                                                    v-model="formData.description" :state="$isValid(errors, valid)">
+                                                <b-form-textarea id="textarea-large" class="description" size="lg"
+                                                    placeholder="Description" v-model="formData.description"
+                                                    :state="$isValid(errors, valid)">
                                                 </b-form-textarea>
                                             </b-form-group>
                                         </validation-provider>
@@ -89,7 +90,7 @@
                                 </b-row>
                             </b-col>
                         </b-row>
-                        <b-row class="add-people">
+                        <b-row class="add-people" :class="{ mobile: $device.mobile === true }">
                             <b-col md="6">
                                 <b-form-group label-class="collaborator-name" label="Collaborators">
                                     <div class="d-flex">
@@ -137,15 +138,21 @@
                         </b-row>
                         <b-row>
                             <b-col md="12">
-                                <b-row>
+                                <b-row v-if="!$device.mobile">
                                     <b-col md="3" v-for="(item, index) in formData.list_customer_selected" :key="index">
                                         <UserItem :user="item" @removePeople="removePeople" />
                                     </b-col>
                                 </b-row>
+                                <b-row v-else class="flex-nowrap overflow-auto">
+                                    <div v-for="(item, index) in formData.list_customer_selected" :key="index">
+                                        <UserItem :user="item" @removePeople="removePeople" />
+                                    </div>
+                                </b-row>
                             </b-col>
                         </b-row>
                         <slot name="submitContent">
-                            <div class="d-flex justify-content-end">
+                            <div class="d-flex justify-content-end"
+                                :class="{ 'justify-content-end': $device.mobile === true }">
                                 <form-button class="btn-submit" size="lg" type="submit" variant="primary"
                                     :disabled="!$hasPermission('project.create') || isSubmitting"
                                     :loading="isSubmitting" loading-without-hidden-text>
@@ -277,24 +284,49 @@ export default {
                 this.isSubmitting = false
             }
         },
-        async searchData(val) {
+        searchData(val) {
             this.key_search = val
         }
     },
-    mounted() {
-        this.fetchCustomerList();
-    }
+    async mounted() {
+        await this.fetchCustomerList();
+    },
+
 }
 </script>
 <style lang="scss" scoped>
+.btn-open-modal {
+    margin-bottom: 13px;
+    font-size: 14px;
+
+    &:hover {
+        background: #FFFFFF;
+    }
+
+    &.mobile {
+        margin-left: auto;
+    }
+}
+
+.title-page {
+    font-size: 16px;
+    font-family: 'Inter';
+    line-height: 17px;
+    font-weight: 600;
+    margin-bottom: 30px;
+}
+
+
 #bv-modal-create-project {
     background: #FFFFFF;
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.25);
     border-radius: 29px;
     height: 604px;
 
-    .modal-content {
-        padding: 30px;
+    .mobile {
+        .project-image {
+            margin-bottom: 14px;
+        }
     }
 
     .project-image {
@@ -331,7 +363,17 @@ export default {
         }
     }
 
+    .description {
+        font-size: 14px;
+    }
+
     .add-people {
+        --vs-search-input-placeholder-color: #999999;
+        --vs-dropdown-option--active-bg: #fff;
+
+        &.mobile {
+            --vs-dropdown-option-padding: 0px;
+        }
 
         .v-select,
         .v-select {
@@ -362,9 +404,6 @@ export default {
                 line-height: 20px;
             }
         }
-
-        --vs-search-input-placeholder-color: #999999;
-        --vs-dropdown-option--active-bg: #fff;
 
         .user-item {
             display: flex;
@@ -419,28 +458,15 @@ export default {
         margin-top: 10px;
     }
 }
-
-.btn-open-modal {
-    margin-bottom: 13px;
-    font-size: 14px;
-
-    &:hover {
-        background: #FFFFFF;
-    }
-}
-
-.title-page {
-    font-size: 16px;
-    font-family: 'Inter';
-    line-height: 17px;
-    font-weight: 600;
-    margin-bottom: 30px;
-}
 </style>
 
-<style>
+<style  lang="scss">
 .custom-content {
-    padding: 30px;
+    padding: 10px;
+
+    &.mobile {
+        padding: 5px;
+    }
 }
 
 .collaborator-name {

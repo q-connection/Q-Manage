@@ -1,6 +1,6 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
-    <b-col class="user-item">
+    <b-col class="user-item" :class="{ mobile: $device.mobile === true }">
         <b-row>
             <div @click="removePeople">
                 <QIcon icon="ant-design:delete-outlined" class="delete-user" color="white" width="21" height="21" />
@@ -46,9 +46,14 @@ export default {
     border-radius: 26.5px;
     padding-top: 5px;
 
-    &:not(last-of-type, first-of-type) {
+    &:not(last-of-type, first-of-type, .mobile) {
         margin-right: 25px;
     }
+
+    &.mobile {
+        margin-right: 11px !important;
+    }
+
 
 
     .delete-user {
