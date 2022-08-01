@@ -6,24 +6,13 @@
                 Projects
             </b-col>
         </b-row>
-        <b-row class="d-flex justify-content-between">
-            <b-col md="10">
-                <form-button variant="outline-warning text-warning btn-open-modal" type="submit"
-                    :disabled="isConfirming" :loading="isConfirming" @click="$bvModal.show('bv-modal-create-project')">
-                    Create
-                </form-button>
-            </b-col>
-            <b-col>
-                <Search @searchData="searchData" class="ml-auto" />
-            </b-col>
-        </b-row>
         <b-row>
             <b-col>
-                <Projects is-show-pagination is-show-issues :key-search="key_search">
-                    <b-img slot="icon" class="project-image" src="https://picsum.photos/200/300" rounded
-                        alt="Rounded image">
-                    </b-img>
-                </Projects>
+                <project-table 
+                    show-thumbnail
+                    :show-create-button="$hasPermission('project.create')"    
+                    @create="$bvModal.show('bv-modal-create-project')"
+                />
             </b-col>
         </b-row>
         <b-modal id="bv-modal-create-project" header-class="custom-header" content-class="custom-content" hide-footer
@@ -35,31 +24,31 @@
                         <QIcon icon="carbon:close-filled" class="close-modal float-right close-modal-custom"
                             color="#fa4032" width="47" height="47" />
                     </span>
-                </div>
+                </div> 
             </template>
             <div class="d-block">
                 <validation-observer ref="profileForm" v-slot="{ handleSubmit }">
                     <b-form @submit.prevent="handleSubmit(onSubmit)" ref="refCreateProject">
                         <b-row>
-                            <b-col md="3" class="project-image">
-                                <b-img :src="urlImage" width="185" height="185" rounded alt="Rounded image">
-                                </b-img>
-                                <div class="upload-image">
-                                    <QIcon icon="ic:twotone-drive-folder-upload" class="icon-upload" color="black"
-                                        width="40" height="31" />
-                                    <validation-provider rules="ext:jpg,jpeg,png|size:3072" name="thumbnail"
-                                        ref="thumbnail" v-slot="{ errors, valid }">
-                                        <b-form-file class="input-upload-image" @change="onFileChange"
-                                            v-model="formData.thumbnail" accept="image/*"
-                                            :state="$isValid(errors, valid)">
-                                        </b-form-file>
-                                        <b-row style="margin-top: -20px;margin-bottom: 10px;">
-                                            <div class="small text-danger text-break">{{ errors[0] }}</div>
-                                        </b-row>
-                                    </validation-provider>
-                                </div>
+                            <b-col cols=12 xl=3 lg=3>
+                                <validation-provider 
+                                    rules="ext:jpg,jpeg,png|size:3072" 
+                                    name="thumbnail" 
+                                    ref="thumbnail"
+                                    v-slot="{errors, valid}"
+                                >
+                                    <div class="project-image pr-0 pr-xl-3">
+                                        <form-image-upload
+                                            v-model="formData.thumbnail"
+                                            :state="$isValid(errors, valid)"
+                                        />
+                                        <span class="text-danger small">
+                                            {{ errors[0] }}
+                                        </span>
+                                    </div>
+                                </validation-provider>
                             </b-col>
-                            <b-col md="9">
+                            <b-col cols=12 xl=9 lg=9>
                                 <b-row>
                                     <b-col>
                                         <validation-provider rules="required|max:255" name="project name" ref="name"
@@ -74,10 +63,13 @@
                                     </b-col>
                                     <b-col>
                                         <b-form-group label="Status" label-class="label-required">
-                                            <b-form-radio-group id="radio-group-2" v-model="formData.status"
-                                                name="radio-sub-component">
-                                                <b-form-radio value="published" size="lg">Active</b-form-radio>
-                                                <b-form-radio value="draft" size="lg">Inactive</b-form-radio>
+                                            <b-form-radio-group 
+                                                id="radio-group-2"
+                                                name="radio-sub-component"
+                                                v-model="formData.status"
+                                            >
+                                                <b-form-radio value="published">Active</b-form-radio>
+                                                <b-form-radio value="draft">Inactive</b-form-radio>
                                             </b-form-radio-group>
                                         </b-form-group>
                                     </b-col>
@@ -169,11 +161,11 @@
 </template>
 
 <script>
-import Projects from '@/components/Projects.vue';
-import Search from '@/components/Search.vue';
 import UserItem from '@/components/project/UserItem.vue';
+import ProjectTable from '@/components/project/Table.vue'
+
 export default {
-    components: { Projects, Search, UserItem },
+    components: { UserItem, ProjectTable },
     data() {
         return {
             list_customer: [],
@@ -193,7 +185,7 @@ export default {
                 status: 'published',
                 list_customer_selected: [],
                 form_customer_selected: [],
-                thumbnail: '/images/default-user-avatar.png',
+                thumbnail: '',
 
             }
         }
@@ -306,7 +298,7 @@ export default {
     }
 
     .project-image {
-        width: 185px;
+        width: 100%;
         height: 185px;
         border-radius: 10px;
         object-fit: cover;

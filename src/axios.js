@@ -8,7 +8,7 @@ const $http = axios.create({
 $http.interceptors.request.use(function (config) {
     app.$Progress.start()
     config.headers.Authorization = 'Bearer ' + localStorage.getItem('access_token')
-
+    
     return config;
   }, function (error) {
     app.$Progress.fail()

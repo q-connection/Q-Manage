@@ -6,12 +6,9 @@
             </div>
             <div class="col-12 col-xl-9 col-lg-10">
                 <dashboard-statistics />
-                <div class="row">
-                    <div class="col-12"  v-if="!$device.mobile">
-                        <Projects get-all>
-                            <QIcon slot="icon" icon="la:dot-circle" class="icon" width="24" height="24" />
-                            <b-badge slot="badges" pill variant="success" class="badges-status">Task</b-badge>
-                        </Projects>
+                <div class="row" v-if="!$device.mobile">
+                    <div class="col-12">
+                        <project-table/>
                     </div>
                 </div>
             </div>
@@ -24,16 +21,19 @@
 
 <script>
 import { mapState } from 'vuex';
-import Projects from '@/components/Projects.vue';
+import ProjectTable from '@/components/project/Table.vue'
 
 export default {
     name: "DashboardPage",
+    components: {ProjectTable},
     computed: {
         ...mapState({
             user: state => state.user || {}
         })
     },
-    components: { Projects }
+    data: () => ({
+        currentTab: 'project'
+    })
 }
 </script>
 

@@ -32,7 +32,7 @@
                             </div>
                             <div>
                                 <form-input-group class="d-none d-xl-block d-lg-block">
-                                    <b-form-input class="border-light" style="min-width: 285px; min-height: 40px" placeholder="Search..." v-model.lazy="queryParams.search"></b-form-input>
+                                    <b-form-input class="input-search" style="min-width: 285px; min-height: 40px" placeholder="Search..." v-model.lazy="queryParams.search"></b-form-input>
                                     <template #append>
                                         <span class="h3">
                                             <q-icon icon="bx:search-alt"/>
@@ -238,5 +238,7 @@
 </script>
 
 <style lang="scss" scoped>
-
+.input-search {
+    border: 1px solid #E0E0E0
+}
 </style>

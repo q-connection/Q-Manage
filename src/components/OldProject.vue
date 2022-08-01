@@ -6,7 +6,7 @@
                 <b-list-group class="group-list-project" v-if="list.length > 0">
                     <b-list-group-item class="d-flex justify-content-between align-items-center list-project"
                         v-for="(p, index) in list" :key="index">
-                        <b-row :class="['item', { 'issue-attach': isShowIssues }]">
+                        <div :class="['item', { 'issue-attach': isShowIssues }]">
                             <slot name="icon" />
                             <div class="project-info">
                                 <div class="project-name">
@@ -27,13 +27,13 @@
                                     </label>
                                 </div>
                             </div>
-                        </b-row>
-                        <b-row class="list-avatar">
+                        </div>
+                        <div class="list-avatar">
                             <div v-for="(c, avatarIndex) in p.customers" :key="avatarIndex">
                                 <b-img class="avatar" :src="getAvatar(c.avatar)" rounded="circle" alt="Circle image">
                                 </b-img>
                             </div>
-                        </b-row>
+                        </div>
                     </b-list-group-item>
                 </b-list-group>
                 <b-list-group v-else-if="queryParams.q != ''">
@@ -135,7 +135,9 @@ export default {
         border: 1px solid #E0E0E0;
 
         .item {
-            margin: 15px auto 14px 44px;
+            display: flex;
+            align-items: center;
+            padding: 15px 0 14px 44px;
 
             &.issue-attach {
                 margin: 8px auto 8px 35px !important;
@@ -194,6 +196,8 @@ export default {
         }
 
         .list-avatar {
+            display: flex;
+            align-items: center;
             margin: 0px;
 
             .avatar {

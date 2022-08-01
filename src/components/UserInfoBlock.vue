@@ -1,9 +1,9 @@
 <template>
     <div>
         <div class="dashboard-user-info mb-3" :class="{ mobile: $device.mobile === true }">
-            <div class="user-avatar shadow-sm">
+            <!-- <div class="user-avatar shadow-sm">
                 <img src="/images/default-avatar.png" />
-            </div>
+            </div> -->
             <div class="user-info">
                 <h5 class="mb-1">{{ user.fullname }}</h5>
                 <div>Department: <b>{{ user.department_name }}</b></div>
