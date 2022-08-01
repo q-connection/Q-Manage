@@ -10,7 +10,13 @@
                     hover
                 >
                     <template slot="tableHeadActions">
-                        <b-button variant="outline-primary" size="sm" class="p-2">
+                        <b-button 
+                            :to="{name: 'hrm-employees-create'}" 
+                            variant="outline-primary" 
+                            size="sm" 
+                            class="p-2"
+                            v-if="$hasPermission('employee.create')"
+                        >
                             Add
                         </b-button>
                     </template>

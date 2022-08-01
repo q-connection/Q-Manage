@@ -10,10 +10,16 @@ export default [
         component: () => import('@/views/hrm/Employees.vue')
     },
     {
-        path: '/hrm/employees/:id',
+        path: '/hrm/employees/edit/:id',
         name: 'hrm-employees-detail',
         meta: { layout: 'default', requiresAuth: true, requiresPermission: 'employee.edit' },
         component: () => import('@/views/hrm/EmployeeDetail.vue')
+    },
+    {
+        path: '/hrm/employees/create',
+        name: 'hrm-employees-create',
+        meta: { layout: 'default', requiresAuth: true, requiresPermission: 'employee.create' },
+        component: () => import('@/views/hrm/EmployeeCreate.vue')
     },
     {
         path: '/hrm/announcements',

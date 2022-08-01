@@ -2,56 +2,127 @@
     <b-card class="mb-5 card-profile" :class="{mobile: $device.mobile === true}" :title="cardTitle">
         <validation-observer ref="profileForm" v-slot="{handleSubmit}">
             <b-form @submit.prevent="handleSubmit(onSubmit)">
-                <b-tabs content-class="mt-3" fill>
+                <b-tabs fill>
                     <b-tab title="Basic Information">
-                        <b-row>
-                            <validation-provider tag="div" class="col-12 col-xl-4 col-lg-4" rules="required" name="last_name" ref="last_name" v-slot="{errors, valid}">
-                                <b-form-group label="Last name" :invalid-feedback="errors[0]" :state="$isValid(errors, valid)">
-                                    <b-form-input v-model="formData.last_name" :readonly="!$hasPermission('employee.edit') || readonly" :state="$isValid(errors, valid)"></b-form-input>
-                                </b-form-group>
-                            </validation-provider>
-                            <validation-provider tag="div" class="col-12 col-xl-4 col-lg-4" rules="required" name="first_name" ref="first_name" v-slot="{errors, valid}">
-                                <b-form-group label="First name" :invalid-feedback="errors[0]" :state="$isValid(errors, valid)">
-                                    <b-form-input v-model="formData.first_name" :readonly="!$hasPermission('employee.edit') || readonly" :state="$isValid(errors, valid)"></b-form-input>
-                                </b-form-group>
-                            </validation-provider>
-                                <validation-provider tag="div" class="col-12 col-xl-4 col-lg-4" rules="required|alpha_num" name="username" ref="username" v-slot="{errors, valid}">
-                                <b-form-group label="Username" :invalid-feedback="errors[0]" :state="$isValid(errors, valid)">
-                                    <b-form-input v-model="formData.username" :readonly="!$hasPermission('employee.edit') || readonly" :state="$isValid(errors, valid)"></b-form-input>
-                                </b-form-group>
-                                </validation-provider>
-                            <validation-provider tag="div" class="col-12 col-xl-4 col-lg-4" rules="required|email" name="email" ref="email" v-slot="{errors, valid}">
-                                <b-form-group label="Email" :invalid-feedback="errors[0]" :state="$isValid(errors, valid)">
-                                    <b-form-input v-model="formData.email" :readonly="!$hasPermission('employee.edit') || readonly" :state="$isValid(errors, valid)"></b-form-input>
-                                </b-form-group>
-                            </validation-provider>
-                            <validation-provider tag="div" class="col-12 col-xl-4 col-lg-4" rules="required|digits:10" name="phone" ref="phone" v-slot="{errors, valid}">
-                                <b-form-group label="Phone number" :invalid-feedback="errors[0]" :state="$isValid(errors, valid)">
-                                    <b-form-input v-model="formData.phone" :readonly="!$hasPermission('employee.edit') || readonly" :state="$isValid(errors, valid)"></b-form-input>
-                                </b-form-group>
-                            </validation-provider>
-                            <validation-provider tag="div" class="col-12 col-xl-4 col-lg-4" rules="required" name="dob" ref="dob" v-slot="{errors, valid}">
-                                <b-form-group label="Date of birth" :invalid-feedback="errors[0]" :state="$isValid(errors, valid)">
-                                    <b-form-datepicker 
-                                        v-model="formData.dob" 
-                                        :readonly="!$hasPermission('employee.edit') || readonly" 
-                                        :state="$isValid(errors, valid)"
-                                        :date-format-options="{year: 'numeric', month: 'numeric', day: 'numeric'}"
-                                        locale="vi"
+                        <b-row class="align-items-center">
+                            <b-col cols=12 xl=3 lg=3>
+                                <div class="d-flex justify-content-center">
+                                    <validation-provider 
+                                        tag="div" 
+                                        rules="ext:jpg,jpeg,png|size:3072" 
+                                        name="avatar" 
+                                        ref="avatar" 
+                                        class="avatar"
+                                        v-slot="{errors, valid}"
                                     >
-                                    </b-form-datepicker>
-                                </b-form-group>     
-                            </validation-provider>                           
+                                        <form-image-upload
+                                            v-model="formData.avatar"
+                                            :preview-url="formData.avatar_url"
+                                            :state="$isValid(errors, valid)"
+                                            avatar
+                                        />
+                                        <div class="text-danger text-center mt-1 small">
+                                            {{ errors[0] }}
+                                        </div>
+                                    </validation-provider>
+                                </div>
+                            </b-col>
+                            <b-col cols=12 xl=9 lg=9>
+                                <b-row>
+                                    <validation-provider tag="div" class="col-12 col-xl-6 col-lg-6" rules="required|max:30" name="last_name" ref="last_name" v-slot="{errors, valid}">
+                                        <b-form-group 
+                                            label="Last name" 
+                                            :invalid-feedback="errors[0]" 
+                                            :state="$isValid(errors, valid)"
+                                            label-class="font-weight-medium label-required"
+                                        >
+                                            <b-form-input v-model="formData.last_name" :readonly="!$hasPermission('employee.edit') || readonly" :state="$isValid(errors, valid)"></b-form-input>
+                                        </b-form-group>
+                                    </validation-provider>
+                                    <validation-provider tag="div" class="col-12 col-xl-6 col-lg-6" rules="required|max:30" name="first_name" ref="first_name" v-slot="{errors, valid}">
+                                        <b-form-group 
+                                            label="First name" 
+                                            :invalid-feedback="errors[0]" 
+                                            :state="$isValid(errors, valid)"
+                                            label-class="font-weight-medium label-required"
+                                        >
+                                            <b-form-input v-model="formData.first_name" :readonly="!$hasPermission('employee.edit') || readonly" :state="$isValid(errors, valid)"></b-form-input>
+                                        </b-form-group>
+                                    </validation-provider>
+                                        <validation-provider tag="div" class="col-12 col-xl-6 col-lg-6" rules="required|alpha_num" name="username" ref="username" v-slot="{errors, valid}">
+                                        <b-form-group 
+                                            label="Username" 
+                                            :invalid-feedback="errors[0]" 
+                                            :state="$isValid(errors, valid)"
+                                            label-class="font-weight-medium label-required"
+                                        >
+                                            <b-form-input v-model="formData.username" :readonly="!$hasPermission('employee.edit') || readonly" :state="$isValid(errors, valid)"></b-form-input>
+                                        </b-form-group>
+                                        </validation-provider>
+                                    <validation-provider tag="div" class="col-12 col-xl-6 col-lg-6" rules="required|email" name="email" ref="email" v-slot="{errors, valid}">
+                                        <b-form-group 
+                                            label="Email" 
+                                            :invalid-feedback="errors[0]" 
+                                            :state="$isValid(errors, valid)"
+                                            label-class="font-weight-medium label-required"
+                                        >
+                                            <b-form-input v-model="formData.email" :readonly="!$hasPermission('employee.edit') || readonly" :state="$isValid(errors, valid)"></b-form-input>
+                                        </b-form-group>
+                                    </validation-provider>
+                                    <validation-provider tag="div" class="col-12 col-xl-6 col-lg-6" rules="required|digits:10" name="phone" ref="phone" v-slot="{errors, valid}">
+                                        <b-form-group 
+                                            label="Phone number" 
+                                            :invalid-feedback="errors[0]" 
+                                            :state="$isValid(errors, valid)"
+                                            label-class="font-weight-medium label-required"
+                                        >
+                                            <b-form-input v-model="formData.phone" :readonly="!$hasPermission('employee.edit') || readonly" :state="$isValid(errors, valid)"></b-form-input>
+                                        </b-form-group>
+                                    </validation-provider>
+                                    <validation-provider tag="div" class="col-12 col-xl-6 col-lg-6" rules="required" name="dob" ref="dob" v-slot="{errors, valid}">
+                                        <b-form-group 
+                                            label="Date of birth" 
+                                            :invalid-feedback="errors[0]" 
+                                            :state="$isValid(errors, valid)"
+                                            label-class="font-weight-medium label-required"
+                                        >
+                                            <b-form-datepicker 
+                                                v-model="formData.dob" 
+                                                :readonly="!$hasPermission('employee.edit') || readonly" 
+                                                :state="$isValid(errors, valid)"
+                                                :date-format-options="{year: 'numeric', month: 'numeric', day: 'numeric'}"
+                                                locale="vi"
+                                            >
+                                            </b-form-datepicker>
+                                        </b-form-group>     
+                                    </validation-provider>                           
+                                    <validation-provider tag="div" class="col-12" rules="required|oneOf:male,female" name="gender" ref="gender" v-slot="{errors, valid}">
+                                        <b-form-group 
+                                            label="Gender" 
+                                            :invalid-feedback="errors[0]" 
+                                            :state="$isValid(errors, valid)"
+                                            label-class="font-weight-medium label-required"
+                                        >
+                                            <b-form-radio-group 
+                                                v-model="formData.gender"
+                                            >
+                                                <b-form-radio value="male">Male</b-form-radio>
+                                                <b-form-radio value="female">Female</b-form-radio>
+                                            </b-form-radio-group>
+                                        </b-form-group>     
+                                    </validation-provider>                           
+                                </b-row>
+                            </b-col>
                         </b-row>
                     </b-tab>
                     <b-tab title="Identify">
                         <b-row>
-                            <validation-provider tag="div" class="col-12 col-xl-4 col-lg-4" rules="required" name="id_number" ref="id_number" v-slot="{errors, valid}">
+                            <validation-provider tag="div" class="col-12 col-xl-4 col-lg-4" rules="numeric" name="id_number" ref="id_number" v-slot="{errors, valid}">
                                 <b-form-group label="ID Number" :invalid-feedback="errors[0]" :state="$isValid(errors, valid)">
                                     <b-form-input v-model="formData.id_number" :readonly="!$hasPermission('employee.edit') || readonly" :state="$isValid(errors, valid)"></b-form-input>
                                 </b-form-group>
                             </validation-provider>
-                            <validation-provider tag="div" class="col-12 col-xl-4 col-lg-4" rules="required" name="id_issuance_date" ref="id_issuance_date" v-slot="{errors, valid}">
+                            <validation-provider tag="div" class="col-12 col-xl-4 col-lg-4" name="id_issuance_date" ref="id_issuance_date" v-slot="{errors, valid}">
                                 <b-form-group label="ID Issuance at" :invalid-feedback="errors[0]" :state="$isValid(errors, valid)">
                                     <b-form-datepicker 
                                         v-model="formData.id_issuance_date" 
@@ -63,7 +134,7 @@
                                     </b-form-datepicker>                                            
                                 </b-form-group>
                             </validation-provider>      
-                            <validation-provider tag="div" class="col-12 col-xl-4 col-lg-4" rules="required" name="id_issued_by" ref="id_issued_by" v-slot="{errors, valid}">                  
+                            <validation-provider tag="div" class="col-12 col-xl-4 col-lg-4" name="id_issued_by" ref="id_issued_by" v-slot="{errors, valid}">                  
                                 <b-form-group label="ID Issue By" :invalid-feedback="errors[0]" :state="$isValid(errors, valid)">
                                     <b-form-input v-model="formData.id_issued_by" :readonly="!$hasPermission('employee.edit') || readonly" :state="$isValid(errors, valid)"></b-form-input>
                                 </b-form-group>  
@@ -72,7 +143,7 @@
                     </b-tab>
                     <b-tab title="Address">
                         <b-row>
-                            <validation-provider tag="div" class="col-12 col-xl-3 col-lg-3" rules="required" name="permanent_city" ref="permanent_city" v-slot="{errors, valid}">
+                            <validation-provider tag="div" class="col-12 col-xl-3 col-lg-3" name="permanent_city" ref="permanent_city" v-slot="{errors, valid}">
                                 <b-form-group label="Permanent city" :invalid-feedback="errors[0]" :state="$isValid(errors, valid)">
                                     <b-select2
                                         v-model="formData.permanent_city"
@@ -82,7 +153,7 @@
                                     />
                                 </b-form-group>
                             </validation-provider>
-                            <validation-provider tag="div" class="col-12 col-xl-3 col-lg-3" rules="required" name="permanent_district" ref="permanent_district" v-slot="{errors, valid}">
+                            <validation-provider tag="div" class="col-12 col-xl-3 col-lg-3" name="permanent_district" ref="permanent_district" v-slot="{errors, valid}">
                                 <b-form-group label="Permanent district" :invalid-feedback="errors[0]" :state="$isValid(errors, valid)">
                                     <b-select2
                                         v-model="formData.permanent_district"
@@ -92,7 +163,7 @@
                                     />                                            
                                 </b-form-group>      
                             </validation-provider>   
-                            <validation-provider tag="div" class="col-12 col-xl-3 col-lg-3" rules="required" name="permanent_ward" ref="permanent_ward" v-slot="{errors, valid}">
+                            <validation-provider tag="div" class="col-12 col-xl-3 col-lg-3" name="permanent_ward" ref="permanent_ward" v-slot="{errors, valid}">
                                 <b-form-group label="Permanent ward" :invalid-feedback="errors[0]" :state="$isValid(errors, valid)">
                                     <b-select2
                                         v-model="formData.permanent_ward"
@@ -102,12 +173,12 @@
                                     />    
                                 </b-form-group>       
                             </validation-provider>          
-                            <validation-provider tag="div" class="col-12 col-xl-3 col-lg-3" rules="required" name="permanent_address" ref="permanent_address" v-slot="{errors, valid}">
+                            <validation-provider tag="div" class="col-12 col-xl-3 col-lg-3" name="permanent_address" ref="permanent_address" v-slot="{errors, valid}">
                                 <b-form-group label="Permanent address" :invalid-feedback="errors[0]" :state="$isValid(errors, valid)">
                                     <b-form-input v-model="formData.permanent_address" :readonly="!$hasPermission('employee.edit') || readonly" :state="$isValid(errors, valid)"></b-form-input>
                                 </b-form-group>        
                             </validation-provider>   
-                            <validation-provider tag="div" class="col-12 col-xl-3 col-lg-3" rules="required" name="residence_city" ref="residence_city" v-slot="{errors, valid}">
+                            <validation-provider tag="div" class="col-12 col-xl-3 col-lg-3" name="residence_city" ref="residence_city" v-slot="{errors, valid}">
                                 <b-form-group label="Residence city" :invalid-feedback="errors[0]" :state="$isValid(errors, valid)">
                                     <b-select2
                                         v-model="formData.residence_city"
@@ -117,7 +188,7 @@
                                     />  
                                 </b-form-group>
                             </validation-provider>
-                            <validation-provider tag="div" class="col-12 col-xl-3 col-lg-3" rules="required" name="residence_district" ref="residence_district" v-slot="{errors, valid}">
+                            <validation-provider tag="div" class="col-12 col-xl-3 col-lg-3" name="residence_district" ref="residence_district" v-slot="{errors, valid}">
                                 <b-form-group label="Residence district" :invalid-feedback="errors[0]" :state="$isValid(errors, valid)">
                                     <b-select2
                                         v-model="formData.residence_district"
@@ -127,7 +198,7 @@
                                     />  
                                 </b-form-group>     
                             </validation-provider>    
-                            <validation-provider tag="div" class="col-12 col-xl-3 col-lg-3" rules="required" name="residence_ward" ref="residence_ward" v-slot="{errors, valid}">
+                            <validation-provider tag="div" class="col-12 col-xl-3 col-lg-3" name="residence_ward" ref="residence_ward" v-slot="{errors, valid}">
                                 <b-form-group label="Residence ward" :invalid-feedback="errors[0]" :state="$isValid(errors, valid)">
                                     <b-select2
                                         v-model="formData.residence_ward"
@@ -137,7 +208,7 @@
                                     />  
                                 </b-form-group>      
                             </validation-provider>            
-                            <validation-provider tag="div" class="col-12 col-xl-3 col-lg-3" rules="required" name="residence_address" ref="residence_address" v-slot="{errors, valid}">
+                            <validation-provider tag="div" class="col-12 col-xl-3 col-lg-3" name="residence_address" ref="residence_address" v-slot="{errors, valid}">
                                 <b-form-group label="Residence address" :invalid-feedback="errors[0]" :state="$isValid(errors, valid)">
                                     <b-form-input v-model="formData.residence_address" :readonly="!$hasPermission('employee.edit') || readonly" :state="$isValid(errors, valid)"></b-form-input>
                                 </b-form-group>  
@@ -184,8 +255,14 @@
                     </b-tab>
                 </b-tabs>
                 <slot name="submitContent">
-                    <div class="d-flex justify-content-end">
-                        <form-button type="submit" variant="primary" :disabled="!$hasPermission('employee.edit') || readonly || isSubmitting" :loading="isSubmitting" loading-without-hidden-text>
+                    <div class="d-flex justify-content-between mt-3">
+                        <router-link :to="{name: 'hrm-employees'}" class="btn btn-dark">
+                            <div class="d-flex align-items-center justify-content-center mt-1">
+                                <q-icon icon="eva:arrow-ios-back-outline"/>
+                                BACK
+                            </div>
+                        </router-link>
+                        <form-button type="submit" variant="primary" style="width: 250px; max-width: 50%" :disabled="!$hasPermission('employee.edit') || readonly || isSubmitting" :loading="isSubmitting" loading-without-hidden-text>
                             SAVE
                         </form-button>                      
                     </div>
@@ -196,7 +273,9 @@
 </template>
 
 <script>
+import FormImageUpload from './FormImageUpload.vue'
     export default {
+    components: { FormImageUpload },
         props: {
             user: {
                 type: [Object, String],
@@ -227,6 +306,8 @@
             residence_districts: [],          
             residence_wards: [],            
             formData: {
+                avatar: null,
+                avatar_url: '',
                 last_name: '',
                 first_name: '',
                 phone: '',
@@ -249,7 +330,8 @@
                 bank_branch: '',
                 bank_city: '',
                 social_insurance_number: '',
-                personal_tax_code: ''
+                personal_tax_code: '',
+                gender: 'male'
             }              
         }),
 
@@ -314,12 +396,14 @@
 
         methods: {
             initUser() {
-                if(this.user) {
+                if(Object.keys(this.user).length > 0) {
                     Object.keys(this.formData).forEach(key => {
                         if(['dob', 'id_issuance_date'].includes(key)) {
                             this.formData[key] = this.$mm(this.user[key], "DD-MM-YYYY").format('YYYY-MM-DD')
                         } else {
-                            this.formData[key] = this.user[key]
+                            if(key != 'avatar') {
+                                this.formData[key] = this.user[key]
+                            }
                         }
                     })
                 }                
@@ -341,12 +425,17 @@
             },            
 
             onSubmit() {
-                this.$emit('submit', {formData: this.formData, refs: this.$refs})
+                const formData = Object.assign({}, this.formData)
+
+                this.$emit('submit', {formData: this.$objToFormData(formData), refs: this.$refs})
             }
         }
     }
 </script>
 
 <style lang="scss" scoped>
-
+.avatar {
+    width: 240px;
+    height: 240px;
+}
 </style>

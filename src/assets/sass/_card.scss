@@ -11,27 +11,57 @@
 }
 
 .card-profile {
-    .nav-tabs {
-        flex-wrap: nowrap;
-        max-width: calc(100% - 5px);
-        overflow-x: auto;
-        overflow-y: hidden;
-        border-bottom: 1px solid var(--primary);
+    border: 0;
 
-        .nav-item {
-            max-width: 180px;
-            flex: none;
-            
-            .nav-link, .nav-link.active {
-                border-radius: 10px 10px 0px 0px;
-                border: 1px solid var(--primary);
-                font-weight: 500;
-            }
+    .card-body {
+        padding: 0
+    }
 
-            .nav-link.active {
-                color: #fff;
-                background-color: var(--primary);
+    .tabs {
+        > div {
+            padding: 0 1rem;
+        }
+
+        .tab-content {
+            margin-top: 0;
+            padding: 1rem;
+            border-radius: 10px;
+            border: 1px solid #E0E0E0
+        }
+
+        .nav-tabs {
+            flex-wrap: nowrap;
+            max-width: calc(100% - 5px);
+            overflow-x: auto;
+            overflow-y: hidden;
+            border-bottom: 0;
+
+            .nav-item {
+                max-width: 180px;
+                flex: none;
+                
+                .nav-link, .nav-link.active {
+                    border-radius: 10px 10px 0px 0px;
+                    border: 1px solid #E0E0E0;
+                    color: #E0E0E0;
+                    font-weight: 500;
+                }
+
+                .nav-link.active {
+                    color: #fff;
+                    background-color: var(--primary);
+                }
             }
         }
+    }
+}
+
+@media screen and (max-width: 990px) {
+    .card-profile {
+        .tabs {
+            > div {
+                padding: 0 .25rem;
+            }
+        }           
     }
 }

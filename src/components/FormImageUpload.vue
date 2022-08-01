@@ -3,14 +3,14 @@
     <div class="fiu-wrapper" :class="{valid: state === true, invalid: state === false, avatar}">
         <input ref="file" type="file" :accept="accept" style="display: none" @change="handleFileUpload"/>
         <div class="preview">
-            <img :src="preview"/>
+            <img-lazy-load :src="preview" error="/images/avatar-placeholder.png"/>
         </div>
-        <div class="overlay" @click="onClickUpload" v-if="!readonly"> 
+        <div class="overlay" @click="onClickUpload" v-if="!readonly && !avatar"> 
             <span class="h2">
                 <b-icon icon="upload"/>
             </span>
         </div>
-        <div class="overlay full" v-else @click="viewImage">
+        <div class="overlay full" v-if="readonly" @click="viewImage">
             <span class="h2 text-primary">
                 <q-icon icon="ant-design:eye-filled"/>                
             </span>
@@ -28,7 +28,7 @@
 <script>
     export default {
         props: {
-            value: [File, String],
+            value: [File, String, Object],
 
             accept: {
                 type: String,
