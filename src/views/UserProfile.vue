@@ -1,13 +1,18 @@
 <template>
     <b-container fluid>
-        <b-row class="mb-3">
+        <b-row class="mb-5">
             <b-col cols="12">
                 <b-card class="user-profile-wrapper" :class="{mobile: $device.mobile}">
-                    <div class="p-3 mb-3">
+                    <div class="p-3">
                         <b-row>
                             <b-col cols=12 xl=2 lg=2>
                                 <div class="avatar-modal">
-                                    <form-image-upload :preview-url="$user.avatar ? $user.avatar_url : null" readonly/>
+                                    <form-image-upload 
+                                        @upload="onAvatarUpload"
+                                        :preview-url="$user.avatar ? $user.avatar_url : null" 
+                                        readonly
+                                        avatar
+                                    />
                                 </div>
                             </b-col>
                             <b-col cols=12 xl=10 lg=10>
@@ -196,7 +201,7 @@
     export default {
         data: () => ({
             isSubmitting: false,
-            contracts: [],          
+            contracts: [],      
             changePwData: {
                 current_password: '',
                 new_password: '',
@@ -255,6 +260,30 @@
                     }
                 } finally {
                     this.isSubmitting = false
+                }
+            },
+
+            async onAvatarUpload({file, uploading}) {
+                try {
+                    uploading(true)
+                    const formData = new FormData()
+                    formData.append('avatar', file)
+                    
+                    const { data } = await this.$http.post('employee/update-avatar', formData)
+
+                    if(!data.error) {
+                        this.$showAlert({type: 'success', message: "Updated avatar successfully"})
+                        await this.$store.dispatch('fetchUser')
+                    } else {
+                        this.$showAlert({type: 'danger', message: data.message})
+                    }
+                } catch (err) {
+                    console.log(err)
+                    if(err.response.data) {
+                        this.$showAlert({type: 'danger', message: err.response.data.message})
+                    }               
+                } finally {
+                    uploading(false)
                 }
             },
 
@@ -329,8 +358,8 @@
 }
 
 .avatar-modal {
-    min-width: 185px;
-    height: 220px;
+    width: 230px;
+    height: 230px;
     overflow: hidden;
     margin-bottom: .75rem;
 }
