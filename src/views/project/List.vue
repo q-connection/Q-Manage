@@ -137,21 +137,35 @@
                                     }}</div>
                                 </validation-provider>
                             </b-col>
+
                         </b-row>
                         <b-row>
                             <b-col md="12">
-                                <b-row v-if="!$device.mobile">
+                                <b-row v-if="$device.mobile || $layout == 'mobile'">
+                                    <b-col sm="12">
+                                        <QIcon icon="fa-solid:user-friends" color="#f0b01d" width="26" height="18" />
+                                        <span class="amount-customer">
+                                            {{ formData.form_customer_selected.length > 5 ? '5+' :
+                                                    formData.form_customer_selected.length
+                                            }}
+                                        </span>
+                                    </b-col>
+                                </b-row>
+                                <b-row v-if="!$device.mobile && $layout != 'mobile'">
                                     <b-col md="3" v-for="(item, index) in formData.list_customer_selected" :key="index">
                                         <UserItem :user="item" @removePeople="removePeople" />
                                     </b-col>
                                 </b-row>
                                 <b-row v-else class="flex-nowrap overflow-auto">
-                                    <div v-for="(item, index) in formData.list_customer_selected" :key="index">
-                                        <UserItem :user="item" @removePeople="removePeople" />
-                                    </div>
+                                    <b-col md="12" class="d-flex">
+                                        <div v-for="(item, index) in formData.list_customer_selected" :key="index">
+                                            <UserItem :user="item" @removePeople="removePeople" />
+                                        </div>
+                                    </b-col>
                                 </b-row>
                             </b-col>
                         </b-row>
+
                         <slot name="submitContent">
                             <div class="d-flex justify-content-end"
                                 :class="{ 'justify-content-end': $device.mobile === true }">
@@ -452,6 +466,14 @@ export default {
             margin-right: auto;
             margin-right: 20px;
         }
+    }
+
+    .amount-customer {
+        margin-left: 6.5px;
+        font-weight: 600;
+        font-size: 14px;
+        line-height: 17px;
+        color: #F0B01D;
     }
 
     .btn-submit {

@@ -46,7 +46,7 @@
                             <div>
                                 <QIcon icon="fa-solid:user-friends" color="#f0b01d" width="26" height="18" />
                             </div>
-                            <div class="amount-project">
+                            <div class="amount-customer">
                                 {{ p.customers.length > 5 ? '5+' : p.customers.length }}
                             </div>
                         </b-row>
@@ -260,7 +260,7 @@ export default {
             &.mobile {
                 margin-right: 25px;
 
-                .amount-project {
+                .amount-customer {
                     margin-left: 6.5px;
                     font-weight: 600;
                     font-size: 14px;
