@@ -10,7 +10,13 @@
                     hover
                 >
                     <template slot="tableHeadActions">
-                        <b-button variant="outline-primary" size="sm" class="p-2">
+                        <b-button 
+                            :to="{name: 'hrm-employees-create'}" 
+                            variant="outline-primary" 
+                            size="sm" 
+                            class="p-2"
+                            v-if="$hasPermission('employee.create')"
+                        >
                             Add
                         </b-button>
                     </template>
@@ -63,7 +69,7 @@
                             <b-col cols=12 xl=5 lg=5>
                                 <div class="d-flex mb-2 flex-wrap">
                                     <div class="font-weight-bold text-title" style="min-width: 120px">Department:</div>
-                                    <div class="text-value">{{ selectedEmp.departments ? selectedEmp.departments[0].name : 'N/A' }}</div>
+                                    <div class="text-value">{{ selectedEmp.departments ? (selectedEmp.departments[0] ? selectedEmp.departments[0].name : 'N/A') : 'N/A' }}</div>
                                 </div>
                             </b-col>
                             <b-col cols=12 xl=7 lg=7>

@@ -51,7 +51,7 @@
                     </b-td>
                     <b-td width="5%" class="text-cursor" @click="$router.push({name: 'view-announcement', params: {id: anno.id}})" v-else>
                         <div class="rounded overflow-hidden">
-                            <img :src="anno.thumbnail_url || '/images/image-placeholder.png'" style="width: 72px; height: 57px; object-fit: cover">
+                            <img :src="anno.thumbnail_url || '/images/image-placeholder.png'" style="width: 72px; height: 72px; object-fit: cover">
                         </div>
                     </b-td>
                     <b-td width="91%" class="text-cursor px-0" @click="$emit('onEdit', anno)" v-if="!onlyView">
@@ -70,6 +70,9 @@
                     <b-td width="95%" class="text-cursor" @click="$router.push({name: 'view-announcement', params: {id: anno.id}})" v-else>
                         <div class="text-break font-weight-bold">
                             {{ anno.title }}
+                        </div>
+                        <div class="small mt-1">
+                            {{ anno.short_description || '' }}
                         </div>
                         <div class="mt-3 small d-none d-xl-block d-lg-block">
                             {{ $mm(anno.created_at).format('LLLL') }}
@@ -212,26 +215,35 @@
                 window.open(routeData.href, '_blank');                
             },
 
-            async onPushMail({toggleLoading}, id) {
-                try {
-                    toggleLoading(true)
-                    const { data } = await this.$http.post('announcements/send-mail/' + id)
+            onPushMail({toggleLoading}, id) {
+                this.$showAlert({
+                    type: 'confirm',
+                    title: "Warning!",
+                    message: 'Really, do you want to send this email? There is no reversing this process.',
+                    callback: async ({dismiss}) => {
+                        try {
+                            toggleLoading(true)
+                            const { data } = await this.$http.post('announcements/send-mail/' + id)
 
-                    if(!data.error) {
-                        this.$showAlert({
-                            type: 'success',
-                            message: 'Sent mail to employees successfully'
-                        })
+                            if(!data.error) {
+                                dismiss(true)
+
+                                this.$showAlert({
+                                    type: 'success',
+                                    message: 'Sent mail to employees successfully'
+                                })
+                            }
+                        } catch (err) {
+                            console.log(err)
+                            this.$showAlert({
+                                type: 'danger',
+                                message: 'Something went wrong, please try again later'
+                            })                    
+                        } finally {
+                            toggleLoading(false)
+                        }
                     }
-                } catch (err) {
-                    console.log(err)
-                    this.$showAlert({
-                        type: 'danger',
-                        message: 'Something went wrong, please try again later'
-                    })                    
-                } finally {
-                    toggleLoading(false)
-                }
+                })
             }
         }
     }

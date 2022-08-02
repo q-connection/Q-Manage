@@ -92,9 +92,9 @@
                     <b-dropdown-item :to="{name: 'profile'}">
                         <span><q-icon icon="bxs:user-rectangle"/>Profile</span>
                     </b-dropdown-item>
-                    <b-dropdown-item :to="{name: 'secutiry'}">
+                    <!-- <b-dropdown-item :to="{name: 'secutiry'}">
                         <span><q-icon icon="teenyicons:password-solid"/>Security</span>
-                    </b-dropdown-item>
+                    </b-dropdown-item> -->
                     <b-dropdown-item :to="{name: 'announcements'}">
                         <span><q-icon icon="zondicons:announcement"/>Announcements</span>
                     </b-dropdown-item>
