@@ -1,6 +1,6 @@
 <template>
     <div class="table-default-wrapper">
-        <b-table-simple class="table-qconnection" :hover="hover" :responsive="responsive">
+        <b-table-simple class="table-qconnection" :hover="hover" :class="{'table-responsive-md': responsive === true}">
             <b-thead>
                 <b-tr>
                     <b-td width="5%" v-if="selectable">
@@ -70,7 +70,7 @@
                 </b-tr>
             </b-tbody>
         </b-table-simple>
-        <div class="float-right">
+        <div class="d-flex justify-content-end">
             <b-pagination
                 v-model="queryParams.page"
                 :total-rows="totalItems"
@@ -203,8 +203,13 @@
             async fetchItems() {
                 try {
                     // this.tableLoading = true
-                    const { url }  = this.tableConfig
-                    const { data } = await this.$http.get(url, {params: this.queryParams})
+                    const { method = 'GET', params = {}, url }  = this.tableConfig
+
+                    const { data } = await this.$http({
+                        method,
+                        url,
+                        params: Object.assign(this.queryParams, params)
+                    })
 
                     if(!data.error) {
                         this.items = data.data.data
