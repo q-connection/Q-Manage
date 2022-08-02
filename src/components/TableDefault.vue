@@ -39,8 +39,11 @@
                             </slot>
                         </b-th>
                     </b-tr>
-                </template>
+                </template>             
                 <b-tr v-for="(row, rowIdx) in items" :key="rowIdx">
+                    <b-td width="5%" v-if="selectable">
+                        <b-checkbox :checked="selected.includes(row.id)" @change="toggleSelect(row.id)"/>
+                    </b-td>                       
                     <b-td v-for="(col, colIdx) in tableColumns" :key="colIdx" :width="col.width" :class="col.rowClass" @click="onRowClick(col, row)">
                         <slot :name="`row-${col.name}`" v-bind="{row}">
                             {{ row[col.name] || '' }}
@@ -158,7 +161,7 @@
                     return 1
                 }
 
-                return this.selectable ? total_columns - 1 : total_columns
+                return this.selectable ? total_columns + 1 : total_columns
             }
         },
 

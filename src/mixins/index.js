@@ -52,6 +52,10 @@ export default {
         },
 
         $hasPermission(name) {
+            if(this.$user.super_user == 1) {
+                return true
+            }
+
             const permissions = this.$userPermissions || {}
 
             return permissions[name] || false

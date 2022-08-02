@@ -98,6 +98,9 @@
                     <b-dropdown-item :to="{name: 'announcements'}">
                         <span><q-icon icon="zondicons:announcement"/>Announcements</span>
                     </b-dropdown-item>
+                    <b-dropdown-item :to="{name: 'policies'}">
+                        <span><q-icon icon="carbon:policy"/>Policies</span>
+                    </b-dropdown-item>
                     <b-dropdown-item @click="onLogout">
                         <span><q-icon icon="ri:logout-circle-r-fill"/>Sign Out</span>
                     </b-dropdown-item>

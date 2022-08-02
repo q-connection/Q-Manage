@@ -20,6 +20,20 @@
             @input="$emit('input', $event)"
             v-if="mode == 'input'"
         /> 
+        <b-form-textarea
+            :name="name"
+            :type="type"
+            :value="value" 
+            :readonly="readonly" 
+            :state="state"
+            :placeholder="placeholder"
+            :loading="loading"
+            :required="required"
+            :class="customClass"
+            :rows="rows"
+            @input="$emit('input', $event)"
+            v-if="mode == 'textarea'"
+        /> 
         <b-select2
             :name="name"
             :value="value" 
@@ -72,6 +86,7 @@
             placeholder: String,
             state: Boolean,
             error: String,
+            rows: String,
             readonly: Boolean,
             loading: Boolean,
             required: Boolean,
