@@ -31,7 +31,7 @@
             </b-button>
         </template>
         <template slot="row-id" slot-scope="{row}">
-            <div class="text-break font-weight-bold d-flex align-items-center">
+            <div class="text-break d-flex align-items-center">
                 <div class="d-flex justify-content-end mr-2" style="width: 60px">
                     <span class="h3 mb-0 mr-1 text-warning" v-if="row.high_priority" style="line-height: 0">
                         <q-icon icon="ant-design:star-filled"/>
@@ -40,7 +40,11 @@
                         <q-icon icon="carbon:policy"/>
                     </span>
                 </div>
-                <div>{{ row.name }}</div>
+                <div>
+                    <div class="font-weight-bold">{{ row.name }}</div>
+                    <div>{{ row.description.substring(0, 100) }}...</div>
+                    <div class="small mt-2">{{ $mm(row.created_at).format('LLL') }}</div>
+                </div>
             </div>
         </template>
         <template slot="row-action">
@@ -140,7 +144,7 @@
                 if(selected.length <= 0) {
                     return
                 }
-                
+
                 this.$showAlert({
                     type: 'confirm', 
                     title: "Warning!", 
