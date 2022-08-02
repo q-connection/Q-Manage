@@ -48,7 +48,7 @@
                 <b-nav-item 
                     v-if="$hasPermission('hrm.index') && $hasPermission('employee.index')" 
                     :to="{name: 'hrm-employees'}"
-                    :active="inHrmRoutes"
+                    :class="{'router-link-exact-active': inHrmRoutes === true}"
                 >
                     HRM
                 </b-nav-item>
