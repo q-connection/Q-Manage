@@ -6,6 +6,7 @@
                     :user="user" 
                     :is-submitting="isSubmitting" 
                     @submit="onSubmit"
+                    :creating="false"
                 />
             </b-col>
         </b-row>

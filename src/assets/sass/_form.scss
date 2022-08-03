@@ -95,7 +95,7 @@
 .v-select {
     .vs__dropdown-toggle {
         background: #FFFFFF;
-        // border: 1px solid #F59300;
+        border: 1px solid var(--primary);
         border-radius: 10px;
         min-height: 45px;
 
@@ -107,6 +107,18 @@
     &.vs--disabled {
         .vs__dropdown-toggle {
             background: var(--vs-disabled-bg);
+        }
+    }
+
+    &[state=true] {
+        .vs__dropdown-toggle {
+            border: 1px solid var(--success)
+        }
+    }
+
+    &[state=false] {
+        .vs__dropdown-toggle {
+            border: 1px solid var(--danger)
         }
     }
 }

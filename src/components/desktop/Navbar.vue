@@ -48,7 +48,7 @@
                 <b-nav-item 
                     v-if="$hasPermission('hrm.index') && $hasPermission('employee.index')" 
                     :to="{name: 'hrm-employees'}"
-                    :active="inHrmRoutes"
+                    :class="{'router-link-exact-active': inHrmRoutes === true}"
                 >
                     HRM
                 </b-nav-item>
@@ -97,6 +97,9 @@
                     </b-dropdown-item> -->
                     <b-dropdown-item :to="{name: 'announcements'}">
                         <span><q-icon icon="zondicons:announcement"/>Announcements</span>
+                    </b-dropdown-item>
+                    <b-dropdown-item :to="{name: 'policies'}">
+                        <span><q-icon icon="carbon:policy"/>Policies</span>
                     </b-dropdown-item>
                     <b-dropdown-item @click="onLogout">
                         <span><q-icon icon="ri:logout-circle-r-fill"/>Sign Out</span>
