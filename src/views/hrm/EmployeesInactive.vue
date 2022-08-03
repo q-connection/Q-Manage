@@ -3,9 +3,9 @@
         <b-row>
             <b-col cols=12>
                 <div class="d-flex justify-content-between align-items-center mb-2">
-                    <h5 class="mb-0">Active Employees</h5>
-                    <router-link :to="{name: 'hrm-employees-inactive'}">
-                        View Inactive Employees
+                    <h5 class="mb-0">Inactive Employees</h5>
+                    <router-link :to="{name: 'hrm-employees'}">
+                        Back to Active Employees
                     </router-link>
                 </div>
             </b-col>
@@ -165,7 +165,7 @@
             tableConfig: {
                 url: 'employee/list',
                 params: {
-                    status: 'active'
+                    status: 'inactive'
                 }
             },
             selectedEmp: null                
@@ -179,7 +179,7 @@
                         name: "id",
                         width: '5%',
                         rowClass: 'text-cursor',
-                        rowClicked: row => this.onRowClick(row)
+                        rowClicked: row => this.previewEmp(row)
                     },
                     {
                         label: "Name",
@@ -187,7 +187,7 @@
                         sort: true,
                         width: '90%',
                         rowClass: 'text-cursor',
-                        rowClicked: row => this.onRowClick(row)
+                        rowClicked: row => this.previewEmp(row)
                     },
                     {
                         label: 'Actions',

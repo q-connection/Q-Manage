@@ -111,6 +111,21 @@
                                             </b-form-radio-group>
                                         </b-form-group>     
                                     </validation-provider>                           
+                                    <validation-provider tag="div" class="col-12" rules="required|oneOf:active,inactive" name="status" ref="status" v-slot="{errors, valid}">
+                                        <b-form-group 
+                                            label="Status" 
+                                            :invalid-feedback="errors[0]" 
+                                            :state="$isValid(errors, valid)"
+                                            label-class="font-weight-medium label-required"
+                                        >
+                                            <b-form-radio-group 
+                                                v-model="formData.status"
+                                            >
+                                                <b-form-radio value="active">Active</b-form-radio>
+                                                <b-form-radio value="inactive">Inactive</b-form-radio>
+                                            </b-form-radio-group>
+                                        </b-form-group>     
+                                    </validation-provider>                           
                                 </b-row>
                             </b-col>
                         </b-row>
@@ -402,7 +417,8 @@
                 bank_city: '',
                 social_insurance_number: '',
                 personal_tax_code: '',
-                gender: 'male'
+                gender: 'male',
+                status: 'active'
             },
             contractColumns: [
                 {label: "Type", name: 'contract_type'},
