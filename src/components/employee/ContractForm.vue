@@ -75,7 +75,7 @@
                     </b-col>
                     <b-col cols=12 xl=4 lg=4>
                         <validation-provider
-                            rules="required"
+                            rules=""
                             name="document"
                             ref="document"
                             v-slot="{errors, valid}"
