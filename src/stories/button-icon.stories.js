@@ -1,29 +1,29 @@
-import FormButton from '../components/FormButton.vue';
+import FormButtonIcon from '../components/FormButtonIcon.vue';
 
 export default {
-  title: 'form-button',
-  component: FormButton,
+  title: 'form-button-icon',
+  component: FormButtonIcon,
   argTypes: {
     variant: {control: {type: 'select', options: ['primary', 'secondary', 'info', 'warning', 'danger', 'success', 'dark', 'light']}},
     type: {control: {type: 'select', options: ['button', 'submit']}},
-    size: {control: {type: 'select', options: ['sm', 'md']}}
+    size: {control: {type: 'select', options: ['sm', 'md']}},
+    fill: {control: {type: 'select', options: ['clear', 'bg-primary', 'bg-secondary', 'bg-light', 'bg-info', 'bg-success', 'bg-danger', 'bg-warning']}},
   }  
 };
 
 const Template = (args, { argTypes }) => ({
-    components: { FormButton },
+    components: { FormButtonIcon },
     props: Object.keys(argTypes),
-    template: '<FormButton v-bind="$props">{{ label }}</FormButton>'
+    template: '<FormButtonIcon v-bind="$props"></FormButtonIcon>'
 });
 
 const other_args = {
+    icon: 'ant-design:home-filled',
     type: 'button',
     size: 'md',
+    fill: 'clear',
     loading: false,
-    block: false,
     disabled: false,
-    loadingWithoutHiddenText: false,
-    label: 'Button'
 }
 
 //👇 Each story then reuses that template

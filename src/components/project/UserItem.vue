@@ -8,13 +8,13 @@
             <b-img src="https://picsum.photos/200" class="avatar" rounded="circle" alt="Circle image"></b-img>
             <b-col>
                 <div class="full-name">
-                    {{ user?.full_name }}
+                    {{ user.full_name }}
                 </div>
                 <div class="email">
-                    {{ user?.email }}
+                    {{ user.email }}
                 </div>
                 <div class="username">
-                    {{ user?.username }}
+                    {{ user.username }}
                 </div>
             </b-col>
         </b-row>

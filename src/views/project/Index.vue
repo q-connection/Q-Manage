@@ -104,13 +104,13 @@
                                                             rounded="circle" alt="Circle image"></b-img>
                                                         <b-col class="info">
                                                             <div class="full-name">
-                                                                {{ option?.full_name }}
+                                                                {{ option.full_name }}
                                                             </div>
                                                             <div class="email">
-                                                                {{ option?.email }}
+                                                                {{ option.email }}
                                                             </div>
                                                             <div class="username">
-                                                                {{ option?.username }}
+                                                                {{ option.username }}
                                                             </div>
                                                         </b-col>
                                                         <div @click="addPeople(option)"
