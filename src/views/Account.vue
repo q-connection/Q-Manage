@@ -125,6 +125,7 @@
     
     .form-control {
         width: 370px;
+        max-width: 100%;
         border: 0;
         min-height: 47px;
 
