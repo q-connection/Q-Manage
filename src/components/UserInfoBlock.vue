@@ -44,9 +44,8 @@ export default {
     .user-avatar {
         border-radius: 50%;
         background: var(--light);
-        width: 150px;
-        height: 150px;
-        padding: .5rem;
+        width: 185px;
+        height: 185px;
         border: 1px solid var(--light);
         overflow: hidden;
         margin-bottom: 10px;
