@@ -265,6 +265,7 @@
                         </div>
                         <div class="px-1">
                             <table-default
+                                ref="contracts"
                                 :columns="contractColumns"
                                 :config="contractTableConfig"
                                 :show-columns="false"
@@ -542,7 +543,7 @@
             },
 
             async onAddedNewContract() {
-                await this.fetchContracts({password: this.contract_pwd})
+                await this.$refs.contracts.refresh(true)
             },
 
             onViewContracts() {

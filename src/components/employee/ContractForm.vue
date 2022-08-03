@@ -5,7 +5,7 @@
                 <b-row>
                     <b-col cols=12 xl=4 lg=4>
                         <validation-provider
-                            rules="required|oneOf:freelaner,probation,official"
+                            rules="required|oneOf:freelancer,probation,official"
                             name="contract_type"
                             ref="contract_type"
                             v-slot="{errors, valid}"
