@@ -75,7 +75,7 @@
                             {{ anno.short_description || '' }}
                         </div>
                         <div class="mt-3 small d-none d-xl-block d-lg-block">
-                            {{ $mm(anno.created_at).format('LLLL') }}
+                            {{ $mm(anno.created_at).format('LLL') }}
                         </div>                        
                     </b-td>
                     <b-td width="5%" v-if="!onlyView">
