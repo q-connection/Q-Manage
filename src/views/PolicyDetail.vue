@@ -6,16 +6,16 @@
             </b-col>
             <b-col cols=12>
                 <b-card class="my-3" v-if="!isLoading">
-                    <h5>{{ anno.title }}</h5>
+                    <h5>{{ anno.name }}</h5>
                     <b-card-sub-title>{{ $mm(anno.created_at).format('LLL') }}</b-card-sub-title>
-                    <div class="mt-3" v-if="anno.files">
-                        <a :href="anno.files" target="_blank" class="text-primary h6">
+                    <div class="mt-3" v-if="anno.file">
+                        <a :href="anno.file" target="_blank" class="text-primary h6">
                             <q-icon icon="et:attachments"/>
-                            {{ getSplitedFile(anno.files) }}
+                            {{ getSplitedFile(anno.file) }}
                         </a>
                     </div>
                     <div class="mt-3" v-html="anno.description"></div>
-                    <PDF class="mt-3" :src="anno.files" :page="1" v-if="anno.files">
+                    <PDF class="mt-3" :src="anno.file" :page="1" v-if="anno.file">
                         <template slot="loading">
                             <b-spinner variant="primary" small>
                                 Loading document...
@@ -32,21 +32,6 @@
                     </div>
                 </b-card>
             </b-col>
-            <b-col cols=12 v-if="!isLoading && other_announcements.length > 0">
-                <h4>Other announcements</h4>
-                <b-row>
-                    <b-col cols=12 xl=3 lg=3 v-for="(item, index) in other_announcements" :key="index">
-                        <div class="announcement-item" :class="{mobile: $device.mobile === true}" @click="handleOtherAnnoClicked(item.id)">
-                            <div class="thumbnail">
-                                <img :src="item.thumbnail ? item.thumbnail_url : '/images/image-placeholder.png'">
-                            </div>
-                            <div class="title">
-                                {{ item.title }}
-                            </div>
-                        </div>
-                    </b-col>
-                </b-row>
-            </b-col>
         </b-row>
     </b-container>
 </template>
@@ -59,7 +44,6 @@
 
         data: () => ({
             anno: {},
-            other_announcements: [],
             isLoading: true
         }),
 
@@ -69,22 +53,22 @@
 
                 return [
                     {title: "Dashboard", to: "dashboard"},
-                    {title: "Announcements", to: "announcements"},
-                    {title: `${this.$lodash.isEmpty(this.anno) ? 'Loading...' : this.anno.title}`, to: "view-announcement", params}
+                    {title: "Policies", to: "policies"},
+                    {title: `${this.$lodash.isEmpty(this.anno) ? 'Loading...' : this.anno.name}`, to: "view-policy", params}
                 ]
             }
         },
 
         async mounted() {
             await this.fetchAnnocement()
-            await this.fetchOtherAnnocements()
+            // await this.fetchOtherAnnocements()
         },
 
         methods: {
             async fetchAnnocement(id = null) {
                 try {
                     const anno_id = id || this.$route.params.id
-                    const { data } = await this.$http.get('announcements/' + anno_id)
+                    const { data } = await this.$http.get('policies/' + anno_id)
 
                     if(!data.error) {
                         this.anno = data.data
@@ -130,7 +114,7 @@
             async handleOtherAnnoClicked(id) {
                 if(id == this.$route.params.id) return
 
-                this.$router.replace({name: 'view-announcement', params: {id}})       
+                this.$router.replace({name: 'view-policy', params: {id}})       
                 this.isLoading = true
                 this.anno = {}
                 this.other_announcements = []

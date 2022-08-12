@@ -7,6 +7,7 @@ import store from '@/store'
 import hm_routes from './hrm'
 import project_routes from './project'
 import anno_routes from './announcements'
+import policies_routes from './policies'
 
 Vue.use(VueRouter)
 
@@ -34,6 +35,12 @@ const base_routes = [
         name: 'dashboard',
         meta: { layout: 'default', requiresAuth: true },
         component: () => import('@/views/Dashboard.vue')
+    },
+    {
+        path: '/user',
+        name: 'account',
+        meta: { layout: 'default', requiresAuth: true },
+        component: () => import('@/views/Account.vue')
     },
     {
         path: '/user/profile',
@@ -67,7 +74,12 @@ const base_routes = [
     },  
 ]
 
-const routes = base_routes.concat(hm_routes, project_routes, anno_routes)
+const routes = base_routes.concat(
+    hm_routes, 
+    project_routes, 
+    anno_routes,
+    policies_routes
+)
 
 const router = new VueRouter({
     mode: 'history',

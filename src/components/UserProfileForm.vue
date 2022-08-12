@@ -2,7 +2,7 @@
     <b-card class="mb-5 card-profile" :class="{mobile: $device.mobile === true}" :title="cardTitle">
         <validation-observer ref="profileForm" v-slot="{handleSubmit}">
             <b-form @submit.prevent="handleSubmit(onSubmit)">
-                <b-tabs fill>
+                <b-tabs v-model="tabIndex" fill>
                     <b-tab title="Basic Information">
                         <b-row class="align-items-center">
                             <b-col cols=12 xl=3 lg=3>
@@ -108,6 +108,21 @@
                                             >
                                                 <b-form-radio value="male">Male</b-form-radio>
                                                 <b-form-radio value="female">Female</b-form-radio>
+                                            </b-form-radio-group>
+                                        </b-form-group>     
+                                    </validation-provider>                           
+                                    <validation-provider tag="div" class="col-12" rules="required|oneOf:active,inactive" name="status" ref="status" v-slot="{errors, valid}">
+                                        <b-form-group 
+                                            label="Status" 
+                                            :invalid-feedback="errors[0]" 
+                                            :state="$isValid(errors, valid)"
+                                            label-class="font-weight-medium label-required"
+                                        >
+                                            <b-form-radio-group 
+                                                v-model="formData.status"
+                                            >
+                                                <b-form-radio value="active">Active</b-form-radio>
+                                                <b-form-radio value="inactive">Inactive</b-form-radio>
                                             </b-form-radio-group>
                                         </b-form-group>     
                                     </validation-provider>                           
@@ -253,6 +268,68 @@
                             </validation-provider>
                         </b-row>
                     </b-tab>
+                    <b-tab @click="onViewContracts" v-if="!creating">
+                        <template #title>
+                            <span>
+                                Contracts
+                                <q-icon icon="wpf:key-security"/>
+                            </span>                            
+                        </template>
+                        <div class="mb-3">
+                            <ContractForm :user_id="user ? user.id : null" @added="onAddedNewContract"/>
+                        </div>
+                        <div class="px-1">
+                            <table-default
+                                ref="contracts"
+                                :columns="contractColumns"
+                                :config="contractTableConfig"
+                                :show-columns="false"
+                                hover   
+                                responsive
+                                v-if="contract_pwd && contractSecurityPassed" 
+                            >
+                                <template slot="row-contract_type" slot-scope="{row}">
+                                    <div class="d-flex align-items-center">
+                                        <div class="h2 mb-0 mr-2 text-primary" style="line-height: 0">
+                                            <q-icon icon="clarity:contract-solid"/>
+                                        </div>
+                                        <div class="font-weight-bold" v-if="row.contract_type == 'official'">Official Contract</div>
+                                        <div class="font-weight-bold" v-if="row.contract_type == 'freelancer'">Freelancer Contract</div>
+                                        <div class="font-weight-bold" v-if="row.contract_type == 'probation'">Probation Contract</div>
+                                    </div>
+                                </template>
+                                <template slot="row-contract_start_date" slot-scope="{row}">
+                                    <div style="min-width: 120px">
+                                        <div class="d-flex">
+                                            <span class="font-weight-medium small d-none d-xl-block d-lg-block" style="width: 60px">Start Date:</span> 
+                                            <span class="font-weight-bold text-primary ml-2">{{ row.contract_start_date }}</span>
+                                        </div>
+                                        <div class="d-flex">
+                                            <span class="font-weight-medium small d-none d-xl-block d-lg-block" style="width: 60px">End Date:</span> 
+                                            <span class="font-weight-bold text-primary ml-2">{{ row.contract_end_date }}</span>
+                                        </div>
+                                    </div>
+                                </template>
+                                <template slot="row-contract_salary" slot-scope="{row}">
+                                    <div class="d-flex align-items-center" style="min-width: 120px">
+                                        <div class="h2 mb-0 mr-2 text-primary" style="line-height: 0">
+                                            <q-icon icon="dashicons:money-alt"/>
+                                        </div>
+                                        <div class="font-weight-bold mb-0" style="line-height: 0">
+                                             {{ $formatCurrency(row.contract_salary, 'VND') }}
+                                        </div>
+                                    </div>                                    
+                                </template>
+                                <template slot="row-action" slot-scope="{row}">
+                                    <a class="text-primary" :href="row.document_url || 'javascript:;'" target="_blank">
+                                        <span class="h1 mb-0" style="line-height: 0">
+                                            <q-icon icon="wpf:view-file"/>
+                                        </span> 
+                                    </a>
+                                </template>
+                            </table-default>                          
+                        </div>
+                    </b-tab>
                 </b-tabs>
                 <slot name="submitContent">
                     <div class="d-flex justify-content-between mt-3">
@@ -268,14 +345,15 @@
                     </div>
                 </slot>   
             </b-form>
-        </validation-observer>                           
+        </validation-observer>                                    
     </b-card>
 </template>
 
 <script>
-import FormImageUpload from './FormImageUpload.vue'
+    import ContractForm from '@/components/employee/ContractForm.vue'
+
     export default {
-    components: { FormImageUpload },
+    components: { ContractForm },
         props: {
             user: {
                 type: [Object, String],
@@ -295,6 +373,11 @@ import FormImageUpload from './FormImageUpload.vue'
             readonly: {
                 type: Boolean,
                 default: false
+            },
+
+            creating: {
+                type: Boolean,
+                default: true
             }
         },
 
@@ -304,7 +387,10 @@ import FormImageUpload from './FormImageUpload.vue'
             wards: [],
             residence_cities: [],
             residence_districts: [],          
-            residence_wards: [],            
+            residence_wards: [],          
+            contractSecurityPassed: false,  
+            tabIndex: 0,
+            contract_pwd: '',
             formData: {
                 avatar: null,
                 avatar_url: '',
@@ -331,14 +417,32 @@ import FormImageUpload from './FormImageUpload.vue'
                 bank_city: '',
                 social_insurance_number: '',
                 personal_tax_code: '',
-                gender: 'male'
-            }              
+                gender: 'male',
+                status: 'active'
+            },
+            contractColumns: [
+                {label: "Type", name: 'contract_type'},
+                {label: "Duration", name: 'contract_start_date'},
+                {label: "Salary", name: 'contract_salary'},
+                {label: "Action", name: 'action'},
+            ]          
         }),
 
         computed: {
             cardTitle() {
                 return this.title || this.user.fullname
-            }
+            },
+
+            contractTableConfig() {
+                return {
+                    url: 'employee/contracts',
+                    method: 'post',
+                    params: {
+                        password: this.contract_pwd,
+                        user_id: this.user ? this.user.id : ''
+                    }
+                }
+            }             
         },
 
         watch: {
@@ -428,6 +532,52 @@ import FormImageUpload from './FormImageUpload.vue'
                 const formData = Object.assign({}, this.formData)
 
                 this.$emit('submit', {formData: this.$objToFormData(formData), refs: this.$refs})
+            },
+
+            async fetchContracts({dismiss, password}) {
+                try {
+                    const { data } = await this.$http.post("employee/verify-permission", {password, permission: 'employee.edit'})
+                    
+                    if(data.error) {
+                        this.$showAlert({type: 'danger', message: data.message})
+                    } else {
+                        if(typeof dismiss == 'function') {
+                            dismiss()
+                        }
+
+                        this.contract_pwd = password
+                        this.contractSecurityPassed = true
+                        this.tabIndex = 5
+                    }
+                } catch (err) {
+                    console.log(err)
+                    
+                    if(err.response && err.response.data) {
+                        this.$showAlert({type: 'danger', message: err.response.data.message})
+                    }
+                }
+            },
+
+            async onAddedNewContract() {
+                await this.$refs.contracts.refresh(true)
+            },
+
+            onViewContracts() {
+                this.$nextTick(() => {
+                    this.tabIndex = 0
+                })
+
+                if(this.contractSecurityPassed) {
+                    return
+                }
+
+                this.$showAlert({
+                    type: 'confirm', 
+                    title: "View Contract", 
+                    message: 'Enter your password and click CONFIRM to view contract detail',
+                    require_password: true,
+                    callback: this.fetchContracts
+                })
             }
         }
     }

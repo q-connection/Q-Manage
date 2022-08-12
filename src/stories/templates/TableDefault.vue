@@ -98,6 +98,8 @@
 </template>
 
 <script>
+    import $lodash from 'lodash'
+
     export default {
         props: {
             columns: {
@@ -182,6 +184,13 @@
                 if(newval) {
                     await this.fetchItems()
                 }
+            },
+
+            config: {
+                deep: true,
+                handler(newval) {
+                    this.initData()
+                }
             }
         },
 
@@ -264,7 +273,7 @@
                 var pg = page || 1,
                     pgSize = pageSize || 100,
                     offset = (pg - 1) * pgSize,
-                    pagedItems = this.$lodash.drop(items, offset).slice(0, pgSize);
+                    pagedItems = $lodash.drop(items, offset).slice(0, pgSize);
                 return {
                     page: pg,
                     pageSize: pgSize,

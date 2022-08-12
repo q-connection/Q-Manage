@@ -19,7 +19,7 @@
             </router-link>
         </div>
         <div class="mobile-navbar--item">
-            <router-link class="d-flex flex-column justify-content-center align-items-center text-cursor text-decoration-none" :to="{name: 'profile'}">
+            <router-link class="d-flex flex-column justify-content-center align-items-center text-cursor text-decoration-none" :to="{name: 'account'}">
                 <div class="icon h4 mb-0"><q-icon icon="ic:sharp-account-circle"/></div>
                 <div class="title">Account</div>
             </router-link>

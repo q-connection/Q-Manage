@@ -1,21 +1,19 @@
 <template>
     <div>
         <div class="dashboard-user-info mb-3" :class="{ mobile: $device.mobile === true }">
-            <!-- <div class="user-avatar shadow-sm">
-                <img src="/images/default-avatar.png" />
-            </div> -->
+            <div class="user-avatar shadow-sm" v-lazy-container="{selector: 'img'}">
+                <img :data-src="user.avatar_url"  data-error="/images/default-avatar.png" />
+            </div>
             <div class="user-info">
                 <h5 class="mb-1">{{ user.fullname }}</h5>
-                <div>Department: <b>{{ user.department_name }}</b></div>
+                <div class="text-primary">{{ user.department_name }}</div>
                 <div>Position: <b>{{ user.role_name }}</b></div>
                 <div>Point: <b>{{ user.point || 0 }}</b></div>
                 <div>Check-in at: <b class="text-danger">{{ formatTime(user.today_check_in_at) }}</b></div>
                 <div>Check-out at: <b class="text-danger">{{ formatTime(user.today_check_out_at) }}</b></div>
                 <hr v-if="!$device.mobile">
-                <user-notworking v-if="!$device.mobile" />
             </div>
         </div>
-        <notification-main class="mb-3" v-if="$device.mobile" />
     </div>
 </template>
 
@@ -46,9 +44,8 @@ export default {
     .user-avatar {
         border-radius: 50%;
         background: var(--light);
-        width: 150px;
-        height: 150px;
-        padding: .5rem;
+        width: 185px;
+        height: 185px;
         border: 1px solid var(--light);
         overflow: hidden;
         margin-bottom: 10px;

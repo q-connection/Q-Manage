@@ -4,6 +4,7 @@ import currencyFormatter from 'currency-formatter'
 import lodash from 'lodash'
 
 export default {
+    components: {},
     computed: {
         $http() {
             return $http
@@ -28,7 +29,7 @@ export default {
         $layout() {
             let device = this.$device.mobile ? "mobile" : "desktop";
             let innerWidth = window.innerWidth;
-            console.log('this.innerWidth', innerWidth)
+            
             if (device == 'desktop' && innerWidth < 1200) {
                 device = 'mobile'
             }
@@ -52,6 +53,10 @@ export default {
         },
 
         $hasPermission(name) {
+            if(this.$user.super_user == 1) {
+                return true
+            }
+
             const permissions = this.$userPermissions || {}
 
             return permissions[name] || false
