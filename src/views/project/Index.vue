@@ -161,7 +161,7 @@
                         <slot name="submitContent">
                             <div class="d-flex justify-content-end"
                                 :class="{ 'justify-content-end': $device.mobile === true }">
-                                <form-button type="submit" variant="primary" style="min-width: 250px"
+                                <form-button type="submit" variant="primary" style="min-width: 250px;margin-top: 10px;"
                                     :loading="isSubmitting" :disabled="isSubmitting" loading-without-hidden-text>
                                     SAVE
                                 </form-button>
