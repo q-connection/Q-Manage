@@ -10,7 +10,7 @@
             <b-col>
                 <project-table show-thumbnail :project-table-loaded="projectTableLoaded"
                     :show-create-button="$hasPermission('project.create')"
-                    @create="$bvModal.show('bv-modal-create-project')" />
+                    @create="$bvModal.show('bv-modal-create-project')" @edit-project="showEditProject" />
             </b-col>
         </b-row>
         <b-modal id="bv-modal-create-project" header-class="custom-header" content-class="custom-content" hide-footer
@@ -32,8 +32,8 @@
                                 <validation-provider rules="ext:jpg,jpeg,png|size:3072" name="thumbnail" ref="thumbnail"
                                     v-slot="{ errors, valid }">
                                     <div class="project-image pr-0 pr-xl-3">
-                                        <form-image-upload v-model="formData.thumbnail"
-                                            :state="$isValid(errors, valid)" />
+                                        <form-image-upload v-model="formData.thumbnail" :state="$isValid(errors, valid)"
+                                            :preview="formData.thumbnail" />
                                         <span class="text-danger small">
                                             {{ errors[0] }}
                                         </span>
@@ -54,17 +54,14 @@
                                         </validation-provider>
                                     </b-col>
                                     <b-col md="4" sm="12">
-                                  
-                                            <b-form-group  label="Status"
-                                                label-class="label-required">
-                                                <b-form-radio-group id="radio-group-2" class="radio-label"
-                                                    name="radio-sub-component" v-model="formData.status"
-                                            >
-                                                    <b-form-radio value="published" selected>Active</b-form-radio>
-                                                    <b-form-radio value="draft">Inactive</b-form-radio>
-                                                </b-form-radio-group>
-                                            </b-form-group>
-                                  
+                                        <b-form-group label="Status" label-class="label-required">
+                                            <b-form-radio-group id="radio-group-2" class="radio-label"
+                                                name="radio-sub-component" v-model="formData.status">
+                                                <b-form-radio value="published" selected>Active</b-form-radio>
+                                                <b-form-radio value="draft">Inactive</b-form-radio>
+                                            </b-form-radio-group>
+                                        </b-form-group>
+
                                     </b-col>
                                 </b-row>
                                 <b-row>
@@ -183,6 +180,7 @@ export default {
     data() {
         return {
             list_customer: [],
+            project_detail: {},
             key_search: '',
             customer_selected: '',
             isConfirming: false,
@@ -201,6 +199,8 @@ export default {
                 list_customer_selected: [],
                 form_customer_selected: [],
                 thumbnail: '',
+                type: 'create',
+                id: 0,
 
             }
         }
@@ -220,6 +220,30 @@ export default {
                 const { data } = await this.$http.get(`employee/list-customer`)
                 if (!data.error) {
                     this.list_customer = data.data
+                    console.log('project_detail', this.project_detail);
+                }
+            } catch (err) {
+                console.log(err)
+            }
+        },
+        async fetchProject(id) {
+            try {
+                const { data } = await this.$http.get(`projects/${id}`)
+                if (!data.error) {
+                    this.project_detail = data.data
+                    this.formData.name = this.project_detail.name
+                    this.formData.description = this.project_detail.description
+                    this.formData.status = this.project_detail.status
+                    this.formData.thumbnail = this.project_detail.thumbnail
+                    this.formData.type = 'edit'
+                    this.formData.id =this.project_detail.id
+                    this.formData.list_customer_selected = this.list_customer.filter((elem) => this.project_detail.customers.find(({ customer_id }) => {
+                        if (elem.id === customer_id) {
+                            elem.show = false
+                            return true;
+                        }
+                    }))
+                    console.log(' this.formData', this.formData)
                 }
             } catch (err) {
                 console.log(err)
@@ -270,21 +294,20 @@ export default {
                 for (var key in this.formData) {
                     formData.append(key, this.formData[key]);
                 }
-
-                const { data } = await this.$http.post('projects', formData)
-                if (!data.error) {
-                    this.$showAlert({ type: 'success', message: 'Create Project successfully!' })
-                    // this.$refs.refCreateProject.reset()
-                    this.formData.list_customer_selected = []
-                    this.formData.form_customer_selected = []
-                    this.formData.thumbnail = ''
-                    this.urlImage = ''
-                    this.formData.name = '',
-                    this.formData.description = '',
-                    this.formData.status = ''
-                    this.projectTableLoaded = true,
-                    this.$bvModal.hide('bv-modal-create-project')
+                if (this.formData.type == 'create') {
+                    const { data } = await this.$http.post('projects', formData)
+                    if (!data.error) {
+                        this.$showAlert({ type: 'success', message: 'Create Project successfully!' })
+                        this.clearFormDat()
+                    }
+                } else {
+                    const { data } = await this.$http.post(`projects/${this.formData.id}`, formData)
+                    if (!data.error) {
+                        this.$showAlert({ type: 'success', message: 'Update Project successfully!' })
+                        this.clearFormDat()
+                    }
                 }
+
             } catch (err) {
                 console.log(err)
 
@@ -301,9 +324,23 @@ export default {
             }
 
         },
-        searchData(val) {
-            this.key_search = val
+        async showEditProject(id) {
+            await this.fetchProject(id)
+            this.$bvModal.show('bv-modal-create-project')
+        },
+        clearFormDat() {
+            this.formData.list_customer_selected = []
+            this.formData.form_customer_selected = []
+            this.formData.thumbnail = ''
+            this.urlImage = ''
+            this.formData.name = '',
+            this.formData.description = '',
+            this.formData.status = ''
+            this.projectTableLoaded = true,
+            this.$bvModal.hide('bv-modal-create-project')
         }
+
+
     },
     async mounted() {
         await this.fetchCustomerList();
@@ -380,7 +417,7 @@ export default {
         }
     }
 
-      
+
     .description {
         font-size: 14px;
     }

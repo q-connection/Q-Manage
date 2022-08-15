@@ -1,12 +1,6 @@
 <template>
     <div class="project-table">
-        <table-default 
-            :columns="columns"
-            :config="tableConfig"
-            :show-columns="false"
-            searchable
-            hover     
-        >
+        <table-default :columns="columns" :config="tableConfig" :show-columns="false" searchable hover>
             <template slot="tableHeadActions" v-if="showCreateButton">
                 <b-button variant="outline-primary" size="sm" class="px-3 py-2" @click="$emit('create', $event)">
                     Create
@@ -15,15 +9,15 @@
             <template slot="row-name" slot-scope="{row}">
                 <div class="d-flex align-items-center">
                     <div class="h3 mr-3" v-if="!showThumbnail">
-                        <q-icon icon="codicon:target"/>
+                        <q-icon icon="codicon:target" />
                     </div>
-                    <img-lazy-load 
-                        :src="row.thumbnail" 
-                        class="thumbnail mr-3" 
-                        v-else
-                    />
+                    <img-lazy-load :src="row.thumbnail" class="thumbnail mr-3" v-else />
                     <div class="project-name">
-                        <div class="font-weight-bold">{{ row.name }}</div>
+                        <div class="font-weight-bold">{{ row.name }}
+                            <span @click="$emit('edit-project', row.id)">
+                                <Q-Icon icon="bx:edit" color="#f0b01d" width="16" height="16" />
+                            </span>
+                        </div>
                         <div class="small">{{ $mm(row.created_at).format('LL') }} by {{ row.created_by || 'N/A' }}</div>
                         <div class="small d-flex">
                             <div class="mr-3">
@@ -32,7 +26,7 @@
                             </div>
                             <div>
                                 <span>Bugs: </span>
-                                <span class="text-danger font-weight-bold">{{ row.total_bugs || 0 }}</span>                                
+                                <span class="text-danger font-weight-bold">{{ row.total_bugs || 0 }}</span>
                             </div>
                         </div>
                     </div>
@@ -41,11 +35,8 @@
             <template slot="row-customers" slot-scope="{row}">
                 <div class="d-flex align-items-center justify-content-end">
                     <div class="project-avatar-wrapper" v-for="(customer, index) in row.customers" :key="index">
-                        <img-lazy-load 
-                            :src="customer.avatar_url" 
-                            error="/images/avatar-placeholder.png"
-                            class="avatar" 
-                        />                        
+                        <img-lazy-load :src="customer.avatar_url" error="/images/avatar-placeholder.png"
+                            class="avatar" />
                     </div>
                 </div>
             </template>
@@ -54,29 +45,29 @@
 </template>
 
 <script>
-    export default {
-        name: 'ProjectTable',
-        props: {
-            showThumbnail: {
-                type: Boolean,
-                default: false
-            },
-
-            showCreateButton: {
-                type: Boolean,
-                default: false
-            }
+export default {
+    name: 'ProjectTable',
+    props: {
+        showThumbnail: {
+            type: Boolean,
+            default: false
         },
-        data: () => ({
-            columns: [
-                {label: 'Name', name: 'name', rowClass: 'text-cursor p-3'},
-                {label: 'Customers', name: 'customers', rowClass: 'text-cursor p-3'},
-            ],
-            tableConfig: {
-                url: 'projects'
-            },            
-        }),
-    }
+
+        showCreateButton: {
+            type: Boolean,
+            default: false
+        }
+    },
+    data: () => ({
+        columns: [
+            { label: 'Name', name: 'name', rowClass: 'text-cursor p-3' },
+            { label: 'Customers', name: 'customers', rowClass: 'text-cursor p-3' },
+        ],
+        tableConfig: {
+            url: 'projects'
+        },
+    }),
+}
 </script>
 
 <style lang="scss" scoped>
@@ -96,7 +87,7 @@
         overflow: hidden;
         border-radius: 50%;
         border: 1px solid var(--primary);
-        
+
         img {
             width: 100%;
             height: 100%;
