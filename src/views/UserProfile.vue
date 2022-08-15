@@ -6,13 +6,15 @@
                     <div class="p-3">
                         <b-row>
                             <b-col cols=12 xl=2 lg=2>
-                                <div class="avatar-modal">
-                                    <form-image-upload 
-                                        @upload="onAvatarUpload"
-                                        :preview-url="$user.avatar ? $user.avatar_url : null" 
-                                        readonly
-                                        avatar
-                                    />
+                                <div class="d-flex justify-content-center">
+                                    <div class="avatar-modal">
+                                        <form-image-upload 
+                                            @upload="onAvatarUpload"
+                                            :preview-url="$user.avatar ? $user.avatar_url : null" 
+                                            readonly
+                                            avatar
+                                        />
+                                    </div>
                                 </div>
                             </b-col>
                             <b-col cols=12 xl=10 lg=10>
@@ -360,8 +362,9 @@
 }
 
 .avatar-modal {
-    width: 230px;
-    height: 230px;
+    width: 200px;
+    height: 200px;
+    max-width: 100%;
     overflow: hidden;
     margin-bottom: .75rem;
 }

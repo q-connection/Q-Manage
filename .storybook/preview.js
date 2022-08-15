@@ -1,9 +1,19 @@
+import Vue from 'vue';
+import Vuex from 'vuex';
+
+import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
+import { Icon } from '@iconify/vue2';
+
+Vue.use(Vuex);
+Vue.use(BootstrapVue)
+Vue.use(IconsPlugin)
+Vue.component('QIcon', Icon);
+
+import '../src/assets/sass/main.scss';
+
 export const parameters = {
-  actions: { argTypesRegex: "^on[A-Z].*" },
-  controls: {
-    matchers: {
-      color: /(background|color)$/i,
-      date: /Date$/,
-    },
+  docs: {
+    inlineStories: true,
+    iframeHeight: '60px',
   },
-}
+};

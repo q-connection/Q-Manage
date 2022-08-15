@@ -42,7 +42,7 @@
                 <div class="d-flex align-items-center justify-content-end">
                     <div class="project-avatar-wrapper" v-for="(customer, index) in row.customers" :key="index">
                         <img-lazy-load 
-                            :src="customer.avatar" 
+                            :src="customer.avatar_url" 
                             error="/images/avatar-placeholder.png"
                             class="avatar" 
                         />                        

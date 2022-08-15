@@ -125,7 +125,7 @@ export default {
         }),
 
         getTime() {
-            return this.$mm().format('LLLL')
+            return this.$mm().format('LLL')
         },
 
         inHrmRoutes() {

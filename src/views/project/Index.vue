@@ -8,11 +8,9 @@
         </b-row>
         <b-row>
             <b-col>
-                <project-table 
-                    show-thumbnail
-                    :show-create-button="$hasPermission('project.create')"    
-                    @create="$bvModal.show('bv-modal-create-project')"
-                />
+                <project-table show-thumbnail :project-table-loaded="projectTableLoaded"
+                    :show-create-button="$hasPermission('project.create')"
+                    @create="$bvModal.show('bv-modal-create-project')" />
             </b-col>
         </b-row>
         <b-modal id="bv-modal-create-project" header-class="custom-header" content-class="custom-content" hide-footer
@@ -24,24 +22,18 @@
                         <QIcon icon="carbon:close-filled" class="close-modal float-right close-modal-custom"
                             color="#fa4032" width="47" height="47" />
                     </span>
-                </div> 
+                </div>
             </template>
             <div class="d-block" :class="{ mobile: $device.mobile === true }">
                 <validation-observer ref="profileForm" v-slot="{ handleSubmit }">
                     <b-form @submit.prevent="handleSubmit(onSubmit)" ref="refCreateProject">
                         <b-row>
                             <b-col cols=12 xl=3 lg=3>
-                                <validation-provider 
-                                    rules="ext:jpg,jpeg,png|size:3072" 
-                                    name="thumbnail" 
-                                    ref="thumbnail"
-                                    v-slot="{errors, valid}"
-                                >
+                                <validation-provider rules="ext:jpg,jpeg,png|size:3072" name="thumbnail" ref="thumbnail"
+                                    v-slot="{ errors, valid }">
                                     <div class="project-image pr-0 pr-xl-3">
-                                        <form-image-upload
-                                            v-model="formData.thumbnail"
-                                            :state="$isValid(errors, valid)"
-                                        />
+                                        <form-image-upload v-model="formData.thumbnail"
+                                            :state="$isValid(errors, valid)" />
                                         <span class="text-danger small">
                                             {{ errors[0] }}
                                         </span>
@@ -62,16 +54,17 @@
                                         </validation-provider>
                                     </b-col>
                                     <b-col md="4" sm="12">
-                                        <b-form-group label="Status" label-class="label-required">
-                                            <b-form-radio-group 
-                                                id="radio-group-2"
-                                                name="radio-sub-component"
-                                                v-model="formData.status"
+                                  
+                                            <b-form-group  label="Status"
+                                                label-class="label-required">
+                                                <b-form-radio-group id="radio-group-2" class="radio-label"
+                                                    name="radio-sub-component" v-model="formData.status"
                                             >
-                                                <b-form-radio value="published">Active</b-form-radio>
-                                                <b-form-radio value="draft">Inactive</b-form-radio>
-                                            </b-form-radio-group>
-                                        </b-form-group>
+                                                    <b-form-radio value="published" selected>Active</b-form-radio>
+                                                    <b-form-radio value="draft">Inactive</b-form-radio>
+                                                </b-form-radio-group>
+                                            </b-form-group>
+                                  
                                     </b-col>
                                 </b-row>
                                 <b-row>
@@ -96,21 +89,22 @@
                                     <div class="d-flex">
                                         <b-select2 v-model="customer_selected" class="search-customer"
                                             placeholder="Search by employee ID or email" :options="list_customer"
-                                            :filter-by="customerFilter" label="full_name">
+                                            :filter-by="customerFilter">
                                             <template v-slot:option="option">
-                                                <slot name="option-data" class="option-data" v-bind="option">
+                                                <slot name="option-data" class="option-data" v-bind="option"
+                                                    v-if="option?.show != false">
                                                     <div class="user-item">
-                                                        <b-img src="https://picsum.photos/200" class="avatar"
-                                                            rounded="circle" alt="Circle image"></b-img>
+                                                        <b-img :src="option.avatar_url" class="avatar" rounded="circle"
+                                                            alt="Circle image"></b-img>
                                                         <b-col class="info">
                                                             <div class="full-name">
-                                                                {{ option?.full_name }}
+                                                                {{ option.full_name }}
                                                             </div>
                                                             <div class="email">
-                                                                {{ option?.email }}
+                                                                {{ option.email }}
                                                             </div>
                                                             <div class="username">
-                                                                {{ option?.username }}
+                                                                {{ option.username }}
                                                             </div>
                                                         </b-col>
                                                         <div @click="addPeople(option)"
@@ -167,9 +161,8 @@
                         <slot name="submitContent">
                             <div class="d-flex justify-content-end"
                                 :class="{ 'justify-content-end': $device.mobile === true }">
-                                <form-button class="btn-submit" size="lg" type="submit" variant="primary"
-                                    :disabled="!$hasPermission('project.create') || isSubmitting"
-                                    :loading="isSubmitting" loading-without-hidden-text>
+                                <form-button type="submit" variant="primary" style="min-width: 250px"
+                                    :loading="isSubmitting" :disabled="isSubmitting" loading-without-hidden-text>
                                     SAVE
                                 </form-button>
                             </div>
@@ -194,6 +187,7 @@ export default {
             customer_selected: '',
             isConfirming: false,
             isSubmitting: false,
+            projectTableLoaded: false,
             urlImage: '',
             customerFilter: (option, label, search) => {
                 let temp = search.toLowerCase();
@@ -232,6 +226,8 @@ export default {
             }
         },
         addPeople(item) {
+            let a = this.list_customer.find(x => x.id === item.id);
+            a.show = false
             this.upsert(this.formData.list_customer_selected, this.formData.form_customer_selected, item)
         },
         upsert(array, form, item) { // (1)
@@ -243,6 +239,8 @@ export default {
             }
         },
         removePeople(id) {
+            let a = this.list_customer.find(x => x.id === id);
+            a.show = true
             const array = this.formData.list_customer_selected;
             const form = this.formData.form_customer_selected;
             // eslint-disable-next-line no-undef
@@ -276,12 +274,16 @@ export default {
                 const { data } = await this.$http.post('projects', formData)
                 if (!data.error) {
                     this.$showAlert({ type: 'success', message: 'Create Project successfully!' })
-                    this.$refs.refCreateProject.reset()
+                    // this.$refs.refCreateProject.reset()
                     this.formData.list_customer_selected = []
                     this.formData.form_customer_selected = []
                     this.formData.thumbnail = ''
                     this.urlImage = ''
-
+                    this.formData.name = '',
+                    this.formData.description = '',
+                    this.formData.status = ''
+                    this.projectTableLoaded = true,
+                    this.$bvModal.hide('bv-modal-create-project')
                 }
             } catch (err) {
                 console.log(err)
@@ -297,6 +299,7 @@ export default {
             } finally {
                 this.isSubmitting = false
             }
+
         },
         searchData(val) {
             this.key_search = val
@@ -377,13 +380,15 @@ export default {
         }
     }
 
+      
     .description {
         font-size: 14px;
     }
 
     .add-people {
         --vs-search-input-placeholder-color: #999999;
-        --vs-dropdown-option--active-bg: #fff;
+        --vs-dropdown-option--active-bg: #fffdfd;
+        --vs-dropdown-option--active-color: #212529;
 
         &.mobile {
             --vs-dropdown-option-padding: 0px;
@@ -427,6 +432,7 @@ export default {
             border-radius: 26.5px;
             padding: 5px 0px 4px 4px;
 
+
             &:not(last-of-type, first-of-type) {
                 margin-right: 25px;
             }
@@ -442,6 +448,7 @@ export default {
                 font-weight: 700;
                 font-size: 14px;
                 line-height: 17px;
+                pointer-events: none;
             }
 
             .email {
@@ -463,6 +470,10 @@ export default {
             margin-bottom: auto;
             margin-right: auto;
             margin-right: 20px;
+
+            &:hover {
+                transform: scale(1.5);
+            }
         }
     }
 

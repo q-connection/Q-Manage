@@ -37,6 +37,12 @@ const base_routes = [
         component: () => import('@/views/Dashboard.vue')
     },
     {
+        path: '/user',
+        name: 'account',
+        meta: { layout: 'default', requiresAuth: true },
+        component: () => import('@/views/Account.vue')
+    },
+    {
         path: '/user/profile',
         name: 'profile',
         meta: { layout: 'default', requiresAuth: true },
