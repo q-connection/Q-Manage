@@ -5,7 +5,7 @@
             <div @click="removePeople">
                 <QIcon icon="ant-design:delete-outlined" class="delete-user" color="white" width="21" height="21" />
             </div>
-            <b-img src="https://picsum.photos/200" class="avatar" rounded="circle" alt="Circle image"></b-img>
+            <b-img :src="user.avatar_url ? user.avatar_url : null" class="avatar" rounded="circle" alt="Circle image"></b-img>
             <b-col>
                 <div class="full-name">
                     {{ user.full_name }}
@@ -39,7 +39,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .user-item {
-    width: 240px;
+    width: 260px;
     height: 53px;
     margin-top: 25px;
     background: rgba(240, 176, 29, 0.21);
