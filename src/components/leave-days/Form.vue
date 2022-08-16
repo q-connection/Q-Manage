@@ -69,8 +69,9 @@
                                                 :aria-describedby="ariaDescribedby"
                                                 size="lg"
                                                 name="time_2"
+                                                :disabled="endTimeDisabled"
                                             >
-                                                <b-form-radio value="12:00">12:00</b-form-radio>
+                                                <b-form-radio value="12:00" :disabled="formData.time_1 == '13:00'">12:00</b-form-radio>
                                                 <b-form-radio value="17:30">17:30</b-form-radio>
                                             </b-form-radio-group>
                                         </b-form-group>
