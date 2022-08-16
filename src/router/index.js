@@ -8,6 +8,7 @@ import hm_routes from './hrm'
 import project_routes from './project'
 import anno_routes from './announcements'
 import policies_routes from './policies'
+import leave_days_routes from './leave-days'
 
 Vue.use(VueRouter)
 
@@ -78,7 +79,8 @@ const routes = base_routes.concat(
     hm_routes, 
     project_routes, 
     anno_routes,
-    policies_routes
+    policies_routes,
+    leave_days_routes
 )
 
 const router = new VueRouter({
