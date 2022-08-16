@@ -75,13 +75,13 @@
         </b-table-simple>
         <div class="table-boxed" v-else>
             <div 
-                class="d-flex align-items-center mb-2" 
+                class="d-flex flex-wrap align-items-center" 
                 :class="headActionsClass"
             >
-                <div class="d-flex">
+                <div class="d-flex mb-2">
                     <slot name="tableHeadActions" v-bind="{selected}"/>
                 </div>
-                <div v-if="searchable">
+                <div class="mb-2" v-if="searchable">
                     <form-input-group class="d-none d-xl-block d-lg-block search-form" v-if="searchType == 'input'">
                         <b-form-input style="min-width: 285px; min-height: 40px" placeholder="Search..." v-model.lazy="queryParams.search"></b-form-input>
                         <template #append>
