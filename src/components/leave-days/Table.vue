@@ -28,10 +28,10 @@
                     <div class="text-info" v-if="row.status == 'pending' || row.status == 'draft'">
                         Waiting for approval
                     </div>
-                    <div class="text-success" v-if="row.status == 'published'">
+                    <div class="text-success" v-if="row.status == 'approved'">
                         Approved
                     </div>
-                    <div class="text-secondary" v-if="row.status == 'cancel'">
+                    <div class="text-danger" v-if="row.status == 'cancel'">
                         Canceled
                     </div>
                     <div class="text-cursor text-danger" v-if="row.status == 'pending' || row.status == 'draft'" @click="cancelLeaveDay(row.id)">
