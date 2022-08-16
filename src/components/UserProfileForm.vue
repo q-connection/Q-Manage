@@ -502,7 +502,7 @@
             initUser() {
                 if(Object.keys(this.user).length > 0) {
                     Object.keys(this.formData).forEach(key => {
-                        if(['dob', 'id_issuance_date'].includes(key)) {
+                        if(['dob', 'id_issuance_date'].includes(key) && this.user[key]) {
                             this.formData[key] = this.$mm(this.user[key], "DD-MM-YYYY").format('YYYY-MM-DD')
                         } else {
                             if(key != 'avatar') {
