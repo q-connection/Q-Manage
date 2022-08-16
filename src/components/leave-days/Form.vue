@@ -251,7 +251,7 @@
 
             async fetchApprovers() {
                 try {
-                    const { data } = await this.$http.get('annual-leave/list_approvers')
+                    const { data } = await this.$http.get('employee/list-customer')
 
                     if(!data.error) {
                         this.approvers = data.data.map(u => ({
