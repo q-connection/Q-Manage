@@ -8,9 +8,9 @@
         </b-row>
         <b-row>
             <b-col>
-                <project-table show-thumbnail :project-table-loaded="projectTableLoaded"
-                    :show-create-button="$hasPermission('project.create')"
-                    @create="$bvModal.show('bv-modal-create-project')" @edit-project="showEditProject" />
+                <project-table show-thumbnail :show-create-button="$hasPermission('project.create')"
+                    @create="$bvModal.show('bv-modal-create-project'); clearFormData()" @edit-project="showEditProject"
+                    v-if="!isSubmitting" />
             </b-col>
         </b-row>
         <b-modal id="bv-modal-create-project" header-class="custom-header" content-class="custom-content" hide-footer
@@ -29,8 +29,9 @@
                     <b-form @submit.prevent="handleSubmit(onSubmit)" ref="refCreateProject">
                         <b-row>
                             <b-col cols=12 xl=3 lg=3>
-                                <validation-provider rules="ext:jpg,jpeg,png|size:3072" name="thumbnail" ref="thumbnail"
-                                    v-slot="{ errors, valid }">
+                                <validation-provider
+                                    :rules="{ 'image': formData.type != 'edit', required: formData.type != 'edit' }"
+                                    name="thumbnail" ref="thumbnail" v-slot="{ errors, valid }">
                                     <div class="project-image pr-0 pr-xl-3">
                                         <form-image-upload v-model="formData.thumbnail" :state="$isValid(errors, valid)"
                                             :preview="formData.thumbnail" />
@@ -185,7 +186,6 @@ export default {
             customer_selected: '',
             isConfirming: false,
             isSubmitting: false,
-            projectTableLoaded: false,
             urlImage: '',
             customerFilter: (option, label, search) => {
                 let temp = search.toLowerCase();
@@ -236,10 +236,11 @@ export default {
                     this.formData.status = this.project_detail.status
                     this.formData.thumbnail = this.project_detail.thumbnail
                     this.formData.type = 'edit'
-                    this.formData.id =this.project_detail.id
+                    this.formData.id = this.project_detail.id
                     this.formData.list_customer_selected = this.list_customer.filter((elem) => this.project_detail.customers.find(({ customer_id }) => {
                         if (elem.id === customer_id) {
                             elem.show = false
+                            this.upsert(this.formData.list_customer_selected, this.formData.form_customer_selected, elem)
                             return true;
                         }
                     }))
@@ -294,17 +295,20 @@ export default {
                 for (var key in this.formData) {
                     formData.append(key, this.formData[key]);
                 }
-                if (this.formData.type == 'create') {
-                    const { data } = await this.$http.post('projects', formData)
-                    if (!data.error) {
-                        this.$showAlert({ type: 'success', message: 'Create Project successfully!' })
-                        this.clearFormDat()
+                if (this.formData.type == 'edit') {
+                    if (!this.$hasPermission('project.edit')) {
+                        return
                     }
-                } else {
                     const { data } = await this.$http.post(`projects/${this.formData.id}`, formData)
                     if (!data.error) {
                         this.$showAlert({ type: 'success', message: 'Update Project successfully!' })
-                        this.clearFormDat()
+                        this.clearFormData()
+                    }
+                } else {
+                    const { data } = await this.$http.post('projects', formData)
+                    if (!data.error) {
+                        this.$showAlert({ type: 'success', message: 'Create Project successfully!' })
+                        this.clearFormData()
                     }
                 }
 
@@ -328,16 +332,19 @@ export default {
             await this.fetchProject(id)
             this.$bvModal.show('bv-modal-create-project')
         },
-        clearFormDat() {
+        clearFormData() {
             this.formData.list_customer_selected = []
             this.formData.form_customer_selected = []
-            this.formData.thumbnail = ''
+            this.formData.type = 'create'
             this.urlImage = ''
-            this.formData.name = '',
+            this.formData.thumbnail = ''
             this.formData.description = '',
-            this.formData.status = ''
-            this.projectTableLoaded = true,
-            this.$bvModal.hide('bv-modal-create-project')
+                this.formData.name = '',
+                this.projectTableLoaded = true,
+                this.$bvModal.hide('bv-modal-create-project')
+            // this.formData.status = ''
+
+
         }
 
 
@@ -468,6 +475,7 @@ export default {
             background: rgba(240, 176, 29, 0.21);
             border-radius: 26.5px;
             padding: 5px 0px 4px 4px;
+            cursor: default;
 
 
             &:not(last-of-type, first-of-type) {
@@ -510,6 +518,7 @@ export default {
 
             &:hover {
                 transform: scale(1.5);
+                cursor: pointer;
             }
         }
     }
