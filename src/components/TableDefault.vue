@@ -252,10 +252,8 @@
                 }
             },
 
-            async 'queryParams.search'(newval) {
-                if(newval) {
-                    await this.fetchItems()
-                }
+            async 'queryParams.search'() {
+                await this.fetchItems()
             }
         },
 
