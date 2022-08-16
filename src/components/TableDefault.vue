@@ -82,13 +82,28 @@
                     <slot name="tableHeadActions" v-bind="{selected}"/>
                 </div>
                 <div v-if="searchable">
-                    <form-input-group class="d-none d-xl-block d-lg-block search-form">
+                    <form-input-group class="d-none d-xl-block d-lg-block search-form" v-if="searchType == 'input'">
                         <b-form-input style="min-width: 285px; min-height: 40px" placeholder="Search..." v-model.lazy="queryParams.search"></b-form-input>
                         <template #append>
                             <span class="h3">
                                 <q-icon icon="bx:search-alt"/>
                             </span>
                         </template>
+                    </form-input-group>
+                    <form-input-group class="search-form" v-if="searchType == 'date'">
+                        <b-form-datepicker 
+                            style="min-width: 285px; min-height: 40px" 
+                            placeholder="Search..." 
+                            v-model.lazy="queryParams.search"
+                            :date-format-options="{year: 'numeric', month: 'numeric', day: 'numeric'}"
+                            locale="vi"
+                            
+                        />
+                        <template #append>
+                            <span class="h6 text-cursor" v-show="queryParams.search" @click="queryParams.search = ''">
+                                <q-icon icon="el:remove"/>
+                            </span>
+                        </template>                        
                     </form-input-group>
                 </div>
             </div>            
@@ -187,6 +202,11 @@
             boxed: {
                 type: Boolean,
                 default: false
+            },
+
+            searchType: {
+                type: String,
+                default: 'input'
             },
 
             tableData: {

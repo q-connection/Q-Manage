@@ -5,6 +5,7 @@
             :columns="columns"
             :config="tableConfig"
             :show-columns="false"
+            searchType="date"
             searchable
             hover            
             boxed
