@@ -33,8 +33,8 @@
                                                 size="lg"
                                                 name="time_1"
                                             >
-                                                <b-form-radio value="08:30">08:30</b-form-radio>
-                                                <b-form-radio value="13:00">13:00</b-form-radio>
+                                                <b-form-radio value="08:30" :disabled="!formData.start_date">08:30</b-form-radio>
+                                                <b-form-radio value="13:00" :disabled="!formData.start_date">13:00</b-form-radio>
                                             </b-form-radio-group>
                                         </b-form-group>
                                     </validation-provider>
@@ -71,8 +71,8 @@
                                                 name="time_2"
                                                 :disabled="endTimeDisabled"
                                             >
-                                                <b-form-radio value="12:00" :disabled="formData.time_1 == '13:00'">12:00</b-form-radio>
-                                                <b-form-radio value="17:30">17:30</b-form-radio>
+                                                <b-form-radio value="12:00" :disabled="!formData.end_date">12:00</b-form-radio>
+                                                <b-form-radio value="17:30" :disabled="!formData.end_date">17:30</b-form-radio>
                                             </b-form-radio-group>
                                         </b-form-group>
                                     </validation-provider>
