@@ -45,4 +45,12 @@ export default [
         component: () => import('@/views/hrm/Policies.vue')
     },
     /** End:Policies */
+    /** Start:Leave Days */
+    {
+        path: '/hrm/leave-days',
+        name: 'hrm-leave-days',
+        meta: { layout: 'default', requiresAuth: true, requiresPermission: 'annual-leave.index' },
+        component: () => import('@/views/hrm/LeaveDays.vue')
+    },
+    /** End:Leave Days */
 ]

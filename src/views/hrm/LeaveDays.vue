@@ -2,7 +2,7 @@
     <b-container fluid>
         <b-row>
             <b-col cols=12>
-                <TableLeaveDays/>
+                <TableLeaveDays for-hrm/>
             </b-col>
         </b-row>
     </b-container>
@@ -12,7 +12,7 @@
     import TableLeaveDays from '@/components/leave-days/Table.vue'
 
     export default {
-        name: 'PageLeaveDays',
+        name: 'HrmLeaveDays',
         components: {TableLeaveDays}
     }
 </script>

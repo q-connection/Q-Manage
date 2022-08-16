@@ -93,7 +93,7 @@
                     <form-input-group class="search-form" v-if="searchType == 'date'">
                         <b-form-datepicker 
                             style="min-width: 285px; min-height: 40px" 
-                            placeholder="Search..." 
+                            placeholder="Search by date" 
                             v-model.lazy="queryParams.search"
                             :date-format-options="{year: 'numeric', month: 'numeric', day: 'numeric'}"
                             locale="vi"

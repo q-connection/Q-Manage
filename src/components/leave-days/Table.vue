@@ -16,7 +16,7 @@
                     variant="outline-primary" 
                     size="sm" 
                     class="p-2"
-                    v-if="$hasPermission('annual-leave.create')"
+                    v-if="!this.forHrm"
                 >
                     Create
                 </b-button>
@@ -35,7 +35,12 @@
                     <div class="text-danger" v-if="row.status == 'cancel'">
                         Canceled
                     </div>
-                    <div class="text-cursor text-danger" v-if="row.status == 'pending' || row.status == 'draft'" @click="cancelLeaveDay(row.id)">
+                    <div 
+                        class="text-cursor text-danger" 
+                        v-if="row.status == 'pending' || row.status == 'draft'" 
+                        @click="cancelLeaveDay(row.id)"
+                        v-show="!forHrm"
+                    >
                         <u>Cancel</u>
                     </div>
                 </div>
@@ -55,6 +60,12 @@
 
     export default {
         name: 'TableLeaveDays',
+        props: {
+            forHrm: {
+                type: Boolean,
+                default: false
+            }
+        },
 
         components: {FormLeaveDay},
 
@@ -72,8 +83,8 @@
         computed: {
             tableConfig() {
                 return {
-                    url: 'annual-leave/list',
-                    per_page: 8
+                    url: `annual-leave${this.forHrm ? '/list' : ''}`,
+                    per_page: 12
                 }
             },
 
