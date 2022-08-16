@@ -25,7 +25,7 @@
                                             :invalid-feedback="errors[0]" 
                                             :state="$isValid(errors, valid)"         
                                             v-slot="{ ariaDescribedby }"   
-                                            style="padding-top: 2.25rem"               
+                                            :style="`padding-top: ${$device.mobile ? 0 : '2.25rem'}`"                 
                                         >
                                             <b-form-radio-group
                                                 v-model="formData.time_1"
@@ -62,7 +62,7 @@
                                             :invalid-feedback="errors[0]" 
                                             :state="$isValid(errors, valid)"         
                                             v-slot="{ ariaDescribedby }"   
-                                            style="padding-top: 2.25rem"               
+                                            :style="`padding-top: ${$device.mobile ? 0 : '2.25rem'}`"               
                                         >
                                             <b-form-radio-group
                                                 v-model="formData.time_2"
