@@ -16,10 +16,16 @@
                     variant="outline-primary" 
                     size="sm" 
                     class="p-2"
-                    v-if="!this.forHrm"
+                    v-if="!forHrm"
                 >
                     Create
                 </b-button>
+            </template>
+            <template slot="row-user_id" slot-scope="{row}">
+                <div v-if="forHrm">
+                    <div>{{ row.user ? row.user.username : 'N/A' }}</div>
+                    <div>{{ row.user ? row.user.fullname : 'N/A' }}</div>
+                </div>
             </template>
             <template slot="row-type" slot-scope="{row}">
                 {{ getTypeLabel(row.type) }}
@@ -89,14 +95,21 @@
             },
 
             columns() {
-                return [
-                    {label: "From", name: "start_date", rowClicked: this.handleEditClicked},
-                    {label: "To", name: "end_date", rowClicked: this.handleEditClicked},
-                    {label: "Total day", name: "total_day", rowClicked: this.handleEditClicked},
-                    {label: "Type", name: "type", rowClicked: this.handleEditClicked},
-                    {label: "Reason", name: "reason", rowClicked: this.handleEditClicked},
-                    {label: "Status", name: "status", display: 'none', rowWidth: '100%', rowClicked: this.handleEditClicked},         
+                const addition = []
+                const cols = [
+                    {label: "From", name: "start_date"},
+                    {label: "To", name: "end_date"},
+                    {label: "Total day", name: "total_day"},
+                    {label: "Type", name: "type"},
+                    {label: "Reason", name: "reason"},
+                    {label: "Status", name: "status", display: 'none', rowWidth: '100%'},         
                 ]
+
+                if(this.forHrm) {
+                    addition.push({label: "User", name: "user_id"})                    
+                }
+
+                return [].concat(addition, cols)
             }
         },
 
