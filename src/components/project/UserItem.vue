@@ -1,24 +1,22 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
-    <b-col class="user-item" :class="{ mobile: $device.mobile === true }">
-        <b-row>
-            <div @click="removePeople">
-                <QIcon icon="ant-design:delete-outlined" class="delete-user" color="white" width="21" height="21" />
+    <div class="user-item" :class="{ mobile: $device.mobile === true }">
+        <div class="delete-user" @click="removePeople">
+            <QIcon icon="ant-design:delete-outlined" color="white" width="21" height="21" />
+        </div>
+        <b-img :src="user.avatar_url ? user.avatar_url : null" class="avatar" rounded="circle" alt="Circle image"></b-img>
+        <div class="ml-2">
+            <div class="full-name">
+                {{ user.full_name }}
             </div>
-            <b-img :src="user.avatar_url ? user.avatar_url : null" class="avatar" rounded="circle" alt="Circle image"></b-img>
-            <b-col>
-                <div class="full-name">
-                    {{ user.full_name }}
-                </div>
-                <div class="email">
-                    {{ user.email }}
-                </div>
-                <div class="username">
-                    {{ user.username }}
-                </div>
-            </b-col>
-        </b-row>
-    </b-col>
+            <div class="email">
+                {{ user.email }}
+            </div>
+            <div class="username">
+                {{ user.username }}
+            </div>
+        </div>
+    </div>
 </template>
 <script>
 export default {
@@ -45,6 +43,8 @@ export default {
     background: rgba(240, 176, 29, 0.21);
     border-radius: 26.5px;
     padding-top: 5px;
+    position: relative;
+    display: flex;
 
     &:not(last-of-type, first-of-type, .mobile) {
         margin-right: 25px;
@@ -54,8 +54,6 @@ export default {
         margin-right: 11px !important;
     }
 
-
-
     .delete-user {
         position: absolute;
         top: -5px;
@@ -63,13 +61,19 @@ export default {
         background-color: #fa4032;
         border-radius: 10px;
         cursor: pointer;
+        padding: 2px;
+        transition: .25s;
+
+        &:hover {
+            transform: scale(1.1);
+        }
     }
 
     .avatar {
         width: 45px;
-        height: 44px;
-        margin-left: 2px;
+        height: 45px;
         border: 1px solid #F59300;
+        margin-left: .25rem;
     }
 
     .full-name {

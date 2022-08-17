@@ -10,7 +10,7 @@
                 <dashboard-statistics />
                 <div class="row" v-if="!$device.mobile">
                     <div class="col-12">
-                        <project-table/>
+                        <issues-table/>
                     </div>
                 </div>
             </div>
@@ -23,11 +23,11 @@
 
 <script>
 import { mapState } from 'vuex';
-import ProjectTable from '@/components/project/Table.vue'
+import IssuesTable from '@/components/issue/Table.vue'
 
 export default {
     name: "DashboardPage",
-    components: {ProjectTable},
+    components: {IssuesTable},
     computed: {
         ...mapState({
             user: state => state.user || {}

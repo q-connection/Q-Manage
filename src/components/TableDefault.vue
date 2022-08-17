@@ -1,7 +1,6 @@
 <template>
     <div class="table-default-wrapper">
-        <b-table-simple class="table-qconnection" :hover="hover"
-            :class="{ 'table-responsive-md': responsive === true }">
+        <b-table-simple class="table-qconnection" :hover="hover" :class="{'table-responsive-md': responsive === true}" v-if="!boxed">
             <b-thead>
                 <b-tr>
                     <b-td width="5%" v-if="selectable">
@@ -78,6 +77,70 @@
                 </b-tr>
             </b-tbody>
         </b-table-simple>
+        <div class="table-boxed" v-else>
+            <div 
+                class="d-flex flex-wrap align-items-center" 
+                :class="headActionsClass"
+            >
+                <div class="d-flex mb-2">
+                    <slot name="tableHeadActions" v-bind="{selected}"/>
+                </div>
+                <div class="mb-2" v-if="searchable">
+                    <form-input-group class="d-none d-xl-block d-lg-block search-form" v-if="searchType == 'input'">
+                        <b-form-input style="min-width: 285px; min-height: 40px" placeholder="Search..." v-model.lazy="queryParams.search"></b-form-input>
+                        <template #append>
+                            <span class="h3">
+                                <q-icon icon="bx:search-alt"/>
+                            </span>
+                        </template>
+                    </form-input-group>
+                    <form-input-group class="search-form" v-if="searchType == 'date'">
+                        <b-form-datepicker 
+                            style="min-width: 285px; min-height: 40px" 
+                            placeholder="Search by date" 
+                            v-model.lazy="queryParams.search"
+                            :date-format-options="{year: 'numeric', month: 'numeric', day: 'numeric'}"
+                            locale="vi"
+                            
+                        />
+                        <template #append>
+                            <span class="h6 text-cursor" v-show="queryParams.search" @click="queryParams.search = ''">
+                                <q-icon icon="el:remove"/>
+                            </span>
+                        </template>                        
+                    </form-input-group>
+                </div>
+            </div>            
+            <div class="d-flex flex-wrap mb-2">
+                <div 
+                    class="boxed-item" 
+                    :class="{mobile: $device.mobile}"
+                    :style="{width: tableConfig.boxedRowWidth || '25%'}"
+                    v-for="(row, rowIdx) in items" 
+                    :key="rowIdx"
+                >
+                    <div class="boxed-item--content">
+                        <div class="boxed-row" v-for="(col, colIdx) in tableColumns" :key="colIdx" :class="col.rowClass" @click="onRowClick(col, row)">
+                            <div class="font-weight-bold" :style="{width: col.width || '30%', display: col.display || 'block'}">
+                                <slot :name="`col-${col.name}`" v-bind="{col}">
+                                    {{ col.label || 'N/A' }}
+                                </slot>
+                            </div>
+                            <div class="text-break" :style="{width: col.rowWidth || '70%'}">
+                                <slot :name="`row-${col.name}`" v-bind="{row}">
+                                    {{ row[col.name] || '' }}
+                                </slot>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="w-100" v-if="items.length <= 0 && !tableLoading">
+                    <div class="text-center p-2 border rounded-lg mb-2">
+                        No records to show.
+                    </div>
+                </div>                
+            </div>
+        </div>
         <div class="d-flex justify-content-end" v-if="hasPagination">
             <b-pagination v-model="queryParams.page" :total-rows="totalItems" :per-page="queryParams.per_page"
                 aria-controls="table-qconnection">
@@ -292,6 +355,35 @@ export default {
 .search-form {
     .form-control {
         border: 1px solid #ced4da
+    }
+}
+
+.table-boxed {
+    .boxed-item {
+        padding: 8px;
+
+        .boxed-item--content {
+            background: #fff;
+            border: 1px solid #E0E0E0;
+            border-radius: 20px;
+            box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
+            padding: 1rem;
+
+            .boxed-row {
+                margin-bottom: .75rem;
+                display: flex;
+                width: 100%;
+
+                &:last-child {
+                    margin-bottom: 0;
+                }
+            }
+        }
+
+        &.mobile {
+            width: 100% !important;
+            padding: 8px 0 8px 0;
+        }
     }
 }
 </style>

@@ -55,14 +55,15 @@
                                         </validation-provider>
                                     </b-col>
                                     <b-col md="4" sm="12">
-                                        <b-form-group label="Status" label-class="label-required">
-                                            <b-form-radio-group id="radio-group-2" class="radio-label"
-                                                name="radio-sub-component" v-model="formData.status">
-                                                <b-form-radio value="published" selected>Active</b-form-radio>
-                                                <b-form-radio value="draft">Inactive</b-form-radio>
-                                            </b-form-radio-group>
-                                        </b-form-group>
-
+                                            <b-form-group  label="Status"
+                                                label-class="label-required">
+                                                <b-form-radio-group id="radio-group-2" class="radio-label"
+                                                    name="radio-sub-component" v-model="formData.status"
+                                            >
+                                                    <b-form-radio value="published" selected>Active</b-form-radio>
+                                                    <b-form-radio value="draft">Inactive</b-form-radio>
+                                                </b-form-radio-group>
+                                            </b-form-group>
                                     </b-col>
                                 </b-row>
                                 <b-row>
@@ -91,24 +92,26 @@
                                             <template v-slot:option="option">
                                                 <slot name="option-data" class="option-data" v-bind="option"
                                                     v-if="option?.show != false">
-                                                    <div class="user-item">
-                                                        <b-img :src="option.avatar_url" class="avatar" rounded="circle"
-                                                            alt="Circle image"></b-img>
-                                                        <b-col class="info">
-                                                            <div class="full-name">
-                                                                {{ option.full_name }}
+                                                    <div class="p-1">
+                                                        <div class="user-item">
+                                                            <b-img :src="option.avatar_url" class="avatar" rounded="circle"
+                                                                alt="Circle image"></b-img>
+                                                            <b-col class="info">
+                                                                <div class="full-name">
+                                                                    {{ option.full_name }}
+                                                                </div>
+                                                                <div class="email">
+                                                                    {{ option.email }}
+                                                                </div>
+                                                                <div class="username">
+                                                                    {{ option.username }}
+                                                                </div>
+                                                            </b-col>
+                                                            <div @click="addPeople(option)"
+                                                                class="btn-add-people align-items-center">
+                                                                <QIcon icon="fluent:add-circle-16-filled" color="#197130"
+                                                                    width="22" height="22" />
                                                             </div>
-                                                            <div class="email">
-                                                                {{ option.email }}
-                                                            </div>
-                                                            <div class="username">
-                                                                {{ option.username }}
-                                                            </div>
-                                                        </b-col>
-                                                        <div @click="addPeople(option)"
-                                                            class="btn-add-people align-items-center">
-                                                            <QIcon icon="fluent:add-circle-16-filled" color="#197130"
-                                                                width="22" height="22" />
                                                         </div>
                                                     </div>
                                                 </slot>
@@ -157,9 +160,11 @@
                         </b-row>
 
                         <slot name="submitContent">
-                            <div class="d-flex justify-content-end"
-                                :class="{ 'justify-content-end': $device.mobile === true }">
-                                <form-button type="submit" variant="primary" style="min-width: 250px;margin-top: 10px;"
+                            <div 
+                                class="d-flex justify-content-end mt-4"
+                                :class="{ 'justify-content-end': $device.mobile === true }"
+                            >
+                                <form-button type="submit" variant="primary" class="w-md-100" style="min-width: 250px;"
                                     :loading="isSubmitting" :disabled="isSubmitting" loading-without-hidden-text>
                                     SAVE
                                 </form-button>
@@ -470,17 +475,12 @@ export default {
 
         .user-item {
             display: flex;
-            width: 339px;
             height: 53px;
+            max-width: 100%;
             background: rgba(240, 176, 29, 0.21);
             border-radius: 26.5px;
             padding: 5px 0px 4px 4px;
             cursor: default;
-
-
-            &:not(last-of-type, first-of-type) {
-                margin-right: 25px;
-            }
 
             .avatar {
                 width: 44px;

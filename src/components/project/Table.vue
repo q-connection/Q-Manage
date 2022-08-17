@@ -36,10 +36,16 @@
                 </div>
             </template>
             <template slot="row-customers" slot-scope="{row}">
-                <div class="d-flex align-items-center justify-content-end">
+                <div class="d-none d-xl-flex d-lg-flex align-items-center justify-content-end">
                     <div class="project-avatar-wrapper" v-for="(customer, index) in row.customers" :key="index">
                         <img-lazy-load :src="customer.avatar_url" error="/images/avatar-placeholder.png"
                             class="avatar" />
+                    </div>
+                </div>
+                <div class="d-block d-xl-none d-lg-none">
+                    <div class="h5 m-0 p-0 text-primary">
+                        <q-icon icon="fa-solid:user-friends"/>
+                        {{ row.customers.length > 5 ? '5+' : row.customers.length }}
                     </div>
                 </div>
             </template>

@@ -60,6 +60,8 @@
             locale="vi"         
             :required="required"   
             :class="customClass"
+            :min="min"
+            :max="max"
             @input="$emit('input', $event)"
         />
         <b-form-file 
@@ -87,6 +89,8 @@
             state: Boolean,
             error: String,
             rows: String,
+            min: [String, Number],
+            max: [String, Number],
             readonly: Boolean,
             loading: Boolean,
             required: Boolean,
