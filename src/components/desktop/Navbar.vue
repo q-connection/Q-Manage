@@ -21,27 +21,21 @@
                         </div>
                     </template>
                     <b-dropdown-item class="project-names" href="javascript:;" active>
-                        <div class="project-title active">
-                            OhRey
-                        </div>
-                        <div class="project-title">
-                            KB-Hero
-                        </div>
-                        <div class="project-title">
-                            FOWI
+                        <div class="project-title" :class="{active: selectedProject == project.id}" v-for="(project, index) in projects" :key="index">
+                            {{ project.name }}
                         </div>
                     </b-dropdown-item>
                     <b-dropdown-form>
                         <b-icon class="mr-1" icon="search" variant="dark"/>
-                        <b-input placeholder="Search recenly viewed issues"/>
+                        <b-input placeholder="Search recenly viewed issues" v-model="issueParams.search"/>
                     </b-dropdown-form>
-                    <b-dropdown-item href="#">
+                    <b-dropdown-item href="#" v-for="(issue, index) in issues" :key="index">
                         <b-icon class="mr-1" icon="record-circle" variant="primary"/>
-                        <span class="task-title">[TASK] Login</span>
+                        <span class="task-title">{{ issue.name }}</span>
                     </b-dropdown-item>
-                    <b-dropdown-item href="#">
+                    <b-dropdown-item href="#" v-if="issues.length <= 0">
                         <b-icon class="mr-1" icon="record-circle" variant="primary"/>
-                        <span class="task-title">[TASK] Register</span>
+                        <span class="task-title">No issue found.</span>
                     </b-dropdown-item>
                 </b-nav-item-dropdown>
                 <b-nav-item href="#">Recently Viewed</b-nav-item>
@@ -99,7 +93,7 @@
                         <span><q-icon icon="zondicons:announcement"/>Announcements</span>
                     </b-dropdown-item>
                     <b-dropdown-item :to="{name: 'policies'}">
-                        <span><q-icon icon="carbon:policy"/>Policies</span>
+                        <span><q-icon icon="ic:baseline-policy"/>Policies</span>
                     </b-dropdown-item>
                     <b-dropdown-item :to="{name: 'leave-days'}">
                         <span><q-icon icon="ic:baseline-work-history"/>Leave Days</span>
@@ -120,6 +114,12 @@ export default {
     name: "DesktopNavbar",
     data: () => ({
         isLoggingTime: false,
+        selectedProject: '',
+        issues: [],
+        projects: [],
+        issueParams: {
+            search: ''
+        }
     }),
 
     computed: {
@@ -180,7 +180,9 @@ export default {
         },
 
         projectDropdownHovered() {
-            this.$refs.projectDropdown.show()
+            if(this.projects.length > 0) {
+                this.$refs.projectDropdown.show()
+            }
         },
 
         projectDropdownBlur() {

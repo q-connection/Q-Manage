@@ -36,7 +36,7 @@
                     <b-button :to="{name: 'policies'}" variant="outline-primary" block>
                         <div class="d-flex align-items-center">
                             <div class="h2 mb-0" style="line-height: 0; width: 40px">
-                                <q-icon icon="carbon:policy"/>
+                                <q-icon icon="ic:baseline-policy"/>
                             </div>
                             <div class="ml-2">Policies</div>
                         </div>
