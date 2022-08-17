@@ -1,5 +1,5 @@
 <template>
-    <b-card class="mb-5 card-profile" :class="{mobile: $device.mobile === true}" :title="cardTitle">
+    <b-card class="mb-5 card-profile" :class="{mobile: $device.mobile === true}">
         <validation-observer ref="profileForm" v-slot="{handleSubmit}">
             <b-form @submit.prevent="handleSubmit(onSubmit)">
                 <b-tabs v-model="tabIndex" fill>
@@ -332,13 +332,13 @@
                     </b-tab>
                 </b-tabs>
                 <slot name="submitContent">
-                    <div class="d-flex justify-content-between mt-3">
-                        <router-link :to="{name: 'hrm-employees'}" class="btn btn-dark">
+                    <div class="d-flex justify-content-end mt-3">
+                        <!-- <router-link :to="{name: 'hrm-employees'}" class="btn btn-dark">
                             <div class="d-flex align-items-center justify-content-center mt-1">
                                 <q-icon icon="eva:arrow-ios-back-outline"/>
                                 BACK
                             </div>
-                        </router-link>
+                        </router-link> -->
                         <form-button type="submit" variant="primary" style="width: 250px; max-width: 50%" :disabled="!$hasPermission('employee.edit') || readonly || isSubmitting" :loading="isSubmitting" loading-without-hidden-text>
                             SAVE
                         </form-button>                      
@@ -499,6 +499,10 @@
         },
 
         methods: {
+            switchTab(idx) {
+                this.tabIndex = idx
+            },
+
             initUser() {
                 if(Object.keys(this.user).length > 0) {
                     Object.keys(this.formData).forEach(key => {
@@ -531,7 +535,7 @@
             onSubmit() {
                 const formData = Object.assign({}, this.formData)
 
-                this.$emit('submit', {formData: this.$objToFormData(formData), refs: this.$refs})
+                this.$emit('submit', {formData: this.$objToFormData(formData), refs: this.$refs, switchTab: this.switchTab})
             },
 
             async fetchContracts({dismiss, password}) {
