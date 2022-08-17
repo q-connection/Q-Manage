@@ -40,7 +40,7 @@
                         </b-th>
                     </b-tr>
                 </template>             
-                <b-tr v-for="(row, rowIdx) in items" :key="rowIdx">
+                <b-tr v-for="(row, rowIdx) in items" :key="rowIdx" @click="$emit('redirect', row.id)">
                     <b-td width="5%" v-if="selectable">
                         <b-checkbox :checked="selected.includes(row.id)" @change="toggleSelect(row.id)"/>
                     </b-td>                       

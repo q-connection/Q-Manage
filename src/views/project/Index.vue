@@ -8,9 +8,9 @@
         </b-row>
         <b-row>
             <b-col>
-                <project-table show-thumbnail :project-table-loaded="projectTableLoaded"
-                    :show-create-button="$hasPermission('project.create')"
-                    @create="$bvModal.show('bv-modal-create-project')" />
+                <project-table show-thumbnail :show-create-button="$hasPermission('project.create')"
+                    @create="$bvModal.show('bv-modal-create-project'); clearFormData()" @edit-project="showEditProject"
+                    v-if="!isSubmitting" />
             </b-col>
         </b-row>
         <b-modal id="bv-modal-create-project" header-class="custom-header" content-class="custom-content" hide-footer
@@ -29,11 +29,12 @@
                     <b-form @submit.prevent="handleSubmit(onSubmit)" ref="refCreateProject">
                         <b-row>
                             <b-col cols=12 xl=3 lg=3>
-                                <validation-provider rules="ext:jpg,jpeg,png|size:3072" name="thumbnail" ref="thumbnail"
-                                    v-slot="{ errors, valid }">
+                                <validation-provider
+                                    :rules="{ 'image': formData.type != 'edit', required: formData.type != 'edit' }"
+                                    name="thumbnail" ref="thumbnail" v-slot="{ errors, valid }">
                                     <div class="project-image pr-0 pr-xl-3">
-                                        <form-image-upload v-model="formData.thumbnail"
-                                            :state="$isValid(errors, valid)" />
+                                        <form-image-upload v-model="formData.thumbnail" :state="$isValid(errors, valid)"
+                                            :preview="formData.thumbnail" />
                                         <span class="text-danger small">
                                             {{ errors[0] }}
                                         </span>
@@ -189,11 +190,11 @@ export default {
     data() {
         return {
             list_customer: [],
+            project_detail: {},
             key_search: '',
             customer_selected: '',
             isConfirming: false,
             isSubmitting: false,
-            projectTableLoaded: false,
             urlImage: '',
             customerFilter: (option, label, search) => {
                 let temp = search.toLowerCase();
@@ -207,6 +208,8 @@ export default {
                 list_customer_selected: [],
                 form_customer_selected: [],
                 thumbnail: '',
+                type: 'create',
+                id: 0,
 
             }
         }
@@ -226,6 +229,31 @@ export default {
                 const { data } = await this.$http.get(`employee/list-customer`)
                 if (!data.error) {
                     this.list_customer = data.data
+                    console.log('project_detail', this.project_detail);
+                }
+            } catch (err) {
+                console.log(err)
+            }
+        },
+        async fetchProject(id) {
+            try {
+                const { data } = await this.$http.get(`projects/${id}`)
+                if (!data.error) {
+                    this.project_detail = data.data
+                    this.formData.name = this.project_detail.name
+                    this.formData.description = this.project_detail.description
+                    this.formData.status = this.project_detail.status
+                    this.formData.thumbnail = this.project_detail.thumbnail
+                    this.formData.type = 'edit'
+                    this.formData.id = this.project_detail.id
+                    this.formData.list_customer_selected = this.list_customer.filter((elem) => this.project_detail.customers.find(({ customer_id }) => {
+                        if (elem.id === customer_id) {
+                            elem.show = false
+                            this.upsert(this.formData.list_customer_selected, this.formData.form_customer_selected, elem)
+                            return true;
+                        }
+                    }))
+                    console.log(' this.formData', this.formData)
                 }
             } catch (err) {
                 console.log(err)
@@ -276,21 +304,23 @@ export default {
                 for (var key in this.formData) {
                     formData.append(key, this.formData[key]);
                 }
-
-                const { data } = await this.$http.post('projects', formData)
-                if (!data.error) {
-                    this.$showAlert({ type: 'success', message: 'Create Project successfully!' })
-                    // this.$refs.refCreateProject.reset()
-                    this.formData.list_customer_selected = []
-                    this.formData.form_customer_selected = []
-                    this.formData.thumbnail = ''
-                    this.urlImage = ''
-                    this.formData.name = '',
-                    this.formData.description = '',
-                    this.formData.status = ''
-                    this.projectTableLoaded = true,
-                    this.$bvModal.hide('bv-modal-create-project')
+                if (this.formData.type == 'edit') {
+                    if (!this.$hasPermission('project.edit')) {
+                        return
+                    }
+                    const { data } = await this.$http.post(`projects/${this.formData.id}`, formData)
+                    if (!data.error) {
+                        this.$showAlert({ type: 'success', message: 'Update Project successfully!' })
+                        this.clearFormData()
+                    }
+                } else {
+                    const { data } = await this.$http.post('projects', formData)
+                    if (!data.error) {
+                        this.$showAlert({ type: 'success', message: 'Create Project successfully!' })
+                        this.clearFormData()
+                    }
                 }
+
             } catch (err) {
                 console.log(err)
 
@@ -307,9 +337,26 @@ export default {
             }
 
         },
-        searchData(val) {
-            this.key_search = val
+        async showEditProject(id) {
+            await this.fetchProject(id)
+            this.$bvModal.show('bv-modal-create-project')
+        },
+        clearFormData() {
+            this.formData.list_customer_selected = []
+            this.formData.form_customer_selected = []
+            this.formData.type = 'create'
+            this.urlImage = ''
+            this.formData.thumbnail = ''
+            this.formData.description = '',
+                this.formData.name = '',
+                this.projectTableLoaded = true,
+                this.$bvModal.hide('bv-modal-create-project')
+            // this.formData.status = ''
+
+
         }
+
+
     },
     async mounted() {
         await this.fetchCustomerList();
@@ -386,7 +433,7 @@ export default {
         }
     }
 
-      
+
     .description {
         font-size: 14px;
     }
@@ -437,6 +484,7 @@ export default {
             background: rgba(240, 176, 29, 0.21);
             border-radius: 26.5px;
             padding: 5px 0px 4px 4px;
+            cursor: default;
 
             .avatar {
                 width: 44px;
@@ -474,6 +522,7 @@ export default {
 
             &:hover {
                 transform: scale(1.5);
+                cursor: pointer;
             }
         }
     }
