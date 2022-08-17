@@ -93,7 +93,10 @@
             tableConfig() {
                 return {
                     url: `annual-leave${this.forHrm ? '/list' : ''}`,
-                    per_page: 12
+                    per_page: 12,
+                    params: {
+                        status: this.forHrm ? 'approved' : ''
+                    }
                 }
             },
 
