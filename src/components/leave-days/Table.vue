@@ -36,7 +36,10 @@
                         Waiting for approval
                     </div>
                     <div class="text-success" v-if="row.status == 'approved'">
-                        Approved
+                        Approved by 
+                        <u class="text-cursor" v-b-tooltip.html="showApproverDetail(row.approver)">
+                            {{ row.approver ? (row.approver.fullname || 'N/A') : 'N/A' }}
+                        </u>
                     </div>
                     <div class="text-danger" v-if="row.status == 'cancel'">
                         Canceled
@@ -156,6 +159,16 @@
             refreshTable() {
                 this.$refs.table.refresh(true)    
                 this.$bvModal.hide('modal-leave-days')
+            },
+
+            showApproverDetail(approver) {
+                const user = approver || {}
+
+                return `<ul class="p-0 h5 mb-0">
+                    <li>Code: ${user.username || 'N/A'}</li>
+                    <li>Name: ${user.fullname || 'N/A'}</li>
+                    <li>Phone: ${user.phone || 'N/A'}</li>
+                </ul>`
             }
         }
     }

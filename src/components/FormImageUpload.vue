@@ -205,6 +205,9 @@
         .preview {
             overflow: hidden;
             border-radius: 10px;
+            position: relative;
+            height: 100%;       
+            width: 100%;     
             
             img {
                 width: 100%;
