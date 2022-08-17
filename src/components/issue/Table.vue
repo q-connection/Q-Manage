@@ -15,17 +15,23 @@
                     :options="projects"
                     :reduce="pj => pj.value"
                     style="min-width: 150px"
-                    :clearable="false"
                     :closeOnSelect="false"
+                    deselectFromDropdown
                     placeholder="Issue types"
                     multiple
                 >
                     <template v-slot:option="option">
                         <slot name="option-data" class="option-data" v-bind="option">
-                            <b-form-checkbox :checked="type.includes(option.value)">
+                            <div class="d-flex w-100 justify-content-between">
                                 <b-badge variant="success" v-if="option.value == 'task'">Task</b-badge>
                                 <b-badge variant="danger" v-else>{{ option.label }}</b-badge>
-                            </b-form-checkbox>
+                                <span class="small text-danger text-cursor mb-0" @click="handleTypeCheck(option.value, false)" v-if="type.includes(option.value)">
+                                    <q-icon icon="el:remove"/>
+                                </span>
+                                <span class="m-0 p-0 text-success text-cursor" @click="handleTypeCheck(option.value, true)" v-else>
+                                    <q-icon icon="carbon:add-filled"/>
+                                </span>
+                            </div>
                         </slot>
                     </template>
                     <template #selected-option-container="{option}">
@@ -106,6 +112,19 @@
                 this.$nextTick(() => {
                     this.$refs.table.refresh(true)
                 })
+            }
+        },
+
+        methods: {
+            handleTypeCheck(value, checked) {
+                if(!checked) {
+                    const idx = this.type.findIndex(x => x == value)
+                    if(idx !== false) {
+                        this.$delete(this.type, idx)
+                    }
+                } else {
+                    this.type.push(value)
+                }
             }
         }
     }

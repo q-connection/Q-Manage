@@ -492,6 +492,10 @@ export default {
         margin-top: 10px;
     }
 }
+
+.vs__dropdown-option {
+    padding: 0;
+}
 </style>
 
 <style  lang="scss">
@@ -510,9 +514,5 @@ export default {
 .custom-header {
     display: block !important;
     border-bottom: 0px !important
-}
-
-.vs__dropdown-option {
-    padding: 0;
 }
 </style>
