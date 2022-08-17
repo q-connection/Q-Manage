@@ -54,7 +54,6 @@
                                         </validation-provider>
                                     </b-col>
                                     <b-col md="4" sm="12">
-                                  
                                             <b-form-group  label="Status"
                                                 label-class="label-required">
                                                 <b-form-radio-group id="radio-group-2" class="radio-label"
@@ -64,7 +63,6 @@
                                                     <b-form-radio value="draft">Inactive</b-form-radio>
                                                 </b-form-radio-group>
                                             </b-form-group>
-                                  
                                     </b-col>
                                 </b-row>
                                 <b-row>

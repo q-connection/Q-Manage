@@ -122,6 +122,12 @@
             border: 1px solid var(--danger)
         }
     }
+
+    &.select-sm {
+        .vs__dropdown-toggle {
+            min-height: 40px;
+        }
+    }
 }
 
 .custom-radio {
