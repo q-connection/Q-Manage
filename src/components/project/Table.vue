@@ -16,7 +16,7 @@
                     <img-lazy-load :src="row.thumbnail" class="thumbnail mr-3" v-else />
                     <div class="project-name">
                         <div class="font-weight-bold">{{ row.name }}
-                            <span v-if="$hasPermission('project.edit')" @click="$emit('edit-project', row.id)" v-on:click.stop style="margin-left:8px">
+                            <span v-if="$hasPermission('project.edit') && row.created_by == $user.username" @click="$emit('edit-project', row.id)" v-on:click.stop style="margin-left:8px">
                                 <Q-Icon icon="bx:edit" color="#f0b01d" width="18" height="18" />
                             </span>
                         </div>
