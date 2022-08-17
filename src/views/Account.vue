@@ -98,7 +98,7 @@
             async onCheckout() {
                 try {
                     this.isLoggingTime = true
-                    const { data } = await this.$http.post('log-time/checkout/' + this.user.last_checkin_id)
+                    const { data } = await this.$http.post('log-time/checkout/' + this.$user.last_checkin_id)
 
                     if(!data.error) {
                         this.$showAlert({type: 'success', message: 'Checkout successfully'})
