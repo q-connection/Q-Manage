@@ -3,7 +3,7 @@
     <div class="fiu-wrapper" :class="{valid: state === true, invalid: state === false}">
         <input ref="file" type="file" :accept="accept" style="display: none" @change="handleFileUpload"/>
         <div class="preview">
-            <img-lazy-load :src="preview" error="/images/avatar-placeholder.png"/>
+            <img-lazy-load class="w-100 h-100" :src="preview" error="/images/avatar-placeholder.png"/>
         </div>
     </div>
     <div class="overlay" @click="onClickUpload" v-if="!readonly && !avatar"> 
