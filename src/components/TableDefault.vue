@@ -81,7 +81,8 @@
                 <div class="d-flex mb-2">
                     <slot name="tableHeadActions" v-bind="{selected}"/>
                 </div>
-                <div class="mb-2" v-if="searchable">
+                <div class="mb-2 d-flex" v-if="searchable">
+                    <slot name="tableHeadForms"/>
                     <form-input-group class="d-none d-xl-block d-lg-block search-form" v-if="searchType == 'input'">
                         <b-form-input style="min-width: 285px; min-height: 40px" placeholder="Search..." v-model.lazy="queryParams.search"></b-form-input>
                         <template #append>

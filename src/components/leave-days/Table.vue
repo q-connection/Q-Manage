@@ -21,6 +21,16 @@
                     Create
                 </b-button>
             </template>
+            <template slot="tableHeadForms">
+                <form-input-group class="d-none d-xl-block d-lg-block search-form mr-2">
+                    <b-form-input style="min-width: 285px;" placeholder="Search by ID or Name..." v-model.lazy="search"></b-form-input>
+                    <template #append>
+                        <span class="h3">
+                            <q-icon icon="bx:search-alt"/>
+                        </span>
+                    </template>
+                </form-input-group>
+            </template>
             <template slot="row-user_id" slot-scope="{row}">
                 <div v-if="forHrm">
                     <div>{{ row.user ? row.user.username : 'N/A' }}</div>
@@ -80,6 +90,7 @@
 
         data: () => ({
             modalData: null,
+            search: '',
             typeOptions: [
                 {label: 'Paid Leave - Nghỉ có lương', value: 'paid_leave'},
                 {label: 'Unpaid Leave - Nghỉ không lương', value: 'unpaid_leave'},
@@ -89,13 +100,20 @@
             ]            
         }),
 
+        watch: {
+            search() {
+                this.$refs.table.refresh(true)
+            }
+        },
+
         computed: {
             tableConfig() {
                 return {
                     url: `annual-leave${this.forHrm ? '/list' : ''}`,
                     per_page: 12,
                     params: {
-                        status: this.forHrm ? 'approved' : ''
+                        status: this.forHrm ? 'approved' : '',
+                        search: this.search
                     }
                 }
             },

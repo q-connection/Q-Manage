@@ -2,6 +2,11 @@
     <b-container fluid>
         <b-row>
             <b-col cols=12>
+                <page-breadcrumb
+                    :items="breadcrumb"
+                />
+            </b-col>
+            <b-col cols=12>
                 <TableLeaveDays/>
             </b-col>
         </b-row>
@@ -13,7 +18,15 @@
 
     export default {
         name: 'PageLeaveDays',
-        components: {TableLeaveDays}
+        components: {TableLeaveDays},
+        computed: {
+            breadcrumb() {
+                return [
+                    {title: "Dashboard", to: "dashboard"},
+                    {title: "Leave Days", to: "leave-days"},
+                ]
+            }            
+        }
     }
 </script>
 

@@ -1,6 +1,11 @@
 <template>
     <b-container fluid>
         <b-row class="mb-5">
+            <b-col cols=12>
+                <page-breadcrumb
+                    :items="breadcrumb"                    
+                />
+            </b-col>
             <b-col cols="12">
                 <b-card class="user-profile-wrapper" :class="{mobile: $device.mobile}">
                     <div class="p-3">
@@ -210,6 +215,15 @@
                 new_password_confirmation: ''
             }            
         }),
+
+        computed: {
+            breadcrumb() {
+                return [
+                    {title: "Dashboard", to: "dashboard"},
+                    {title: "User Profile", to: "profile"}
+                ]
+            }
+        },
 
         methods: {
             // async onSubmit({formData, refs}) {
