@@ -13,3 +13,59 @@
 .w-90 {
     width: 90%;
 }
+
+@media screen and (max-width: 1400px) and (max-width: 2560px) {
+    @for $i from 1 through 20 {
+        $size: 5 * $i;
+
+        .w-xl-#{$size} {
+            width: $size * 1%
+        }
+
+        .h-xl-#{$size} {
+            width: $size * 1%
+        }
+    }
+}
+
+@media screen and (max-width: 1200px) {
+    @for $i from 1 through 20 {
+        $size: 5 * $i;
+
+        .w-lg-#{$size} {
+            width: $size * 1%
+        }
+
+        .h-lg-#{$size} {
+            width: $size * 1%
+        }        
+    }
+}
+
+@media screen and (max-width: 992px) {
+    @for $i from 1 through 20 {
+        $size: 5 * $i;
+
+        .w-md-#{$size} {
+            width: $size * 1%
+        }
+
+        .h-md-#{$size} {
+            width: $size * 1%
+        }
+    }
+}
+
+@media screen and (max-width: 768px) {
+    @for $i from 1 through 20 {
+        $size: 5 * $i;
+
+        .w-sm-#{$size} {
+            width: $size * 1%
+        }
+
+        .h-sm-#{$size} {
+            width: $size * 1%
+        }
+    }
+}
