@@ -11,12 +11,30 @@
             <template slot="tableHeadActions">
                 <b-select2
                     class="select-sm"
-                    v-model="projectId"
+                    v-model="type"
                     :options="projects"
                     :reduce="pj => pj.value"
                     style="min-width: 150px"
                     :clearable="false"
-                />
+                    :closeOnSelect="false"
+                    placeholder="Issue types"
+                    multiple
+                >
+                    <template v-slot:option="option">
+                        <slot name="option-data" class="option-data" v-bind="option">
+                            <b-form-checkbox :checked="type.includes(option.value)">
+                                <b-badge variant="success" v-if="option.value == 'task'">Task</b-badge>
+                                <b-badge variant="danger" v-else>{{ option.label }}</b-badge>
+                            </b-form-checkbox>
+                        </slot>
+                    </template>
+                    <template #selected-option-container="{option}">
+                        <div class="mt-1" style="padding: .25rem .15rem">
+                            <b-badge class="p-1" variant="success" v-if="option.value == 'task'">Task</b-badge>
+                            <b-badge class="p-1" variant="danger" v-else>{{ option.label }}</b-badge>
+                        </div>
+                    </template>
+                </b-select2>
             </template>
             <template slot="row-name" slot-scope="{row}">
                 <div class="d-flex align-items-center">
@@ -54,7 +72,11 @@
     export default {
         name: 'TableIssues',
         data: () => ({
-            projects: [{label: 'All', value: ''}],
+            projects: [
+                {label: 'Task', value: 'task'},
+                {label: 'Bug', value: 'bug'},
+                {label: 'Hot fix', value: 'hot_fix'},
+            ],
             columns: [
                 {label: 'Name', name: 'name', rowClass: 'text-cursor p-3'},
                 {label: 'Customers', name: 'customers', rowClass: 'text-cursor p-3'},
@@ -62,49 +84,28 @@
             tableConfig: {
                 url: 'issues',
                 params: {
-                    project_id: ''
+                    type: []
                 }
             },            
         }),
 
         computed: {
-            projectId: {
+            type: {
                 get() {
-                    return this.tableConfig.params.project_id
+                    return this.tableConfig.params.type
                 },
 
                 set(val) {
-                    this.tableConfig.params.project_id = val
+                    this.tableConfig.params.type = val
                 }
             }
         },
 
         watch: {
-            projectId() {
+            type() {
                 this.$nextTick(() => {
                     this.$refs.table.refresh(true)
                 })
-            }
-        },
-
-        async mounted() {
-            await this.fetchProjects()
-        },
-
-        methods: {
-            async fetchProjects() {
-                try {
-                    const { data } = await this.$http.get('projects/all-for-select')
-
-                    if(!data.error) {
-                        this.projects = this.projects.concat(data.data.map(pj => ({
-                            label: pj.name,
-                            value: pj.id
-                        })))
-                    }
-                } catch (err) {
-                    console.log(err)
-                }
             }
         }
     }

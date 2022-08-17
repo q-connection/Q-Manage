@@ -86,9 +86,13 @@
                             <b-col md="6">
                                 <b-form-group label-class="collaborator-name" label="Collaborators">
                                     <div class="d-flex">
-                                        <b-select2 v-model="customer_selected" class="search-customer"
+                                        <b-select2 
+                                            v-model="customer_selected" 
+                                            class="search-customer"
                                             placeholder="Search by employee ID or email" :options="list_customer"
-                                            :filter-by="customerFilter">
+                                            :filter-by="customerFilter"
+                                            :closeOnSelect="false"
+                                        >
                                             <template v-slot:option="option">
                                                 <slot name="option-data" class="option-data" v-bind="option"
                                                     v-if="option?.show != false">
@@ -555,5 +559,9 @@ export default {
 .custom-header {
     display: block !important;
     border-bottom: 0px !important
+}
+
+.vs__dropdown-option {
+    padding: 0;
 }
 </style>
