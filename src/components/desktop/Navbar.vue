@@ -21,7 +21,13 @@
                         </div>
                     </template>
                     <b-dropdown-item class="project-names" href="javascript:;" active>
-                        <div class="project-title" :class="{active: selectedProject == project.id}" v-for="(project, index) in projects" :key="index">
+                        <div 
+                            class="project-title" 
+                            :class="{active: selectedProject == project.id}" 
+                            v-for="(project, index) in projects" 
+                            :key="index"
+                            @click="selectedProject = project.id"
+                        >
                             {{ project.name }}
                         </div>
                     </b-dropdown-item>
@@ -34,7 +40,6 @@
                         <span class="task-title">{{ issue.name }}</span>
                     </b-dropdown-item>
                     <b-dropdown-item href="#" v-if="issues.length <= 0">
-                        <b-icon class="mr-1" icon="record-circle" variant="primary"/>
                         <span class="task-title">No issue found.</span>
                     </b-dropdown-item>
                 </b-nav-item-dropdown>
@@ -135,6 +140,19 @@ export default {
             return this.$route.name.indexOf('hrm') !== -1
         }     
     },
+
+    watch: {
+        async selectedProject(newval) {
+            if(newval) {
+                await this.fetchIssues()
+            }
+        }
+    },
+
+    async mounted() {
+        await this.fetchProjects()
+    },
+
     methods: {
         async onLogout() {
             this.$store.commit('SET_IDLE_LOADING', true)
@@ -176,6 +194,36 @@ export default {
                 this.$showAlert({type: 'danger', message: err.response.data.message})
             } finally {
                 this.isLoggingTime = false
+            }
+        },
+
+        async fetchProjects()
+        {
+            try {
+                const { data } = await this.$http.get('projects/all-for-select')
+
+                if(!data.error) {
+                    this.projects = data.data
+
+                    if(this.projects.length > 0) {
+                        this.selectedProject = this.projects[0].id
+                    }
+                }
+            } catch (err) {
+                console.log(err)
+            }
+        },
+
+        async fetchIssues()
+        {
+            try {
+                const { data } = await this.$http.get('projects/issue/' + this.selectedProject)
+
+                if(!data.error) {
+                    this.issues = data.data.issues
+                }
+            } catch (err) {
+                console.log(err)
             }
         },
 
