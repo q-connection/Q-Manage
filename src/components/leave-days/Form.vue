@@ -254,7 +254,7 @@
                     const { data } = await this.$http.get('employee/list-customer')
 
                     if(!data.error) {
-                        this.approvers = data.data.map(u => ({
+                        this.approvers = data.data.filter(x => x.id != this.$user.id).map(u => ({
                             label: u.username + ' - ' + u.fullname,
                             value: u.id
                         }))
