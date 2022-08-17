@@ -49,6 +49,7 @@
             :required="required"
             :class="customClass"
             :multiple="multiple"
+            :disabled="disabled"
             @input="$emit('input', $event)"
             v-if="mode == 'select'"        
         />
@@ -87,7 +88,6 @@
             label: String,
             name: String,
             placeholder: String,
-            state: Boolean,
             error: String,
             rows: String,
             min: [String, Number],
@@ -98,7 +98,14 @@
             value: [String, Number, File, Array],
             options: [Array, Object],
             customClass: String,
+            state: {
+                default: null
+            },
             multiple: {
+                type: Boolean,
+                default: false
+            },
+            disabled: {
                 type: Boolean,
                 default: false
             },

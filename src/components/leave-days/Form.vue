@@ -114,7 +114,8 @@
                                 label="CC"
                                 placeholder="Choose multiple options..."
                                 v-model="formData.cc"
-                                :options="approverFiltered"    
+                                :options="approverFiltered"
+                                :disabled="!formData.approver_id"
                                 multiple                            
                             />
                         </b-col>
