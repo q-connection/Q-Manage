@@ -5,6 +5,7 @@
             :columns="columns"
             :config="tableConfig"
             :show-columns="false"
+            searchPlaceholder="Search by issue name..."
             searchable
             hover     
         >

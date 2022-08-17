@@ -18,7 +18,7 @@
                             </div>
                             <div v-if="searchable">
                                 <form-input-group class="d-none d-xl-block d-lg-block search-form">
-                                    <b-form-input style="min-width: 285px; min-height: 40px" placeholder="Search..." v-model.lazy="queryParams.search"></b-form-input>
+                                    <b-form-input style="min-width: 285px; min-height: 40px" :placeholder="searchPlaceholder" v-model.lazy="queryParams.search"></b-form-input>
                                     <template #append>
                                         <span class="h3">
                                             <q-icon icon="bx:search-alt"/>
@@ -208,6 +208,11 @@
             searchType: {
                 type: String,
                 default: 'input'
+            },
+
+            searchPlaceholder: {
+                type: String,
+                default: 'Search...'
             },
 
             tableData: {
