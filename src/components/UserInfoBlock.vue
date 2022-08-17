@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="dashboard-user-info mb-3" :class="{ mobile: $device.mobile === true }">
-            <div class="user-avatar shadow-sm" v-lazy-container="{selector: 'img'}">
+            <div class="user-avatar shadow-sm d-none" v-lazy-container="{selector: 'img'}">
                 <img :data-src="user.avatar_url"  data-error="/images/default-avatar.png" />
             </div>
             <div class="user-info">

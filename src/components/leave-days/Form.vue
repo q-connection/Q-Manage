@@ -109,6 +109,16 @@
                             </validation-provider>
                         </b-col>
                         <b-col cols=12>
+                            <form-group
+                                mode="select"
+                                label="CC"
+                                placeholder="Choose multiple options..."
+                                v-model="formData.cc"
+                                :options="approverFiltered"    
+                                multiple                            
+                            />
+                        </b-col>
+                        <b-col cols=12>
                             <validation-provider rules="required|min:10|max:255" name="reason" ref="reason" v-slot="{errors, valid}">
                                 <form-group
                                     mode="textarea"
@@ -174,7 +184,8 @@
                     reason: '',
                     type: null,
                     approver_id: null,
-                    status: 'pending'
+                    status: 'pending',
+                    cc: []
                 }
             }
         },
@@ -207,6 +218,10 @@
                     this.$set(this.formData, 'time_2', val)
                 }
             },
+
+            approverFiltered() {
+                return this.approvers.filter(x => x.value != this.formData.approver_id)
+            }
         },
 
         async mounted() {

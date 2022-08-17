@@ -48,6 +48,7 @@
             :loading="loading"
             :required="required"
             :class="customClass"
+            :multiple="multiple"
             @input="$emit('input', $event)"
             v-if="mode == 'select'"        
         />
@@ -94,9 +95,13 @@
             readonly: Boolean,
             loading: Boolean,
             required: Boolean,
-            value: [String, Number, File],
+            value: [String, Number, File, Array],
             options: [Array, Object],
             customClass: String,
+            multiple: {
+                type: Boolean,
+                default: false
+            },
             config: {
                 type: Object,
                 default: () => ({
