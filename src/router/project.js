@@ -9,6 +9,12 @@ export default [
         path: '/projects/:id',
         name: 'project-detail',
         meta: { layout: 'default', requiresAuth: true, requiresPermission: 'projects.index' },
-        component: () => import('@/views/project/Detail.vue')
+        redirect: {name: 'project-issues'}
+    },
+    {
+        path: '/projects/:id/issues',
+        name: 'project-issues',
+        meta: { layout: 'default', requiresAuth: true, requiresPermission: 'projects.index' },
+        component: () => import('@/views/project/Issues.vue')
     }
 ]

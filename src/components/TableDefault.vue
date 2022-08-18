@@ -96,7 +96,7 @@
                             style="min-width: 285px; min-height: 40px" 
                             placeholder="Search by date" 
                             v-model.lazy="queryParams.search"
-                            :date-format-options="{year: 'numeric', month: 'numeric', day: 'numeric'}"
+                            :date-format-options="{year: 'numeric', month: '2-digit', day: '2-digit'}"
                             locale="vi"
                             
                         />

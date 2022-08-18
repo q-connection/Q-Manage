@@ -90,7 +90,7 @@
                                                 v-model="formData.dob" 
                                                 :readonly="!$hasPermission('employee.edit') || readonly" 
                                                 :state="$isValid(errors, valid)"
-                                                :date-format-options="{year: 'numeric', month: 'numeric', day: 'numeric'}"
+                                                :date-format-options="{year: 'numeric', month: '2-digit', day: '2-digit'}"
                                                 locale="vi"
                                             >
                                             </b-form-datepicker>
@@ -143,7 +143,7 @@
                                         v-model="formData.id_issuance_date" 
                                         :readonly="!$hasPermission('employee.edit') || readonly" 
                                         :state="$isValid(errors, valid)"
-                                        :date-format-options="{year: 'numeric', month: 'numeric', day: 'numeric'}"
+                                        :date-format-options="{year: 'numeric', month: '2-digit', day: '2-digit'}"
                                         locale="vi"
                                     >
                                     </b-form-datepicker>                                            
