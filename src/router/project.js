@@ -14,7 +14,13 @@ export default [
     {
         path: '/projects/:id/issues',
         name: 'project-issues',
-        meta: { layout: 'default', requiresAuth: true, requiresPermission: 'projects.index' },
+        meta: { layout: 'default', requiresAuth: true, requiresPermission: 'issues.index' },
         component: () => import('@/views/project/Issues.vue')
-    }
+    },
+    {
+        path: '/projects/:id/issues/create',
+        name: 'project-issues-create',
+        meta: { layout: 'default', requiresAuth: true, requiresPermission: 'issues.create' },
+        component: () => import('@/views/project/IssuesCreate.vue')
+    },
 ]

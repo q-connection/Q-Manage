@@ -10,7 +10,7 @@
     }
 }
 
-.card-profile {
+.card-profile, .card-editor {
     border: 0;
 
     .card-body {
@@ -44,7 +44,7 @@
                 .nav-link, .nav-link.active {
                     border-radius: 10px 10px 0px 0px;
                     border: 1px solid #E0E0E0;
-                    color: #E0E0E0;
+                    color: #D5D5D5;
                     font-weight: 500;
                 }
 
@@ -58,7 +58,7 @@
 }
 
 @media screen and (max-width: 990px) {
-    .card-profile {
+    .card-profile, .card-tabs {
         .tabs {
             > div {
                 padding: 0 .25rem;

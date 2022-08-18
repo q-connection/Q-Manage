@@ -3,6 +3,7 @@
         :label="label" 
         :invalid-feedback="error" 
         :state="state"
+        :description="description"
         :label-class="{
             'font-weight-medium label-required': required === true
         }"
@@ -75,8 +76,9 @@
             :accept="accept"
             :placeholder="placeholder" 
             :required="required"
+            :multiple="multiple"
             @input="$emit('input', $event)"
-        />        
+        />      
     </b-form-group>   
 </template>
 
@@ -86,6 +88,7 @@
             type: String,
             accept: String,
             label: String,
+            description: String,
             name: String,
             placeholder: String,
             error: String,
