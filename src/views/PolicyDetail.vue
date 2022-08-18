@@ -9,19 +9,15 @@
                     <h5>{{ anno.name }}</h5>
                     <b-card-sub-title>{{ $mm(anno.created_at).format('LLL') }}</b-card-sub-title>
                     <div class="mt-3" v-if="anno.file">
-                        <a :href="anno.file" target="_blank" class="text-primary h6">
+                        <a :href="anno.file_url" target="_blank" class="text-primary h6">
                             <q-icon icon="et:attachments"/>
                             {{ getSplitedFile(anno.file) }}
                         </a>
                     </div>
                     <div class="mt-3" v-html="anno.description"></div>
-                    <PDF class="mt-3" :src="anno.file" :page="1" v-if="anno.file">
-                        <template slot="loading">
-                            <b-spinner variant="primary" small>
-                                Loading document...
-                            </b-spinner>
-                        </template>
-                    </PDF>
+                    <div class="mt-3 w-100 border" v-if="anno.file">
+                        <embed :src="fileUrl(anno.file)" style="width: 100%; min-height: 500px" type="application/pdf">
+                    </div>
                 </b-card>
                 <b-card class="my-3 p-3" v-else>
                     <div class="d-flex justify-content-center align-items-center">
@@ -37,11 +33,7 @@
 </template>
 
 <script>
-    import PDF from 'pdfvuer'
-
     export default {
-        components: {PDF},
-
         data: () => ({
             anno: {},
             isLoading: true
@@ -121,7 +113,11 @@
 
                 await this.fetchAnnocement(id)
                 await this.fetchOtherAnnocements(id)
-            }
+            },
+
+            fileUrl(file) {
+                return process.env.VUE_APP_API_ENDPOINT + `/stream-pdf/${file}`
+            }            
         }
     }
 </script>
