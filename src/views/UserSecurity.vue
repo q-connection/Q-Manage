@@ -1,4 +1,5 @@
 <template>
+<div class="page-content" :class="{hrm: inHrmRoutes === true}">
     <b-container fluid>
         <b-row>
             <b-col cols=12 xl=3 lg=2 v-if="!$device.mobile">
@@ -40,6 +41,7 @@
             </b-col>
         </b-row>
     </b-container>
+</div>
 </template>
 
 <script>

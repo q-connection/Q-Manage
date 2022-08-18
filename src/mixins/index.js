@@ -40,6 +40,9 @@ export default {
 
             return device;
         },
+        inHrmRoutes() {
+            return this.$route.name.indexOf('hrm') !== -1
+        }        
     },
 
     methods: {

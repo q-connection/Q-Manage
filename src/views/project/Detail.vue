@@ -1,8 +1,10 @@
 <template>
+<div class="page-content" :class="{hrm: inHrmRoutes === true}">
     <b-container fluid>
         <b-row>
         </b-row>
     </b-container>
+</div>
 </template>
 
 <script>

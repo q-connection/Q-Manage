@@ -1,5 +1,6 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
+<div class="page-content" :class="{hrm: inHrmRoutes === true}">
     <b-container fluid>
         <b-row>
             <b-col class="title-page">
@@ -179,6 +180,7 @@
             </div>
         </b-modal>
     </b-container>
+</div>
 </template>
 
 <script>

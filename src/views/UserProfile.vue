@@ -1,4 +1,5 @@
 <template>
+<div class="page-content" :class="{hrm: inHrmRoutes === true}">
     <b-container fluid>
         <b-row class="mb-5">
             <b-col cols=12>
@@ -202,6 +203,7 @@
             </div>
         </div>               
     </b-container>
+</div>
 </template>
 
 <script>
