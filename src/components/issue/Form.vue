@@ -49,7 +49,7 @@
                                     description="Only support files: jpg, jpeg, png, gif, pdf, doc, docx, xlsx, xls, zip, rar, tar, tar.gz"
                                     :error="errors[0]"
                                     :state="$isValid(errors, valid)"
-                                    v-model="formData.file"
+                                    v-model="formData.files"
                                     multiple
                                 />    
                             </validation-provider>     
@@ -233,7 +233,7 @@
                 if(!this.editing) {
                     formData.project_id = this.$route.params.id
                 }
-                
+
                 this.$emit('submit', {formData: this.$objToFormData(formData), refs: this.$refs})
             }
         }
