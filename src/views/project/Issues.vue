@@ -160,6 +160,15 @@
             async 'queryParams.order'() {
                 await this.fetchIssues()
             },
+            async 'queryParams.label_id'() {
+                await this.fetchIssues()
+            },
+            async 'queryParams.team_id'() {
+                await this.fetchIssues()
+            },
+            async 'queryParams.assigned_id'() {
+                await this.fetchIssues()
+            },
 
             'queryParams.search'() {
                 clearTimeout(this.timer)
@@ -319,7 +328,7 @@
 
             removeFilter(type) {
                 this.filtering[type] = null
-                this.queryParams[`${type}_id`] = null
+                this.queryParams[`${type}_id`] = ''
             }
         }
     }
