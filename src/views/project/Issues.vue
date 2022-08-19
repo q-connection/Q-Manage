@@ -90,7 +90,9 @@
                                                 <span v-if="index < issue.teams.length -1">, </span>
                                             </span>
                                         </div>
-                                        <div class="issue-date">{{ $mm(issue.created_at).format('LLL') }} by {{ issue.create_by || 'N/A' }}</div>
+                                        <div class="issue-date">
+                                            {{ $mm(issue.created_at).format('LLL') }} by <a href="javascript:;" @click="onFilter(issue.user, 'assigned')">{{ issue.user.fullname || 'N/A' }}</a>
+                                        </div>
                                     </div>
                                     <div class="issue-content-right">
                                         <div 
