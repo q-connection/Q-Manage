@@ -18,7 +18,7 @@
                     </span>
                     Refresh
                 </form-button>
-                <b-form-checkbox class="ml-3" value="show_all" unchecked-value="" v-model="queryParams.order">
+                <b-form-checkbox class="ml-3" value="show_all" unchecked-value="assigne" v-model="queryParams.order">
                     Show all
                 </b-form-checkbox>
             </div>
@@ -39,7 +39,7 @@
                     <div class="issues-content--table">
                         <div class="issues-content--table__content shadow-sm">
                             <div class="head">
-                                <div class="head-title">{{ status.label }} ({{ status.total_issues }})</div>
+                                <div class="head-title">{{ status.label }} ({{ getIssuesByStatus(status.name).length }})</div>
                                 <div class="head-toolbar">
                                     <span class="icon">
                                         <q-icon icon="fluent:more-circle-20-regular"/>
@@ -67,9 +67,14 @@
                                                 class="member-avatar"
                                                 :src="member.avatar_url"
                                                 error="/images/avatar-placeholder.png"
-                                                v-for="(member, member_idx) in issue.assignes" 
+                                                v-for="(member, member_idx) in splitAssginees(issue.assignes)" 
                                                 :key="member_idx"
                                             />
+                                            <div class="member-avatar" v-if="issue.assignes.length > 2">
+                                                <div class="text-center text-primary mt-1 small">
+                                                    +{{ issue.assignes.length - 2 }}
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -90,6 +95,7 @@
         name: 'ProjectIssues',
         components: {ProjectLayout, draggable},
         data: () => ({
+            timer: null,
             isLoading: false,
             issues: [],
             statuses: [
@@ -99,17 +105,21 @@
                 {label: 'Done', name: 'done', total_issues: 0}
             ],
             queryParams: {
-                order: '',
+                order: 'assigne',
                 search: ''
             }
         }),
 
         watch: {
-            queryParams: {
-                deep: true,
-                async handler() {
+            async 'queryParams.order'() {
+                await this.fetchIssues()
+            },
+
+            'queryParams.search'() {
+                clearTimeout(this.timer)
+                this.timer = setTimeout(async () => {
                     await this.fetchIssues()
-                }
+                }, 750)
             }
         },
 
@@ -246,6 +256,14 @@
 
             parseTeams(teams) {
                 return teams.length > 0 ? teams.map(x => x.name).join(', ') : 'All'
+            },
+
+            splitAssginees(list) {
+                if(list.length <= 2) {
+                    return list
+                }
+
+                return this.$lodash.chunk(list, 2)[0]
             }
         }
     }
@@ -318,7 +336,6 @@ $content: issues-content;
                     padding: .5rem;
                     // box-shadow: 0 0.125rem 0.25rem rgb(0 0 0 / 8%);
                     border: 1px solid #E0E0E0;
-                    cursor: pointer;
                     margin-bottom: .5rem;
 
                     &:hover {
@@ -393,6 +410,7 @@ $content: issues-content;
                                 position: relative;
                                 overflow: hidden;
                                 border-radius: 100%;
+                                margin-right: 2px;
                                 
                                 img {
                                     width: 100%;
