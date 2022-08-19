@@ -62,7 +62,7 @@
                             </div>
                             <div class="right" v-show="$hasPermission('issues.label.destroy') && config.server_side">
                                 <span class="danger" @click="onDelete(opt.value)">
-                                    <q-icon icon="codicon:close"/>
+                                    <q-icon icon="bi:trash-fill"/>
                                 </span>
                             </div>
                         </div>

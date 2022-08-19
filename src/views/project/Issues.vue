@@ -33,6 +33,33 @@
                 </form-input-group>                
             </div>
         </div>
+        <div class="issues-filter">
+            <div class="d-flex mb-1" v-if="filtering.team">
+                <div class="mr-2">Team:</div>
+                <div class="text-primary font-weight-bold mr-2">{{ filtering.team.name }}</div>
+                <div class="text-danger text-cursor h5 mb-0" style="line-height: 1" @click="removeFilter('team')">
+                    <q-icon icon="codicon:close"/>
+                </div>
+            </div>
+            <div class="d-flex mb-1" v-if="filtering.label">
+                <div class="mr-2">Label:</div>
+                <div class="font-weight-bold mr-2">
+                    <span class="px-3 py-1 text-white" :style="{backgroundColor: filtering.label.color, borderRadius: '10px', fontSize: '10px'}">
+                        {{ filtering.label.name }}
+                    </span>
+                </div>
+                <div class="text-danger text-cursor h5 mb-0" style="line-height: 1" @click="removeFilter('label')">
+                    <q-icon icon="codicon:close"/>
+                </div>
+            </div>
+            <div class="d-flex mb-1" v-if="filtering.assigned">
+                <div class="mr-2">Assigned:</div>
+                <div class="text-primary font-weight-bold mr-2">{{ filtering.assigned.fullname }}</div>
+                <div class="text-danger text-cursor h5 mb-0" style="line-height: 1" @click="removeFilter('assigned')">
+                    <q-icon icon="codicon:close"/>
+                </div>
+            </div>
+        </div>
         <div class="issues-content">
             <b-row>
                 <b-col cols=12 xl=3 lg=3 v-for="(status, index) in statuses" :key="index">
@@ -55,11 +82,22 @@
                                 <div class="issue-item" v-for="(issue, issue_idx) in getIssuesByStatus(status.name)" :key="issue_idx">
                                     <div class="issue-content-left">
                                         <div class="issue-title">[{{ issue.id }}] {{ issue.name }}</div>
-                                        <div class="issue-team">{{ parseTeams(issue.teams) }}</div>
-                                        <div class="issue-date">{{ $mm(issue.created_at).format('LLL') }} by {{ issue.created_by }}</div>
+                                        <div class="issue-team">
+                                            <span  v-for="(team, index) in issue.teams" :key="index">
+                                                <a href="javascript:;" class="text-primary" @click="onFilter(team, 'team')">
+                                                    {{ team.name }}
+                                                </a>
+                                                <span v-if="index < issue.teams.length -1">, </span>
+                                            </span>
+                                        </div>
+                                        <div class="issue-date">{{ $mm(issue.created_at).format('LLL') }} by {{ issue.create_by || 'N/A' }}</div>
                                     </div>
                                     <div class="issue-content-right">
-                                        <div class="issue-badge" :style="{backgroundColor: firstLabel(issue.labels).color, color: '#fff'}">
+                                        <div 
+                                            class="issue-badge text-cursor" 
+                                            :style="{backgroundColor: firstLabel(issue.labels).color, color: '#fff'}"
+                                            @click="onFilter(firstLabel(issue.labels), 'label')"
+                                        >
                                             {{ firstLabel(issue.labels).name }}
                                         </div>
                                         <div class="issue-members">
@@ -98,6 +136,11 @@
             timer: null,
             isLoading: false,
             issues: [],
+            filtering: {
+                label: null,
+                team: null,
+                assigned: null,
+            },
             statuses: [
                 {label: 'To do', name: 'to_do', total_issues: 0},
                 {label: 'In progress', name: 'inprogess', total_issues: 0},
@@ -106,7 +149,10 @@
             ],
             queryParams: {
                 order: 'assigne',
-                search: ''
+                search: '',
+                label_id: '',
+                team_id: '',
+                assigned_id: ''
             }
         }),
 
@@ -264,6 +310,16 @@
                 }
 
                 return this.$lodash.chunk(list, 2)[0]
+            },
+
+            onFilter(item, type) {
+                this.filtering[type] = item
+                this.queryParams[`${type}_id`] = item.id
+            },
+
+            removeFilter(type) {
+                this.filtering[type] = null
+                this.queryParams[`${type}_id`] = null
             }
         }
     }
