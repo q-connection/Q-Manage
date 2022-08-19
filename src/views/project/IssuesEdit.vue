@@ -1,6 +1,11 @@
 <template>
     <project-layout>
-        <issue-form @submit="onSubmit" :loading="formLoading"/>
+        <issue-form 
+            @submit="onSubmit" 
+            :loading="formLoading"
+            :issue="issue"
+            editing
+        />
     </project-layout>
 </template>
 
@@ -11,14 +16,39 @@
     export default {
         components: {ProjectLayout, IssueForm},
         data:() => ({
-            formLoading: false
+            formLoading: false,
+            issue: null
         }),
 
+        mounted() {
+            if(!this.$route.params.issue_id) {
+                this.$router.push({name: 'project-issues'})
+
+                return
+            }
+
+            this.fetchIssue()
+        },
+
         methods: {
+            async fetchIssue() {
+                try {
+                    const { data } = await this.$http.get('issues/' + this.$route.params.issue_id)
+
+                    if(!data.error) {
+                        this.issue = data.data
+                    }
+                } catch (err) {
+                    console.log(err)
+
+                    this.$router.push({name: 'project-issues'})
+                }
+            },
+
             async onSubmit({formData, refs}) {
                 try {
                     this.formLoading = true
-                    const { data } = await this.$http.post('issues', formData)
+                    const { data } = await this.$http.post('issues/' + this.issue.id, formData)
 
                     if(!data.error) {
                         this.$showAlert({

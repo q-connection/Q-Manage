@@ -23,4 +23,10 @@ export default [
         meta: { layout: 'default', requiresAuth: true, requiresPermission: 'issues.create' },
         component: () => import('@/views/project/IssuesCreate.vue')
     },
+    {
+        path: '/projects/:id/issues/edit/:issue_id',
+        name: 'project-issues-edit',
+        meta: { layout: 'default', requiresAuth: true, requiresPermission: 'issues.edit' },
+        component: () => import('@/views/project/IssuesEdit.vue')
+    },
 ]

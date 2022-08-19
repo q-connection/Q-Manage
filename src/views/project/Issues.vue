@@ -2,9 +2,22 @@
     <project-layout>
         <div class="issues-header">
             <div class="issues-header--actions">
-                <b-button class="p-2" :to="{name: 'project-issues-create'}" variant="outline-primary" size="sm">
+                <form-button class="p-2" :to="{name: 'project-issues-create'}" variant="outline-primary" size="sm">
                     Create
-                </b-button>
+                </form-button>
+                <form-button 
+                    class="p-2 ml-3" @click="fetchIssues()" 
+                    variant="outline-danger" 
+                    size="sm" 
+                    :loading="isLoading" 
+                    :disabled="isLoading"
+                    loading-without-hidden-text
+                >
+                    <span slot="icon" class="h5 mb-0" style="line-height: 1">
+                        <q-icon icon="bx:refresh"/>
+                    </span>
+                    Refresh
+                </form-button>
                 <b-form-checkbox class="ml-3" value="show_all" unchecked-value="" v-model="queryParams.show_all">
                     Show all
                 </b-form-checkbox>
@@ -33,7 +46,12 @@
                                     </span>
                                 </div>
                             </div>
-                            <div class="body">
+                            <draggable 
+                                class="body"
+                                :value="getIssuesByStatus(status.name)" 
+                                @change="onPositionChange($event, status.name)"
+                                v-bind="dragOptions"
+                            >
                                 <div class="issue-item" v-for="(issue, issue_idx) in getIssuesByStatus(status.name)" :key="issue_idx">
                                     <div class="issue-content-left">
                                         <div class="issue-title">[{{ issue.id }}] {{ issue.name }}</div>
@@ -41,17 +59,21 @@
                                         <div class="issue-date">{{ $mm(issue.created_at).format('LLL') }} by {{ issue.created_by }}</div>
                                     </div>
                                     <div class="issue-content-right">
-                                        <div class="issue-badge" :class="issue.type">{{ issue.type }}</div>
-                                        <div class="issue-members" v-for="(member, member_idx) in issue.assigne.users" :key="member_idx">
+                                        <div class="issue-badge" :style="{backgroundColor: firstLabel(issue.labels).color, color: '#fff'}">
+                                            {{ firstLabel(issue.labels).name }}
+                                        </div>
+                                        <div class="issue-members">
                                             <img-lazy-load 
                                                 class="member-avatar"
-                                                :src="member.avatar"
+                                                :src="member.avatar_url"
                                                 error="/images/avatar-placeholder.png"
+                                                v-for="(member, member_idx) in issue.assignes" 
+                                                :key="member_idx"
                                             />
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </draggable>
                         </div>
                     </div>
                 </b-col>
@@ -61,12 +83,14 @@
 </template>
 
 <script>
+    import draggable from 'vuedraggable'
     import ProjectLayout from '@/components/project/Layout.vue'
 
     export default {
         name: 'ProjectIssues',
-        components: {ProjectLayout},
+        components: {ProjectLayout, draggable},
         data: () => ({
+            isLoading: false,
             issues: [],
             statuses: [
                 {label: 'To do', name: 'to_do', total_issues: 0},
@@ -91,17 +115,33 @@
 
         computed: {
             toDoIssues() {
-                return this.issues.length > 0 ? this.issues.filter(x => x.status == 'to_do') : []
+                const issues = this.issues.length > 0 ? this.issues.filter(x => x.status == 'to_do') : []
+
+                return this.$lodash.sortBy(issues, x => x.order)
             },
             inProgressIssues() {
-                return this.issues.length > 0 ? this.issues.filter(x => x.status == 'inprogess') : []
+                const issues = this.issues.length > 0 ? this.issues.filter(x => x.status == 'inprogess') : []
+
+                return this.$lodash.sortBy(issues, x => x.order)
             },
             pendingIssues() {
-                return this.issues.length > 0 ? this.issues.filter(x => x.status == 'pending') : []
+                const issues = this.issues.length > 0 ? this.issues.filter(x => x.status == 'pending') : []
+
+                return this.$lodash.sortBy(issues, x => x.order)
             },
             doneIssues() {
-                return this.issues.length > 0 ? this.issues.filter(x => x.status == 'done') : []
+                const issues = this.issues.length > 0 ? this.issues.filter(x => x.status == 'done') : []
+
+                return this.$lodash.sortBy(issues, x => x.order)
             },
+            dragOptions() {
+                return {
+                    animation: 200,
+                    group: "issue",
+                    disabled: false,
+                    ghostClass: "ghost"
+                };
+            }            
         },
 
         async mounted() {
@@ -111,6 +151,7 @@
         methods: {
             async fetchIssues() {
                 try {
+                    this.isLoading = true
                     const project_id = this.$route.params.id
                     const params     = this.queryParams
                     const { data } = await this.$http.get(`projects/issue/${project_id}`, {params})
@@ -120,9 +161,11 @@
                     }
                 } catch (err) {
                     console.log(err)
+                } finally {
+                    this.isLoading = false
                 }
             },
-
+    
             getIssuesByStatus(status) {
                 let issues = []
 
@@ -142,6 +185,63 @@
                 }
 
                 return issues
+            },
+
+            async updateOrder(id, order) {
+                try {
+                    await this.$http.put('issues/update_order/' + id, {order})
+                } catch (err) {
+                    console.log(err)
+                }
+            },
+
+            async updateStatus(id, status) {
+                try {
+                    await this.$http.put('issues/update_status/' + id, {status})
+                } catch (err) {
+                    console.log(err)
+                }
+            },
+
+            async onPositionChange(event, status) {
+                if(event.added) {
+                    const obj = event.added.element
+                    const idx  = this.issues.findIndex(x => x.id == obj.id)
+
+                    if(idx !== -1) {
+                        obj.status = status
+                        this.$set(this.issues, idx, obj)
+                        await this.updateStatus(obj.id, status)
+                    }
+                }
+
+                if(event.moved) {
+                    const obj = event.moved.element
+                    const oldObj = this.getIssuesByStatus(status)[event.moved.newIndex]
+                    
+                    const objIdx = this.issues.findIndex(x => x.id == obj.id)
+                    const objOldIdx = this.issues.findIndex(x => x.id == oldObj.id)
+                    console.log(obj, oldObj)
+                    if(objIdx !== -1 && objOldIdx !== -1) {
+                        obj.order = event.moved.newIndex
+                        oldObj.order = event.moved.oldIndex
+
+                        this.$set(this.issues, objIdx, obj)
+                        this.$set(this.issues, objOldIdx, oldObj)
+
+                        await this.updateOrder(obj.id, event.moved.newIndex)
+                        await this.updateOrder(oldObj.id, event.moved.oldIndex)                        
+                    }
+                }
+            },
+
+            firstLabel(labels) {
+                const first = labels[0] || {
+                    name: 'N/A',
+                    color: '#333333'
+                }
+
+                return first
             }
         }
     }
@@ -203,6 +303,7 @@ $content: issues-content;
                 padding: .75rem;
                 border: 1px solid #F5F5F5;
                 border-top: 0;
+                min-height: 110px;
 
                 .issue-item {
                     display: flex;
@@ -262,7 +363,7 @@ $content: issues-content;
                             text-align: center;
                             font-size: 10px;
                             font-weight: 600;
-                            padding: 2px;
+                            padding: 2px 6px;
 
                             &.task {
                                 background-color: var(--success);

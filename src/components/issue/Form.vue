@@ -88,10 +88,27 @@
                                 ref="labels"
                                 rules="required"
                             >                            
-                                <Labels
-                                    v-model="formData.labels" 
+                                <CustomSelect
+                                    label="Labels"
+                                    v-model="formData.labels"
                                     :error="errors[0]"
-                                />
+                                    :config="labelConfig"
+                                    required
+                                >
+                                    <template slot="creation" slot-scope="{reset, search}">
+                                        <FormLabel :reset="reset" :name="search"/>
+                                    </template>
+                                    <template slot="option" slot-scope="opt">
+                                        <div 
+                                            class="font-weight-bold" 
+                                            style="padding: 0.15rem 0.75rem; font-size: 10px; border-radius: 10px" 
+                                            :class="opt.class" 
+                                            :style="opt.style"
+                                        >
+                                            {{ opt.label }}
+                                        </div>                                        
+                                    </template>
+                                </CustomSelect>
                             </validation-provider>
                             <validation-provider 
                                 v-slot="{errors}"
@@ -99,10 +116,17 @@
                                 ref="teams"
                                 rules="required"
                             >                            
-                                <Teams
-                                    v-model="formData.teams" 
+                                <CustomSelect
+                                    label="Team"
+                                    v-model="formData.teams"
                                     :error="errors[0]"
-                                />
+                                    :config="teamConfig"
+                                    required
+                                >
+                                    <template slot="creation" slot-scope="{reset, search}">
+                                        <FormTeam :reset="reset" :name="search"/>
+                                    </template>
+                                </CustomSelect>
                             </validation-provider>
                             <validation-provider 
                                 v-slot="{errors, valid}"
@@ -183,13 +207,14 @@
 
 <script>
     import Assignees from '@/components/issue/SelectAssignees.vue'
-    import Labels from '@/components/issue/SelectLabels.vue'
-    import Teams from '@/components/issue/SelectTeams.vue'
+    import CustomSelect from '@/components/issue/CustomSelect.vue'
+    import FormLabel from '@/components/issue/FormLabel.vue'
+    import FormTeam from '@/components/issue/FormTeam.vue'
 
     export default {
         name: 'IssueForm',
 
-        components: {Assignees, Labels, Teams},
+        components: {Assignees, CustomSelect, FormLabel, FormTeam},
         
         props: {
             editing: {
@@ -202,6 +227,10 @@
                 default: false
             },
             
+            issue: {
+                type: Object,
+                default: null
+            }
         },
 
         data: () => ({
@@ -227,6 +256,48 @@
             }
         }),
 
+        watch: {
+            issue(newval){
+                if(newval) {
+                    this.initIssue()
+                }
+            }
+        },
+
+        computed: {
+            labelConfig() {
+                return {
+                    server_side: true,
+                    allow_creation: true,
+                    endpoint: 'issues_labels',
+                    resolveData: data => ({
+                        label: data.name,
+                        value: data.id,
+                        style: `background-color: ${data.color}; color: #fff`
+                    })
+                }
+            },
+            teamConfig() {
+                return {
+                    server_side: true,
+                    allow_creation: true,
+                    endpoint: 'issues_teams',
+                    resolveData: data => ({
+                        label: data.name,
+                        value: data.id,
+                        class: `text-primary m-0`,
+                        style: 'font-size: 14px; font-weight: 600'
+                    })
+                }
+            },
+        },
+
+        mounted() {
+            if(this.issue) {
+                this.initIssue()
+            }
+        },
+
         methods: {
             onSubmit() {
                 const formData = Object.assign({}, this.formData)
@@ -235,6 +306,31 @@
                 }
 
                 this.$emit('submit', {formData: this.$objToFormData(formData), refs: this.$refs})
+            },
+
+            initIssue() {
+                const keys = [
+                    'project_id',
+                    'name',
+                    'content',
+                    'assigned_customers',
+                    'labels',
+                    'start_date',
+                    'end_date',
+                    'point',
+                    'teams',
+                    'status'
+                ]
+
+                keys.forEach(key => {
+                    if(this.issue[key]) {
+                        if(['labels', 'teams'].includes(key)) {
+                            this.formData[key] = this.issue[key].map(item => item.id)
+                        } else {
+                            this.formData[key] = this.issue[key]
+                        }
+                    }
+                })
             }
         }
     }

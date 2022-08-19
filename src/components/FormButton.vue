@@ -1,5 +1,5 @@
 <template>
-    <b-button :type="type" :variant="variant" :disabled="disabled" :size="size" @click="($event) => $emit('click', $event)" :block="block">
+    <b-button :to="to" :type="type" :variant="variant" :disabled="disabled" :size="size" @click="($event) => $emit('click', $event)" :block="block">
         <div v-if="!loading">
             <slot name="icon"/>
             <slot/>
@@ -52,7 +52,11 @@
             block: {
                 type: Boolean,
                 default: false
-            }
+            },
+
+            to: {
+                default: null
+            },
         },
 
         computed: {

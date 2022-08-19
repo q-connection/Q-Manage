@@ -219,8 +219,8 @@ export default {
             try {
                 const { data } = await this.$http.get('projects/issue/' + this.selectedProject)
 
-                if(!data.error) {
-                    this.issues = data.data || []
+                if(!data.error && data.data) {
+                    this.issues = data.data.issues || []
                 }
             } catch (err) {
                 console.log(err)

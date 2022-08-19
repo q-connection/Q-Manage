@@ -84,7 +84,9 @@ export default {
             for(let i = 0; i < keys.length; i++) {
                 if(obj[keys[i]]) {
                     if(Array.isArray(obj[keys[i]])) {
-                        formData.append(`${keys[i]}[]`, obj[keys[i]])
+                        obj[keys[i]].forEach(item => {
+                            formData.append(`${keys[i]}[]`, item)
+                        })
                     } else {
                         formData.append(keys[i], obj[keys[i]])
                     }

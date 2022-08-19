@@ -79,7 +79,41 @@
             :multiple="multiple"
             @input="$emit('input', $event)"
         />      
-    </b-form-group>   
+        <div class="color-picker" v-if="mode == 'color'">
+            <div class="pr-2">
+                <b-button variant="primary" @click="$emit('input', colors[0])">
+                    <span class="h5 p-0 m-0" style="line-height: 0">
+                        <q-icon icon="bx:refresh"/>
+                    </span>
+                </b-button>
+            </div>
+            <div class="color-picker--input">
+                <b-form-input
+                    :name="name"
+                    :type="type"
+                    :value="value" 
+                    :state="state"
+                    :placeholder="placeholder"
+                    :loading="loading"
+                    :required="required"
+                    :class="customClass"
+                    @input="$emit('input', $event)"
+                    readonly
+                    @click="colorActive = !colorActive"
+                />   
+                <div class="color-picker--input__wrapper" :class="{active: colorActive}">
+                    <div class="color-picker--input__wrapper-content">
+                        <div class="small font-weight-bold mt-1">Choose from default colors:</div>
+                        <div class="colors mt-1">
+                            <div class="colors-item" v-for="(color, index) in colors" :key="index" @click="$emit('input', color)">
+                                <div class="colors-item--box" :style="{backgroundColor: color}"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>          
+        </div>
+    </b-form-group>
 </template>
 
 <script>
@@ -125,14 +159,92 @@
             },
         },
 
+        data: () => ({
+            colorActive: false
+        }),
+
         computed: {
             stateToString() {
                 return this.state === null ? false : (new Boolean(this.state)).toString()
+            },
+
+            colors() {
+                return [
+                    '#A72218',
+                    '#C84B25',
+                    '#F3CC45',
+                    '#3E882D',
+                    '#2D6973',
+                    '#3A74D4',
+                    '#2151C5',
+                    '#4C1DDE',
+                    '#DD9A97',
+                    '#F2D2C6',
+                    '#FCF2C5',
+                    '#C8DFC8',
+                    '#C4D9DB',
+                    '#CADDF3',
+                    '#C3D3EF',
+                    '#D1C5F5'
+                ]
             }
         }
     }
 </script>
 
 <style lang="scss" scoped>
+.color-picker {
+    display: flex;
+    width: 100%;
+    
+    .btn {
+        height: 100%;
+        min-width: 28px;
+        transition: .35s    ;
+    }
 
+    .color-picker--input {
+        .form-control {
+            width: 100%;
+            cursor: pointer;
+        }
+
+        .color-picker--input__wrapper {
+            position: relative;
+            overflow: hidden;
+
+            .color-picker--input__wrapper-content {
+                position: relative;
+                overflow: hidden;         
+                height: 0px;
+                transform: translateY(-100%);
+                transition: .35s;
+            }
+
+            .colors {
+                display: flex;
+                flex-wrap: wrap;
+                -ms-flex-wrap: wrap;
+
+                .colors-item {
+                    padding: 4px;
+                    cursor: pointer;
+
+                    .colors-item--box {
+                        width: 18px;
+                        height: 18px;
+                        border-radius: 5px;
+                    }
+                }
+            }
+
+            &.active {
+                .color-picker--input__wrapper-content {
+                    height: 80px;
+                    transform: translateY(0);
+                }
+            }
+        }
+    }
+}
 </style>

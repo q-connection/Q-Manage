@@ -11,6 +11,7 @@
             <b-tab :title="label">
                 <VueEditor 
                     @input="onInput"
+                    :value="value"
                     :editorOptions="editorSettings"
                 />
             </b-tab>
