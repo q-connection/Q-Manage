@@ -55,7 +55,7 @@
                                 <div class="issue-item" v-for="(issue, issue_idx) in getIssuesByStatus(status.name)" :key="issue_idx">
                                     <div class="issue-content-left">
                                         <div class="issue-title">[{{ issue.id }}] {{ issue.name }}</div>
-                                        <div class="issue-team">{{ issue.team || 'All' }}</div>
+                                        <div class="issue-team">{{ parseTeams(issue.teams) }}</div>
                                         <div class="issue-date">{{ $mm(issue.created_at).format('LLL') }} by {{ issue.created_by }}</div>
                                     </div>
                                     <div class="issue-content-right">
@@ -242,6 +242,10 @@
                 }
 
                 return first
+            },
+
+            parseTeams(teams) {
+                return teams.length > 0 ? teams.map(x => x.name).join(', ') : 'All'
             }
         }
     }
