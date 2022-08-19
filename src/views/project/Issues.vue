@@ -18,7 +18,7 @@
                     </span>
                     Refresh
                 </form-button>
-                <b-form-checkbox class="ml-3" value="show_all" unchecked-value="" v-model="queryParams.show_all">
+                <b-form-checkbox class="ml-3" value="show_all" unchecked-value="" v-model="queryParams.order">
                     Show all
                 </b-form-checkbox>
             </div>
