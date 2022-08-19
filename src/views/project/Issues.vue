@@ -91,7 +91,7 @@
                                             </span>
                                         </div>
                                         <div class="issue-date">
-                                            {{ $mm(issue.created_at).format('LLL') }} by <a href="javascript:;" @click="onFilter(issue.user, 'assigned')">{{ issue.user.fullname || 'N/A' }}</a>
+                                            {{ $mm(issue.created_at).format('LL') }} by {{ issue.user.fullname || 'N/A' }}
                                         </div>
                                     </div>
                                     <div class="issue-content-right">
@@ -104,11 +104,12 @@
                                         </div>
                                         <div class="issue-members">
                                             <img-lazy-load 
-                                                class="member-avatar"
+                                                class="member-avatar text-cursor"
                                                 :src="member.avatar_url"
                                                 error="/images/avatar-placeholder.png"
                                                 v-for="(member, member_idx) in splitAssginees(issue.assignes)" 
                                                 :key="member_idx"
+                                                @click="onFilter(member, 'assigned')"
                                             />
                                             <div class="member-avatar" v-if="issue.assignes.length > 2">
                                                 <div class="text-center text-primary mt-1 small">
