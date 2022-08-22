@@ -86,7 +86,7 @@
                                         </div>
                                         <div class="issue-team">
                                             <span  v-for="(team, index) in issue.teams" :key="index">
-                                                <a href="javascript:;" class="text-primary" @click="onFilter(team, 'team')">
+                                                <a href="javascript:;" class="text-primary" @click="onFilter(team, 'team', 'team_id')">
                                                     {{ team.name }}
                                                 </a>
                                                 <span v-if="index < issue.teams.length -1">, </span>
@@ -103,7 +103,7 @@
                                         <div 
                                             class="issue-badge text-cursor" 
                                             :style="{backgroundColor: firstLabel(issue.labels).color, color: '#fff'}"
-                                            @click="onFilter(firstLabel(issue.labels), 'label')"
+                                            @click="onFilter(firstLabel(issue.labels), 'label', 'label_id')"
                                         >
                                             {{ firstLabel(issue.labels).name }}
                                         </div>
@@ -500,9 +500,9 @@
                 return this.$lodash.chunk(list, 2)[0]
             },
 
-            onFilter(item, type) {
+            onFilter(item, type, key = 'id') {
                 this.filtering[type] = item
-                this.queryParams[`${type}_id`] = item.id
+                this.queryParams[`${type}_id`] = item[key]
             },
 
             removeFilter(type) {
