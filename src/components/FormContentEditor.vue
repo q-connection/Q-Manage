@@ -16,7 +16,9 @@
                 />
             </b-tab>
             <b-tab title="Review" v-if="reviewable">
-                <div class="w-100 p-3" v-html="value"></div>
+                <div class="ql-snow">
+                    <div class="ql-editor w-100 p-3" v-html="value"></div>
+                </div>
             </b-tab>
         </b-tabs>      
         <span class="text-danger small mt-1">

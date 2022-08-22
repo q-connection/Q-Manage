@@ -324,10 +324,15 @@
 
                 keys.forEach(key => {
                     if(this.issue[key]) {
-                        if(['labels', 'teams'].includes(key)) {
-                            this.formData[key] = this.issue[key].map(item => item.id)
-                        } else {
-                            this.formData[key] = this.issue[key]
+                        switch(key) {
+                            case 'labels':
+                                this.formData[key] = this.issue[key].map(item => item.label_id)
+                            break;
+                            case 'teams':
+                                this.formData[key] = this.issue[key].map(item => item.team_id)
+                            break;
+                            default:
+                                this.formData[key] = this.issue[key]
                         }
                     }
                 })

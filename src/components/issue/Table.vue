@@ -12,8 +12,8 @@
             <template slot="tableHeadActions">
                 <b-select2
                     class="select-sm"
-                    v-model="type"
-                    :options="projects"
+                    v-model="labels"
+                    :options="issue_types"
                     :reduce="pj => pj.value"
                     style="min-width: 150px"
                     :closeOnSelect="false"
@@ -24,12 +24,11 @@
                     <template v-slot:option="option">
                         <slot name="option-data" class="option-data" v-bind="option">
                             <div class="d-flex w-100 justify-content-between">
-                                <b-badge variant="success" v-if="option.value == 'task'">Task</b-badge>
-                                <b-badge variant="danger" v-else>{{ option.label }}</b-badge>
-                                <span class="small text-danger text-cursor mb-0" @click="handleTypeCheck(option.value, false)" v-if="type.includes(option.value)">
+                                <span class="badge" :style="{backgroundColor: option.color, color: '#fff'}">{{ option.label }}</span>
+                                <span class="small text-danger text-cursor mb-0" v-if="labels.includes(option.value)">
                                     <q-icon icon="el:remove"/>
                                 </span>
-                                <span class="m-0 p-0 text-success text-cursor" @click="handleTypeCheck(option.value, true)" v-else>
+                                <span class="m-0 p-0 text-success text-cursor" v-else>
                                     <q-icon icon="carbon:add-filled"/>
                                 </span>
                             </div>
@@ -37,8 +36,7 @@
                     </template>
                     <template #selected-option-container="{option}">
                         <div class="mt-1" style="padding: .25rem .15rem">
-                            <b-badge class="p-1" variant="success" v-if="option.value == 'task'">Task</b-badge>
-                            <b-badge class="p-1" variant="danger" v-else>{{ option.label }}</b-badge>
+                            <span class="badge" :style="{backgroundColor: option.color, color: '#fff'}">{{ option.label }}</span>
                         </div>
                     </template>
                 </b-select2>
@@ -49,14 +47,24 @@
                         <q-icon icon="codicon:target"/>
                     </div>
                     <div class="issue-name">
-                        <div class="font-weight-bold">{{ row.name }}</div>
-                        <div class="small">{{ $mm(row.created_at).format('LL') }} by {{ row.created_by || 'N/A' }}</div>
+                        <div class="font-weight-bold d-flex align-items-center">
+                            <span class="mr-2">{{ row.name }}</span>
+                            <span 
+                                class="badge mr-1" 
+                                :style="{backgroundColor: lbl.color, color: '#fff'}"
+                                v-for="(lbl, index) in issue_types"
+                                :key="index"
+                            >
+                                {{ lbl.label }}
+                            </span>
+                        </div>
+                        <div class="small">{{ $mm(row.created_at).format('LL') }} by {{ row.created_by.fullname || 'N/A' }}</div>
                     </div>
                 </div>
             </template>
             <template slot="row-customers" slot-scope="{row}">
                 <div class="d-none d-xl-flex d-lg-flex align-items-center justify-content-end">
-                    <div class="issue-avatar-wrapper" v-for="(customer, index) in row.customers" :key="index">
+                    <div class="issue-avatar-wrapper" v-for="(customer, index) in row.assignes" :key="index">
                         <img-lazy-load 
                             :src="customer.avatar_url" 
                             error="/images/avatar-placeholder.png"
@@ -67,7 +75,7 @@
                 <div class="d-block d-xl-none d-lg-none">
                     <div class="h5 m-0 p-0 text-primary">
                         <q-icon icon="fa-solid:user-friends"/>
-                        {{ row.customers.length > 5 ? '5+' : row.customers.length }}
+                        {{ row.assignes.length > 5 ? '5+' : row.assignes.length }}
                     </div>
                 </div>
             </template>
@@ -79,11 +87,7 @@
     export default {
         name: 'TableIssues',
         data: () => ({
-            projects: [
-                {label: 'Task', value: 'task'},
-                {label: 'Bug', value: 'bug'},
-                {label: 'Hot fix', value: 'hot_fix'},
-            ],
+            issue_types: [],
             columns: [
                 {label: 'Name', name: 'name', rowClass: 'text-cursor p-3'},
                 {label: 'Customers', name: 'customers', rowClass: 'text-cursor p-3'},
@@ -91,41 +95,63 @@
             tableConfig: {
                 url: 'issues',
                 params: {
-                    type: []
+                    labels: []
                 }
             },            
         }),
 
         computed: {
-            type: {
+            labels: {
                 get() {
-                    return this.tableConfig.params.type
+                    return this.tableConfig.params.labels
                 },
 
                 set(val) {
-                    this.tableConfig.params.type = val
+                    this.tableConfig.params.labels = val
                 }
             }
         },
 
         watch: {
-            type() {
+            labels() {
                 this.$nextTick(() => {
                     this.$refs.table.refresh(true)
                 })
             }
         },
 
+        async mounted() {
+            await this.fetchTypes()
+        },
+
         methods: {
+            async fetchTypes() {
+                try {
+                    const { data } = await this.$http.get('issues_labels')
+
+                    if(!data.error) {
+                        this.issue_types = data.data.map(lbl => ({
+                            label: lbl.name,
+                            value: lbl.id,
+                            color: lbl.color
+                        }))
+                    }
+                } catch (err) {
+                    console.log(err)
+                }
+            },
+
             handleTypeCheck(value, checked) {
                 if(!checked) {
-                    const idx = this.type.findIndex(x => x == value)
+                    const idx = this.labels.findIndex(x => x == value)
                     if(idx !== false) {
-                        this.$delete(this.type, idx)
+                        this.$delete(this.labels, idx)
                     }
                 } else {
-                    this.type.push(value)
+                    this.labels.push(value)
                 }
+
+                    console.log(this.labels)
             }
         }
     }

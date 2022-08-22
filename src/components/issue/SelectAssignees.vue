@@ -85,6 +85,7 @@
 
 <script>
     import ClickOutside from 'vue-click-outside'
+import { mapActions } from 'vuex'
 
     export default {
         directives: {ClickOutside},
@@ -98,10 +99,13 @@
         },
         data: () => ({
             isDropdown: false,
-            users: [],
             search: ''
         }),
         computed: {
+            users() {
+                return this.$store.state.employees
+            },
+
             userFiltered() {
                 if(!this.search) {
                     return this.users
@@ -121,20 +125,12 @@
             }
         },
         async mounted() {
-            await this.fetchUsers()
+            await this.fetchEmployees()
         },
         methods: {
-            async fetchUsers() {
-                try {
-                    const { data } = await this.$http.get('employee/list-customer')
-
-                    if(!data.error) {
-                        this.users = data.data
-                    }
-                } catch (err) {
-                    console.log(err)
-                }
-            },
+            ...mapActions([
+                'fetchEmployees'
+            ]),
 
             onClickUser(id) {
                 let users = this.value || [];

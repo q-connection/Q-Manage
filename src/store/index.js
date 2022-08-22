@@ -8,7 +8,8 @@ Vue.use(Vuex)
 export default new Vuex.Store({
     state: {
         user: null,
-        idleLoading: false
+        idleLoading: false,
+        employees: []
     },
     getters: {
         userInfo: state => state.user
@@ -20,6 +21,10 @@ export default new Vuex.Store({
 
         SET_IDLE_LOADING(state, data) {
             state.idleLoading = data
+        },
+
+        SET_EMPLOYEES(state, data) {
+            state.employees = data
         }
     },
     actions: {
@@ -119,7 +124,19 @@ export default new Vuex.Store({
             }
 
             return has_permission
-        }
+        },
+
+        async fetchEmployees({commit}) {
+            try {
+                const { data } = await $http.get('employee/list-customer')
+
+                if(!data.error) {
+                    commit('SET_EMPLOYEES', data.data)
+                }
+            } catch (err) {
+                console.log(err)
+            }
+        }       
     },
     modules: {
     }

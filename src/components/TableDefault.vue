@@ -299,7 +299,14 @@
 
                 try {
                     // this.tableLoading = true
-                    const { method = 'GET', params = {}, url }  = this.tableConfig
+                    let { method = 'GET', params = {}, url }  = this.tableConfig
+                    
+                    params = Object.assign({}, params)
+                    Object.keys(params).forEach(key => {
+                        if(Array.isArray(params[key])) {
+                            params[key] = params[key].join(',')
+                        }
+                    })
 
                     const { data } = await this.$http({
                         method,

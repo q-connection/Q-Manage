@@ -81,13 +81,18 @@
                             >
                                 <div class="issue-item" v-for="(issue, issue_idx) in getIssuesByStatus(status.name)" :key="issue_idx">
                                     <div class="issue-content-left">
-                                        <div class="issue-title">[{{ issue.id }}] {{ issue.name }}</div>
+                                        <div class="issue-title" @click="showIssueModal(issue)">
+                                            [{{ issue.cod || 'N/A' }}] {{ issue.name }}
+                                        </div>
                                         <div class="issue-team">
                                             <span  v-for="(team, index) in issue.teams" :key="index">
                                                 <a href="javascript:;" class="text-primary" @click="onFilter(team, 'team')">
                                                     {{ team.name }}
                                                 </a>
                                                 <span v-if="index < issue.teams.length -1">, </span>
+                                            </span>
+                                            <span class="text-muted" v-if="issue.teams.length == 0">
+                                                N/A
                                             </span>
                                         </div>
                                         <div class="issue-date">
@@ -111,7 +116,7 @@
                                                 :key="member_idx"
                                                 @click="onFilter(member, 'assigned')"
                                             />
-                                            <div class="member-avatar" v-if="issue.assignes.length > 2">
+                                            <div class="member-avatar text-cursor" v-if="issue.assignes.length > 2" @click="showAssigneesModal(issue.assignes)">
                                                 <div class="text-center text-primary mt-1 small">
                                                     +{{ issue.assignes.length - 2 }}
                                                 </div>
@@ -125,20 +130,111 @@
                 </b-col>
             </b-row>
         </div>
+        <b-modal title="List Assigned Employees" id="assignees-modal" hide-footer>
+            <div class="d-flex align-items-center flex-wrap">
+                <img-lazy-load
+                    class="assigne-avatar text-cursor"
+                    :src="member.avatar_url"
+                    error="/images/avatar-placeholder.png"
+                    v-for="(member, member_idx) in assignees" 
+                    :key="member_idx"
+                    @click="onFilter(member, 'assigned')"
+                />
+            </div>
+        </b-modal>
+        <b-modal 
+            :title="selectedIssue ? `[${selectedIssue.cod || 'N/A'}] ${selectedIssue.name}` : 'N/A'" 
+            id="issue-detail-modal" 
+            size="lg" 
+            body-class="p-0"
+            hide-footer
+        >
+            <div id="issue-detail" class="p-1" v-if="selectedIssue">
+                <div class="issue-section">
+                    <div class="issue-author">
+                        <img-lazy-load
+                            class="author-avatar"
+                            :src="selectedIssue.created_by.avatar_url"
+                            error="/images/default-avatar.png"
+                        />
+                        <div class="author-name">
+                            <div class="font-weight-bold">{{ selectedIssue.created_by.fullname }}</div>  
+                            <div class="text-muted">{{ this.$mm(selectedIssue.created_at).format('LLL') }}</div>  
+                        </div>
+                    </div>
+                    <div class="ql-snow">
+                        <div class="issue-content ql-editor" v-html="selectedIssue.content"></div>
+                    </div>
+                </div>
+                <div class="issue-section">
+                    <Assignees 
+                        v-model="issue.assigned_customers" 
+                    />
+                    <CustomSelect
+                        label="Labels"
+                        v-model="issue.labels"
+                        :config="labelConfig"
+                    >
+                        <template slot="creation" slot-scope="{reset, search}">
+                            <FormLabel :reset="reset" :name="search"/>
+                        </template>
+                        <template slot="option" slot-scope="opt">
+                            <div 
+                                class="font-weight-bold" 
+                                style="padding: 0.15rem 0.75rem; font-size: 10px; border-radius: 10px" 
+                                :class="opt.class" 
+                                :style="opt.style"
+                            >
+                                {{ opt.label }}
+                            </div>                                        
+                        </template>
+                    </CustomSelect>     
+                    <CustomSelect
+                        label="Team"
+                        v-model="issue.teams"
+                        :config="teamConfig"
+                    >
+                        <template slot="creation" slot-scope="{reset, search}">
+                            <FormTeam :reset="reset" :name="search"/>
+                        </template>
+                    </CustomSelect>                                   
+                </div>
+                <div class="d-flex justify-content-end p-2" v-if="selectedIssue.created_by.id == $user.id">
+                    <form-button
+                        :to="{name: 'project-issues-edit', params: {id: selectedIssue.project_id, issue_id: selectedIssue.id}}"
+                        class="btn btn-primary w-md-100"
+                        style="min-width: 150px; line-height: 1.75;"
+                    >
+                        Edit Issue
+                    </form-button>
+                </div>
+            </div>
+        </b-modal>
     </project-layout>
 </template>
 
 <script>
     import draggable from 'vuedraggable'
     import ProjectLayout from '@/components/project/Layout.vue'
+    import Assignees from '@/components/issue/SelectAssignees.vue'
+    import CustomSelect from '@/components/issue/CustomSelect.vue'
+    import FormLabel from '@/components/issue/FormLabel.vue'
+    import FormTeam from '@/components/issue/FormTeam.vue'    
 
     export default {
         name: 'ProjectIssues',
-        components: {ProjectLayout, draggable},
+        components: {ProjectLayout, draggable, Assignees, CustomSelect, FormLabel, FormTeam},
         data: () => ({
             timer: null,
             isLoading: false,
             issues: [],
+            selectedIssue: null,
+            assignees: [],
+            issue: {
+                assigned_customers: [],
+                labels: [],
+                teams: []
+            },
             filtering: {
                 label: null,
                 team: null,
@@ -172,13 +268,21 @@
             async 'queryParams.assigned_id'() {
                 await this.fetchIssues()
             },
-
             'queryParams.search'() {
                 clearTimeout(this.timer)
                 this.timer = setTimeout(async () => {
                     await this.fetchIssues()
                 }, 750)
-            }
+            },
+            async 'issue.assigned_customers'(newval) {
+                await this.quickUpdate('assigned_customers', newval)
+            },
+            async 'issue.labels'(newval) {
+                await this.quickUpdate('assigned_customers', newval)
+            },
+            async 'issue.teams'(newval) {
+                await this.quickUpdate('assigned_customers', newval)
+            },
         },
 
         computed: {
@@ -209,7 +313,32 @@
                     disabled: false,
                     ghostClass: "ghost"
                 };
-            }            
+            },
+            labelConfig() {
+                return {
+                    server_side: true,
+                    allow_creation: true,
+                    endpoint: 'issues_labels',
+                    resolveData: data => ({
+                        label: data.name,
+                        value: data.id,
+                        style: `background-color: ${data.color}; color: #fff`
+                    })
+                }
+            },
+            teamConfig() {
+                return {
+                    server_side: true,
+                    allow_creation: true,
+                    endpoint: 'issues_teams',
+                    resolveData: data => ({
+                        label: data.name,
+                        value: data.id,
+                        class: `text-primary m-0`,
+                        style: 'font-size: 14px; font-weight: 600'
+                    })
+                }
+            },                     
         },
 
         async mounted() {
@@ -332,6 +461,35 @@
             removeFilter(type) {
                 this.filtering[type] = null
                 this.queryParams[`${type}_id`] = ''
+            },
+
+            showAssigneesModal(assignees) {
+                this.assignees = assignees
+
+                this.$bvModal.show('assignees-modal')
+            },
+
+            showIssueModal(issue) {
+                this.selectedIssue = issue
+                const {assigned_customers = [], teams = [], labels = []} = issue
+
+                this.issue.assigned_customers = assigned_customers
+                this.issue.teams = teams.map(team => team.team_id)
+                this.issue.labels = labels.map(label => label.label_id)
+
+                this.$bvModal.show('issue-detail-modal')
+            },
+
+            async quickUpdate(key, data) {
+                try {
+                    const formData = {},
+                          {id} = this.selectedIssue
+
+                    formData[key] = data
+                    await this.$http.patch('update/' + id, formData)
+                } catch (err) {
+                    console.log(err)
+                }
             }
         }
     }
@@ -421,8 +579,12 @@ $content: issues-content;
                             text-overflow: ellipsis;
                             display: -webkit-box;
                             -webkit-box-orient: vertical;
-                            -webkit-line-clamp: 2                           
+                            -webkit-line-clamp: 2;
+                            cursor: pointer;
                             // margin-bottom: .25rem;
+                            &:hover {
+                                text-decoration: underline;
+                            }
                         }
 
                         .issue-team {
@@ -491,6 +653,70 @@ $content: issues-content;
                 }
             }
         }
+    }
+}
+
+.assigne-avatar {
+    width: 36px;
+    height: 36px;
+    border: 1px solid #F0B01D;
+    position: relative;
+    overflow: hidden;
+    border-radius: 100%;
+    margin-right: 8px;
+    transition: .25s;
+    
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    &:hover {
+        transform: scale(1.1);
+    }    
+}
+
+#issue-detail {
+    overflow-y: auto;
+    max-height: 500px;
+
+    .issue-section {
+        margin-bottom: .75rem;
+        padding: .75rem;
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    .issue-author {
+        display: flex;
+        align-items: center;
+        margin-bottom: .75rem;
+
+        .author-avatar {
+            width: 40px;
+            height: 40px;
+            overflow: hidden;
+            position: relative;
+            border: 1px solid #dee2e6;
+            margin-right: 8px;
+            border-radius: 50%;
+
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+        }
+    }
+
+    .issue-content {
+        width: 100%;
+        height: 100%;
+        padding: .5rem;
+        border: 1px solid #dee2e6;
+        max-height: 500px;
+        overflow-y: auto;
+        border-radius: 10px;
     }
 }
 </style>

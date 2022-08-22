@@ -19,6 +19,7 @@
 
 <script>
 import OrganizationChart from 'vue-organization-chart'
+import { mapActions } from 'vuex';
 
 export default {
     name: "App",
@@ -45,7 +46,7 @@ export default {
             return (this.$route.meta.layout || "blank") + `-${device}-layout`;
         },
     },
-    async mounted() {
+    mounted() {
         const that = this;
         this.innerWidth = window.innerWidth;
         this.innerHeight = window.innerHeight;
@@ -55,10 +56,12 @@ export default {
             that.innerHeight = window.innerHeight;
         });
 
-        await this.fetchOrgChartData()
+        this.fetchOrgChartData()
+        this.fetchEmployees()
     },    
     
     methods: {
+        ...mapActions(['fetchEmployees']),
         async fetchOrgChartData() {
             try {
                 const { data } = await this.$http.get('department/org-chart-data')

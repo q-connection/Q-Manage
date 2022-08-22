@@ -191,7 +191,6 @@ export default {
     components: { UserItem, ProjectTable },
     data() {
         return {
-            list_customer: [],
             project_detail: {},
             key_search: '',
             customer_selected: '',
@@ -225,18 +224,12 @@ export default {
         },
 
     },
+    computed: {
+        list_customer() {
+            return this.$store.state.employees
+        }
+    },
     methods: {
-        async fetchCustomerList() {
-            try {
-                const { data } = await this.$http.get(`employee/list-customer`)
-                if (!data.error) {
-                    this.list_customer = data.data
-                    console.log('project_detail', this.project_detail);
-                }
-            } catch (err) {
-                console.log(err)
-            }
-        },
         async fetchProject(id) {
             try {
                 const { data } = await this.$http.get(`projects/${id}`)
@@ -360,10 +353,6 @@ export default {
 
 
     },
-    async mounted() {
-        await this.fetchCustomerList();
-    },
-
 }
 </script>
 <style lang="scss" scoped>

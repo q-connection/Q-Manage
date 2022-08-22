@@ -176,7 +176,6 @@
                     {label: 'Marriage Leave - Nghỉ đám cưới', value: 'marriage_leave'},
                     {label: 'Sick Leave - Nghỉ bệnh', value: 'sick_leave'}
                 ],
-                approvers: [],
                 formData: {
                     start_date: null,
                     end_date: null,
@@ -220,6 +219,13 @@
                 }
             },
 
+            approvers() {
+                return this.$store.state.employees.filter(x => x.id != this.$user.id).map(u => ({
+                    label: u.username + ' - ' + u.fullname,
+                    value: u.id
+                }))
+            },
+
             approverFiltered() {
                 return this.approvers.filter(x => x.value != this.formData.approver_id)
             }
@@ -229,8 +235,6 @@
             if(this.data) {
                 this.initFormData()
             }
-
-            await this.fetchApprovers()
         },
 
         methods: {
@@ -262,21 +266,6 @@
                     }
                 } finally {
                     this.isSubmitting = false
-                }
-            },
-
-            async fetchApprovers() {
-                try {
-                    const { data } = await this.$http.get('employee/list-customer')
-
-                    if(!data.error) {
-                        this.approvers = data.data.filter(x => x.id != this.$user.id).map(u => ({
-                            label: u.username + ' - ' + u.fullname,
-                            value: u.id
-                        }))
-                    }
-                } catch (err) {
-                    console.log(err)
                 }
             },
 
