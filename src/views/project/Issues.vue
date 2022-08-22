@@ -131,15 +131,24 @@
             </b-row>
         </div>
         <b-modal title="List Assigned Employees" id="assignees-modal" hide-footer>
-            <div class="d-flex align-items-center flex-wrap">
-                <img-lazy-load
-                    class="assigne-avatar text-cursor"
-                    :src="member.avatar_url"
-                    error="/images/avatar-placeholder.png"
+            <div class="d-flex align-items-start flex-wrap">
+                <div 
+                    class="w-20 p-2 assigne"
                     v-for="(member, member_idx) in assignees" 
-                    :key="member_idx"
+                    :key="member_idx"  
                     @click="onFilter(member, 'assigned')"
-                />
+                >
+                    <div 
+                        class="text-center"              
+                    >
+                        <img-lazy-load
+                            class="assigne-avatar mb-1 mx-auto"
+                            :src="member.avatar_url"
+                            error="/images/avatar-placeholder.png"
+                        />
+                        <div class="text-muted text-break small">{{ member.fullname }}</div>
+                    </div>
+                </div>
             </div>
         </b-modal>
         <b-modal 
@@ -231,9 +240,9 @@
             selectedIssue: null,
             assignees: [],
             issue: {
-                assigned_customers: [],
-                labels: [],
-                teams: []
+                assigned_customers: null,
+                labels: null,
+                teams: null
             },
             filtering: {
                 label: null,
@@ -274,15 +283,27 @@
                     await this.fetchIssues()
                 }, 750)
             },
-            async 'issue.assigned_customers'(newval) {
-                await this.quickUpdate('assigned_customers', newval)
+            'issue.assigned_customers': {
+                async handler(newval, oldval) {
+                    if(oldval !== null) {
+                        await this.quickUpdate('assigned_customers', newval)
+                    }
+                }
             },
-            async 'issue.labels'(newval) {
-                await this.quickUpdate('assigned_customers', newval)
+            'issue.labels': {
+                async handler(newval, oldval) {
+                    if(oldval !== null) {
+                        await this.quickUpdate('labels', newval)
+                    }
+                }
             },
-            async 'issue.teams'(newval) {
-                await this.quickUpdate('assigned_customers', newval)
-            },
+            'issue.teams': {
+                async handler(newval, oldval) {
+                    if(oldval !== null) {
+                        await this.quickUpdate('teams', newval)
+                    }
+                }
+            }
         },
 
         computed: {
@@ -494,7 +515,15 @@
                           {id} = this.selectedIssue
 
                     formData[key] = data
-                    await this.$http.patch('update/' + id, formData)
+                    const resp = await this.$http.post('issues/update_data/' + id, formData)
+
+                    if(!resp.data.error) {
+                        const issue_idx = this.issues.findIndex(x => x.id == id)
+
+                        if(issue_idx !== -1) {
+                            this.$set(this.issues, issue_idx, resp.data.data[0])
+                        }
+                    }
                 } catch (err) {
                     console.log(err)
                 }
@@ -664,25 +693,29 @@ $content: issues-content;
     }
 }
 
-.assigne-avatar {
-    width: 36px;
-    height: 36px;
-    border: 1px solid #F0B01D;
-    position: relative;
-    overflow: hidden;
-    border-radius: 100%;
-    margin-right: 8px;
+.assigne {
     transition: .25s;
-    
-    img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
+    cursor: pointer;
 
     &:hover {
         transform: scale(1.1);
-    }    
+    }
+
+    .assigne-avatar {
+        width: 36px;
+        height: 36px;
+        border: 1px solid #F0B01D;
+        position: relative;
+        overflow: hidden;
+        border-radius: 100%;
+        margin-right: 8px;
+        
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
 }
 
 #issue-detail {

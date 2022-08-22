@@ -57,11 +57,11 @@ export default {
         });
 
         this.fetchOrgChartData()
-        this.fetchEmployees()
+        this.fetchBasicData()
     },    
     
     methods: {
-        ...mapActions(['fetchEmployees']),
+        ...mapActions(['fetchBasicData']),
         async fetchOrgChartData() {
             try {
                 const { data } = await this.$http.get('department/org-chart-data')

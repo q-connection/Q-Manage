@@ -9,7 +9,9 @@ export default new Vuex.Store({
     state: {
         user: null,
         idleLoading: false,
-        employees: []
+        employees: [],
+        labels: [],
+        teams: []
     },
     getters: {
         userInfo: state => state.user
@@ -25,7 +27,15 @@ export default new Vuex.Store({
 
         SET_EMPLOYEES(state, data) {
             state.employees = data
-        }
+        },
+
+        SET_LABELS(state, data) {
+            state.labels = data
+        },
+
+        SET_TEAMS(state, data) {
+            state.teams = data
+        },
     },
     actions: {
         async login({commit}, {username, password, remember}) {
@@ -126,17 +136,27 @@ export default new Vuex.Store({
             return has_permission
         },
 
-        async fetchEmployees({commit}) {
+        async fetchBasicData({commit}) {
             try {
-                const { data } = await $http.get('employee/list-customer')
+                const customerResp = await $http.get('employee/list-customer')
+                // const labelResp = await $http.get('issues_labels')
+                // const teamResp = await $http.get('issues_teams')
 
-                if(!data.error) {
-                    commit('SET_EMPLOYEES', data.data)
+                if(!customerResp.data.error) {
+                    commit('SET_EMPLOYEES', customerResp.data.data)
                 }
+
+                // if(!labelResp.data.error) {
+                //     commit('SET_LABELS', labelResp.data.data)
+                // }
+
+                // if(!teamResp.data.error) {
+                //     commit('SET_TEAMS', teamResp.data.data)
+                // }
             } catch (err) {
                 console.log(err)
             }
-        }       
+        }    
     },
     modules: {
     }

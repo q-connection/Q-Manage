@@ -125,11 +125,11 @@ import { mapActions } from 'vuex'
             }
         },
         async mounted() {
-            await this.fetchEmployees()
+            await this.fetchBasicData()
         },
         methods: {
             ...mapActions([
-                'fetchEmployees'
+                'fetchBasicData'
             ]),
 
             onClickUser(id) {
