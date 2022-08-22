@@ -157,6 +157,7 @@
             size="lg" 
             body-class="p-0"
             hide-footer
+            @hide="onIssueDetailHide"
         >
             <div id="issue-detail" class="p-1" v-if="selectedIssue">
                 <div class="issue-section">
@@ -298,21 +299,21 @@
             },
             'issue.assigned_customers': {
                 async handler(newval, oldval) {
-                    if(oldval !== null) {
+                    if(oldval !== null && newval !== null) {
                         await this.quickUpdate('assigned_customers', newval)
                     }
                 }
             },
             'issue.labels': {
                 async handler(newval, oldval) {
-                    if(oldval !== null) {
+                    if(oldval !== null && newval !== null) {
                         await this.quickUpdate('labels', newval)
                     }
                 }
             },
             'issue.teams': {
                 async handler(newval, oldval) {
-                    if(oldval !== null) {
+                    if(oldval !== null && newval !== null) {
                         await this.quickUpdate('teams', newval)
                     }
                 }
@@ -538,12 +539,21 @@
                         const issue_idx = this.issues.findIndex(x => x.id == id)
 
                         if(issue_idx !== -1) {
-                            this.$set(this.issues, issue_idx, resp.data.data[0])
+                            this.$set(this.issues, issue_idx, resp.data.data)
                         }
                     }
                 } catch (err) {
                     console.log(err)
                 }
+            },
+
+            onIssueDetailHide() {
+                this.$router.replace({ name: "project-issues", params: {id: this.$route.params.id}, query: {} })
+
+                this.selectedIssue = null
+                this.issue.assigned_customers = null
+                this.issue.teams = null
+                this.issue.labels = null
             }
         }
     }
