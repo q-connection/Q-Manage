@@ -388,6 +388,7 @@
                             break;
                             case 'files':
                                 this.file_urls = this.issue.files
+                                this.formData.files = null
                             break;
                             default:
                                 this.formData[key] = this.issue[key]

@@ -66,6 +66,8 @@
                             title: 'Congratulations!',
                             message: 'Updated issue successfully!'
                         })
+
+                        this.issue = data.data
                     }
                 } catch (err) {
                     console.log(err)
