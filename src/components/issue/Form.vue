@@ -52,7 +52,31 @@
                                     v-model="formData.files"
                                     multiple
                                 />    
-                            </validation-provider>     
+                            </validation-provider>    
+                            <div class="mb-3" v-if="formData.files.length > 0">
+                                <ul class="list-group">
+                                    <li 
+                                        class="list-group-item"
+                                        v-for="(file, fileIdx) in formData.files" 
+                                        :key="fileIdx"                                
+                                    >
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <a :href="file">
+                                                    {{ $parseFileName(file) }}
+                                                </a>
+                                            </div>
+                                            <div>
+                                                <form-button-icon
+                                                    icon="bi:trash-fill"
+                                                    variant="danger"
+                                                    @click="removeFile(fileIdx)"
+                                                /> 
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>                             
                             <div class="d-flex justify-content-end">
                                 <form-button
                                     type="submit"
@@ -240,7 +264,6 @@
                 {label: 'Pending', value: 'pending'},
                 {label: 'Done', value: 'done'},
             ],
-
             formData: {
                 project_id: null,
                 name: '',
@@ -270,6 +293,8 @@
                     server_side: true,
                     allow_creation: true,
                     endpoint: 'issues_labels',
+                    storeKey: 'labels',
+                    storeDispatch: 'fetchLabels',                    
                     resolveData: data => ({
                         label: data.name,
                         value: data.id,
@@ -282,6 +307,8 @@
                     server_side: true,
                     allow_creation: true,
                     endpoint: 'issues_teams',
+                    storeKey: 'teams',
+                    storeDispatch: 'fetchTeams',                    
                     resolveData: data => ({
                         label: data.name,
                         value: data.id,
@@ -319,7 +346,8 @@
                     'end_date',
                     'point',
                     'teams',
-                    'status'
+                    'status',
+                    'files'
                 ]
 
                 keys.forEach(key => {
@@ -336,6 +364,10 @@
                         }
                     }
                 })
+            },
+
+            removeFile(idx) {
+                this.$delete(this.formData.files, idx)
             }
         }
     }

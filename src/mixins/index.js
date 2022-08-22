@@ -94,6 +94,12 @@ export default {
             }
 
             return formData
+        },
+
+        $parseFileName(name) {
+            const arr = name.toString().split('/')
+
+            return arr[arr.length - 1]
         }
     }
 }

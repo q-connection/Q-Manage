@@ -174,6 +174,19 @@
                     <div class="ql-snow">
                         <div class="issue-content ql-editor" v-html="selectedIssue.content"></div>
                     </div>
+                    <div class="mt-2" v-if="selectedIssue.files.length > 0">
+                        <ul class="list-group">
+                            <li 
+                                class="list-group-item"
+                                v-for="(file, fileIdx) in selectedIssue.files" 
+                                :key="fileIdx"                                
+                            >
+                                <a :href="file">
+                                    {{ $parseFileName(file) }}
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
                 <div class="issue-section">
                     <Assignees 
@@ -757,11 +770,8 @@ $content: issues-content;
     .issue-content {
         width: 100%;
         height: 100%;
-        padding: .5rem;
-        border: 1px solid #dee2e6;
         max-height: 500px;
         overflow-y: auto;
-        border-radius: 10px;
     }
 }
 </style>
