@@ -340,6 +340,8 @@
                     server_side: true,
                     allow_creation: true,
                     endpoint: 'issues_labels',
+                    storeKey: 'labels',
+                    storeDispatch: 'fetchLabels',
                     resolveData: data => ({
                         label: data.name,
                         value: data.id,
@@ -352,6 +354,8 @@
                     server_side: true,
                     allow_creation: true,
                     endpoint: 'issues_teams',
+                    storeKey: 'teams',
+                    storeDispatch: 'fetchTeams',
                     resolveData: data => ({
                         label: data.name,
                         value: data.id,

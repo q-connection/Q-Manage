@@ -139,24 +139,52 @@ export default new Vuex.Store({
         async fetchBasicData({commit}) {
             try {
                 const customerResp = await $http.get('employee/list-customer')
-                // const labelResp = await $http.get('issues_labels')
-                // const teamResp = await $http.get('issues_teams')
+
+                $http.get('issues_labels')
+                .then((resp) => {
+                    if(!resp.data.error) {
+                        commit('SET_LABELS', resp.data.data)
+                    }
+                })
+
+                $http.get('issues_teams')
+                .then((resp) => {
+                    if(!resp.data.error) {
+                        commit('SET_TEAMS', resp.data.data)
+                    }                    
+                })
 
                 if(!customerResp.data.error) {
                     commit('SET_EMPLOYEES', customerResp.data.data)
                 }
-
-                // if(!labelResp.data.error) {
-                //     commit('SET_LABELS', labelResp.data.data)
-                // }
-
-                // if(!teamResp.data.error) {
-                //     commit('SET_TEAMS', teamResp.data.data)
-                // }
             } catch (err) {
                 console.log(err)
             }
-        }    
+        },
+        
+        async fetchLabels({commit}) {
+            try {
+                const { data } = await $http.get('issues_labels')
+
+                if(!data.error) {
+                    commit('SET_LABELS', data.data)
+                }
+            } catch (err) {
+                console.log(err)
+            }
+        },
+        
+        async fetchTeams({commit}) {
+            try {
+                const { data } = await $http.get('issues_teams')
+
+                if(!data.error) {
+                    commit('SET_TEAMS', data.data)
+                }
+            } catch (err) {
+                console.log(err)
+            }
+        },
     },
     modules: {
     }

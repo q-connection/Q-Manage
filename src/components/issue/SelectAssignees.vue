@@ -85,7 +85,6 @@
 
 <script>
     import ClickOutside from 'vue-click-outside'
-import { mapActions } from 'vuex'
 
     export default {
         directives: {ClickOutside},
@@ -124,14 +123,7 @@ import { mapActions } from 'vuex'
                 return this.users.filter(x => this.value.includes(x.id))
             }
         },
-        async mounted() {
-            await this.fetchBasicData()
-        },
         methods: {
-            ...mapActions([
-                'fetchBasicData'
-            ]),
-
             onClickUser(id) {
                 let users = this.value || [];
                 const idx = users.findIndex(x => x == id)

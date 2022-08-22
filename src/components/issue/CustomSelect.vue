@@ -103,7 +103,8 @@
                     endpoint: null,
                     params: {},
                     resolveData: null,
-                    allow_creation: false
+                    allow_creation: false,
+                    storeKey: null
                 })
             },
 
@@ -163,19 +164,27 @@
         },
         methods: {
             async init() {
-                const {server_side, endpoint, params, resolveData} = this.config
+                const {server_side, endpoint, params, resolveData, storeKey = null} = this.config
 
                 if(server_side && endpoint) {
-                    await this.fetchData(endpoint, params, resolveData)
-                } else {
-                    let options = this.items
-
-                    if(typeof resolveData == 'function') {
-                        options = options.map(opt => resolveData(opt))
+                    if(storeKey && this.$store.state[storeKey]) {
+                        this.parseOptions(this.$store.state[storeKey], resolveData) 
+                    } else {
+                        await this.fetchData(endpoint, params, resolveData)
                     }
-
-                    this.options = options
+                } else {
+                    this.parseOptions(this.items, resolveData)
                 }
+            },
+
+            parseOptions(items, resolveData) {
+                let options = items
+
+                if(typeof resolveData == 'function') {
+                    options = options.map(opt => resolveData(opt))
+                }
+
+                this.options = options
             },
 
             async fetchData(endpoint, params, resolveData = null) {
@@ -184,13 +193,7 @@
                     const { data } = await this.$http.get(endpoint, {params})
 
                     if(!data.error && data.data) {
-                        let options = data.data
-
-                        if(typeof resolveData == 'function') {
-                            options = options.map(opt => resolveData(opt))
-                        }
-
-                        this.options = options
+                        this.parseOptions(data.data, resolveData)
                     }
                 } catch (err) {
                     console.log(err)
@@ -223,13 +226,21 @@
             },
 
             async reset() {
+                const {storeDispatch} = this.config
                 this.isCreating = false
                 this.search = ''
+
+                if(storeDispatch) {
+                    this.loading = true
+                    await this.$store.dispatch(storeDispatch)
+                    this.loading = false
+                }
+
                 await this.init()
             },
 
             async onDelete(val) {
-                const {endpoint, server_side} = this.config
+                const {endpoint, server_side, storeDispatch = null} = this.config
 
                 if(!this.$hasPermission('issues.label.destroy')) {
                     return
@@ -244,6 +255,10 @@
                     const { data } = await this.$http.delete(endpoint + `/${val}`)
                     
                     if(!data.error) {
+                        if(storeDispatch) {
+                            await this.$store.dispatch(storeDispatch)
+                        }
+
                         await this.init()
                     }
                 } catch (err) {
