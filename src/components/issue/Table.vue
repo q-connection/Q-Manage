@@ -88,10 +88,6 @@
         name: 'TableIssues',
         data: () => ({
             issue_types: [],
-            columns: [
-                {label: 'Name', name: 'name', rowClass: 'text-cursor p-3'},
-                {label: 'Customers', name: 'customers', rowClass: 'text-cursor p-3'},
-            ],
             tableConfig: {
                 url: 'issues',
                 params: {
@@ -109,7 +105,13 @@
                 set(val) {
                     this.tableConfig.params.labels = val
                 }
-            }
+            },
+            columns() {
+                return [
+                    {label: 'Name', name: 'name', rowClass: 'text-cursor p-3', rowClicked: this.handleClicked},
+                    {label: 'Customers', name: 'customers', rowClass: 'text-cursor p-3', rowClicked: this.handleClicked},
+                ]
+            }          
         },
 
         watch: {
@@ -152,6 +154,14 @@
                 }
 
                     console.log(this.labels)
+            },
+
+            handleClicked(row) {
+                this.$router.push({
+                    name: 'project-issues', 
+                    params: {id: row.project_id},
+                    query: {issue_id: row.id}
+                })
             }
         }
     }

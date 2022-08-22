@@ -355,6 +355,14 @@
 
                     if(!data.error) {
                         this.issues = data.data.issues
+
+                        if(this.$route.query.issue_id && !this.selectedIssue) {
+                            const issue = this.issues.find(x => x.id == this.$route.query.issue_id)
+
+                            if(issue) {
+                                this.showIssueModal(issue)
+                            }
+                        }
                     }
                 } catch (err) {
                     console.log(err)
