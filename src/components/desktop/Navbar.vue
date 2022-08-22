@@ -35,7 +35,7 @@
                         <b-icon class="mr-1" icon="search" variant="dark"/>
                         <b-input placeholder="Search recenly viewed issues" v-model="issueParams.search"/>
                     </b-dropdown-form>
-                    <b-dropdown-item href="#" v-for="(issue, index) in issues" :key="index">
+                    <b-dropdown-item :to="{name: 'project-issues', params: {id: issue.project_id}, query: {issue_id: issue.id}}" v-for="(issue, index) in issues" :key="index">
                         <b-icon class="mr-1" icon="record-circle" variant="primary"/>
                         <span class="task-title">{{ issue.name }}</span>
                     </b-dropdown-item>
