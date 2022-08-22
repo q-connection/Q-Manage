@@ -96,10 +96,14 @@ export default {
             return formData
         },
 
-        $parseFileName(name) {
-            const arr = name.toString().split('/')
+        $parseFileName(file) {
+            if(file instanceof File) {
+                return file.name
+            } else {
+                const arr = file.toString().split('/')
 
-            return arr[arr.length - 1]
+                return arr[arr.length - 1]
+            }
         }
     }
 }

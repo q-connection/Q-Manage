@@ -53,12 +53,33 @@
                                     multiple
                                 />    
                             </validation-provider>    
-                            <div class="mb-3" v-if="formData.files.length > 0">
+                            <div class="mb-3" v-if="formData.files || file_urls.length > 0">
                                 <ul class="list-group">
                                     <li 
                                         class="list-group-item"
                                         v-for="(file, fileIdx) in formData.files" 
-                                        :key="fileIdx"                                
+                                        :key="`file_${fileIdx}`"                                
+                                    >
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div class="text-primary">
+                                                <span class="h5 mb-0">
+                                                    <q-icon icon="ant-design:cloud-upload-outlined"/>
+                                                </span>
+                                                {{ $parseFileName(file) }}
+                                            </div>
+                                            <div>
+                                                <form-button-icon
+                                                    icon="bi:trash-fill"
+                                                    variant="danger"
+                                                    @click="removeFile(fileIdx)"
+                                                /> 
+                                            </div>
+                                        </div>                                        
+                                    </li>
+                                    <li 
+                                        class="list-group-item"
+                                        v-for="(file, fileIdx) in file_urls" 
+                                        :key="`file_url_${fileIdx}`"                                
                                     >
                                         <div class="d-flex justify-content-between align-items-center">
                                             <div>
@@ -70,7 +91,7 @@
                                                 <form-button-icon
                                                     icon="bi:trash-fill"
                                                     variant="danger"
-                                                    @click="removeFile(fileIdx)"
+                                                    @click="removeFileUrl(fileIdx)"
                                                 /> 
                                             </div>
                                         </div>
@@ -264,6 +285,7 @@
                 {label: 'Pending', value: 'pending'},
                 {label: 'Done', value: 'done'},
             ],
+            file_urls: [],
             formData: {
                 project_id: null,
                 name: '',
@@ -328,8 +350,13 @@
         methods: {
             onSubmit() {
                 const formData = Object.assign({}, this.formData)
+                
                 if(!this.editing) {
                     formData.project_id = this.$route.params.id
+                }
+
+                if(this.editing) {
+                    formData.files = formData.files.concat(this.file_urls)
                 }
 
                 this.$emit('submit', {formData: this.$objToFormData(formData), refs: this.$refs})
@@ -359,6 +386,9 @@
                             case 'teams':
                                 this.formData[key] = this.issue[key].map(item => item.team_id)
                             break;
+                            case 'files':
+                                this.file_urls = this.issue.files
+                            break;
                             default:
                                 this.formData[key] = this.issue[key]
                         }
@@ -368,7 +398,11 @@
 
             removeFile(idx) {
                 this.$delete(this.formData.files, idx)
-            }
+            },
+
+            removeFileUrl(idx) {
+                this.$delete(this.file_urls, idx)
+            },
         }
     }
 </script>
