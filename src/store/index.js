@@ -11,7 +11,8 @@ export default new Vuex.Store({
         idleLoading: false,
         employees: [],
         labels: [],
-        teams: []
+        teams: [],
+        selected_project: null
     },
     getters: {
         userInfo: state => state.user
@@ -35,6 +36,10 @@ export default new Vuex.Store({
 
         SET_TEAMS(state, data) {
             state.teams = data
+        },
+
+        SET_PROJECT(state, data) {
+            state.selected_project = data
         },
     },
     actions: {
@@ -180,6 +185,18 @@ export default new Vuex.Store({
 
                 if(!data.error) {
                     commit('SET_TEAMS', data.data)
+                }
+            } catch (err) {
+                console.log(err)
+            }
+        },
+
+        async fetchProject({commit}, id) {
+            try {
+                const { data } = await $http.get('projects/' + id)
+
+                if(!data.error) {
+                    commit('SET_PROJECT', data.data)
                 }
             } catch (err) {
                 console.log(err)
