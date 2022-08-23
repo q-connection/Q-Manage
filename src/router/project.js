@@ -47,4 +47,16 @@ export default [
         meta: { layout: 'default', requiresAuth: true, requiresPermission: 'project.design.create' },
         component: () => import('@/views/project/DesignsCreate.vue')
     },    
+    {
+        path: '/projects/:id/wiki/spec-files',
+        name: 'project-wiki-spec-files',
+        meta: { layout: 'default', requiresAuth: true, requiresPermission: 'project.spec.index' },
+        component: () => import('@/views/project/SpecFiles.vue')
+    },    
+    {
+        path: '/projects/:id/wiki/spec-files/create',
+        name: 'project-wiki-spec-files-create',
+        meta: { layout: 'default', requiresAuth: true, requiresPermission: 'project.spec.create' },
+        component: () => import('@/views/project/SpecFilesCreate.vue')
+    },    
 ]
