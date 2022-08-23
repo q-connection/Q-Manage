@@ -71,17 +71,17 @@
             name(newval) {
                 this.formData.name = newval || 'Label Name'
             }
-        },
+        },      
 
         mounted() {
             this.formData.name = this.name || 'Label Name'
-        },         
+        },        
 
         methods: {
             async onSubmit() {
                 try {
                     this.isSubmitting = true
-                    const { data } = await this.$http.post('issues_labels', this.formData)
+                    const { data } = await this.$http.post('design_tags', this.formData)
 
                     if(!data.error) {
                         if(typeof this.reset == 'function') {

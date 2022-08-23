@@ -139,9 +139,10 @@
                                     :error="errors[0]"
                                     :config="labelConfig"
                                     required
+                                    multiple
                                 >
-                                    <template slot="creation" slot-scope="{reset, search}">
-                                        <FormLabel :reset="reset" :name="search"/>
+                                    <template slot="creation" slot-scope="{reset, search, isCreating}">
+                                        <FormLabel :reset="reset" :name="search" v-if="isCreating"/>
                                     </template>
                                     <template slot="option" slot-scope="opt">
                                         <div 
@@ -167,9 +168,10 @@
                                     :error="errors[0]"
                                     :config="teamConfig"
                                     required
+                                    multiple
                                 >
-                                    <template slot="creation" slot-scope="{reset, search}">
-                                        <FormTeam :reset="reset" :name="search"/>
+                                    <template slot="creation" slot-scope="{reset, search, isCreating}">
+                                        <FormTeam :reset="reset" :name="search" v-if="isCreating"/>
                                     </template>
                                 </CustomSelect>
                             </validation-provider>
@@ -252,7 +254,7 @@
 
 <script>
     import Assignees from '@/components/issue/SelectAssignees.vue'
-    import CustomSelect from '@/components/issue/CustomSelect.vue'
+    import CustomSelect from '@/components/CustomSelect.vue'
     import FormLabel from '@/components/issue/FormLabel.vue'
     import FormTeam from '@/components/issue/FormTeam.vue'
 
@@ -313,7 +315,7 @@
             labelConfig() {
                 return {
                     server_side: true,
-                    allow_creation: true,
+                    permission: 'issues.label',
                     endpoint: 'issues_labels',
                     storeKey: 'labels',
                     storeDispatch: 'fetchLabels',                    
@@ -327,7 +329,7 @@
             teamConfig() {
                 return {
                     server_side: true,
-                    allow_creation: true,
+                    permission: 'issues.team',
                     endpoint: 'issues_teams',
                     storeKey: 'teams',
                     storeDispatch: 'fetchTeams',                    
@@ -356,7 +358,8 @@
                 }
 
                 if(this.editing) {
-                    formData.files = formData.files.concat(this.file_urls)
+                    const files = formData.files || []
+                    formData.files = files.concat(this.file_urls)
                 }
 
                 this.$emit('submit', {formData: this.$objToFormData(formData), refs: this.$refs})

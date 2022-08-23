@@ -4,7 +4,8 @@
         :class="{
             required: required,
             'is-valid': state === true,
-            'is-invalid': state === false
+            'is-invalid': state === false,
+            'no-review': reviewable === false
         }"
     >
         <b-tabs v-model="tabIndex">
@@ -116,6 +117,24 @@
                         border: 1px solid var(--primary);
                     }
                 }                
+            }
+        }
+    }
+
+    &.no-review {
+        .tabs {       
+            > div {
+                padding: 0
+            }   
+
+            .nav-tabs {
+                .nav-item {
+                    .nav-link {
+                        border: none !important;
+                        padding: 0 !important;
+                        margin-bottom: .5rem;
+                    }
+                }
             }
         }
     }

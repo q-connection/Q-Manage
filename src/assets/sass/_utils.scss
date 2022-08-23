@@ -86,3 +86,15 @@
 .hrm-tabs {
     margin-top: 2rem;
 }
+
+@media screen and (max-width: 992px) {
+    .page-content {
+        padding-top: 30px;
+    }
+}
+
+.read-more {
+    p {
+        margin-bottom: .25rem;
+    }
+}

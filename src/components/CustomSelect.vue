@@ -1,16 +1,37 @@
 <template>
-    <div class="options-wrapper" v-click-outside="hide">
-        <div class="toolbar" @click="show">
-            <div class="title" :class="{'label-required': required}">{{ label }}</div>
+    <div class="options-wrapper" :class="mode" v-click-outside="hide">
+        <legend class="bv-no-focus-ring col-form-label pt-0 font-weight-medium" :class="{'label-required': required}" v-show="mode == 'select'">
+            {{ label }}
+        </legend>
+        <div class="toolbar" @click="show" :class="[mode, {show: isDropdown}]" :state="stateToString">
+            <div class="title" :class="{'label-required': required}" v-show="mode == 'label'">{{ label }}</div>
+            <div class="placeholder" v-show="mode == 'select' && !value">{{ placeholder }}</div>
+            <div class="values" v-show="mode == 'select' && value">
+                <div 
+                    class="values-item"
+                    v-for="(opt, index) in optionSelected" 
+                    :key="index" 
+                >
+                    <slot name="option-selected" v-bind="opt">
+                        <div :class="opt.class || 'left'" :style="opt.style">
+                            {{ opt.label }}
+                        </div>
+                    </slot>
+                </div>
+            </div>
             <div class="icon">
-                <q-icon icon="ep:setting"></q-icon>
+                <q-icon icon="ep:setting" v-show="mode == 'label'"></q-icon>
+                <svg xmlns="http://www.w3.org/2000/svg" role="presentation" v-show="mode == 'select'">
+                    <path d="M9.211364 7.59931l4.48338-4.867229c.407008-.441854.407008-1.158247 0-1.60046l-.73712-.80023c-.407008-.441854-1.066904-.441854-1.474243 0L7 5.198617 2.51662.33139c-.407008-.441853-1.066904-.441853-1.474243 0l-.737121.80023c-.407008.441854-.407008 1.158248 0 1.600461l4.48338 4.867228L7 10l2.211364-2.40069z"></path>
+                </svg>
             </div>
         </div>
         <div class="options-users no-padding no-cursor no-hover d-flex flex-wrap">
             <div 
                 class="options-users--item"
                 v-for="(opt, index) in optionSelected" 
-                :key="index" 
+                :key="index"
+                v-show="mode == 'label'"
             >
                 <slot name="option-selected" v-bind="opt">
                     <div :class="opt.class || 'left'" :style="opt.style">
@@ -20,17 +41,17 @@
             </div>
             <div class="text-danger small my-1">{{error}}</div>
         </div>
-        <div class="options-dropdown" v-show="isDropdown">
+        <div class="options-dropdown" :class="mode" v-show="isDropdown">
             <div class="options-dropdown--content">
                 <div class="loading" v-show="loading">
                     <b-spinner variant="secondary"/>
                 </div>
                 <div v-show="!isCreating">
                     <div class="px-3 pt-3 pb-2 mb-1">
-                        <b-form-input v-model="search" :placeholder="searchPlaceholder"/>
+                        <b-form-input v-model="search" :placeholder="searchPlaceholder" />
                     </div>                
                     <div class="options-users pb-4">
-                        <div v-show="optionSelected.length > 0">
+                        <div v-show="optionSelected.length > 0 && multiple">
                             <div class="d-flex justify-content-end py-1 px-3">
                                 <div class="text-cursor" @click="$emit('input', [])">
                                     <span>Clear All</span>
@@ -44,41 +65,46 @@
                             class="options-users--item"
                             v-for="(opt, index) in optionFiltered" 
                             :key="index" 
-                            :class="{active: value.includes(opt.value)}" 
+                            :class="{active: hasValue(opt.value)}" 
                         >
                             <div class="d-flex" @click="onClick(opt.value)">
                                 <div class="pr-2">
                                     <div style="width: 16px">
-                                        <span class="text-success h5 m-0 p-0" style="line-height: 0" v-show="value.includes(opt.value)">
+                                        <span class="text-success h5 m-0 p-0" style="line-height: 0" v-show="hasValue(opt.value)">
                                             <q-icon icon="ant-design:check-outlined"/>
                                         </span>
                                     </div>
                                 </div>
                                 <slot name="option" v-bind="opt">
-                                    <div :class="opt.class || 'left'" :style="opt.style">
-                                        {{ opt.label }}
+                                    <div>
+                                        <div :class="opt.class || 'left'" :style="opt.style">
+                                            {{ opt.label }}
+                                        </div>
                                     </div>
                                 </slot>
                             </div>
-                            <div class="right" v-show="$hasPermission('issues.label.destroy') && config.server_side">
+                            <div class="right" v-show="userHasPermission('destroy') && config.server_side">
                                 <span class="danger" @click="onDelete(opt.value)">
                                     <q-icon icon="bi:trash-fill"/>
                                 </span>
                             </div>
                         </div>
-                        <div class="text-center text-muted p-1" v-show="optionFiltered.length <= 0 && !search && !$hasPermission('issues.label.create')">
-                            No option to show.
+                        <div class="text-center text-muted p-1" v-show="optionFiltered.length <= 0 && !search && !userHasPermission('create')">
+                            No option to show
                         </div>                    
-                        <div class="text-center text-muted p-1" v-show="optionFiltered.length <= 0 && !search && $hasPermission('issues.label.create')">
+                        <div class="text-center text-muted p-1" v-show="optionFiltered.length <= 0 && search && !userHasPermission('create')">
+                            No options were found
+                        </div>                    
+                        <div class="text-center text-muted p-1" v-show="optionFiltered.length <= 0 && !search && userHasPermission('create')">
                             No option to show. Enter to create a new one!
                         </div>                    
-                        <div class="text-center text-cursor text-muted p-1" v-show="optionFiltered.length <= 0 && search && $hasPermission('issues.label.create')" @click="isCreating = true">
+                        <div class="text-center text-cursor text-muted p-1" v-show="optionFiltered.length <= 0 && search && userHasPermission('create')" @click="isCreating = true">
                             <u>Create new option "<b>{{ search }}</b>" ?</u>
                         </div>         
                     </div>
                 </div>
                 <div class="pb-2" v-show="isCreating">
-                    <slot name="creation" v-bind="{reset, search}"/>
+                    <slot name="creation" v-bind="{reset, search, isCreating}"/>
                 </div> 
             </div>           
         </div>
@@ -92,8 +118,12 @@
         directives: {ClickOutside},
         props: {
             value: {
-                type: Array,
-                default: () => ([])
+                type: [Array, String, Number],
+                default: null
+            },
+
+            state: {
+                default: null
             },
 
             config: {
@@ -114,6 +144,9 @@
             },
 
             error: String,
+            placeholder: {
+                default: 'Select an option'
+            },
             searchPlaceholder: {
                 default: 'Type of choose an option'
             },
@@ -124,13 +157,24 @@
                 type: Boolean,
                 default: false
             },
+            multiple: {
+                type: Boolean,
+                default: false
+            },
+            mode: {
+                default: 'label',
+                validator(value) {
+                    return ['label', 'select'].includes(value)
+                }
+            }
         },
         data: () => ({
             isDropdown: false,
             isCreating: false,
             loading: false,
+            isSubmitting: false,
             search: '',
-            options: [],
+            options: []
         }),
         watch: {
             isDropdown(val) {
@@ -156,8 +200,12 @@
             },
 
             optionSelected() {
-                return this.options.filter(x => this.value.includes(x.value))
-            }
+                return this.options.filter(x => this.hasValue(x.value))
+            },
+
+            stateToString() {
+                return this.state === null ? false : (new Boolean(this.state)).toString()
+            }            
         },
         async mounted() {
             await this.init()
@@ -203,16 +251,20 @@
             },
 
             onClick(id) {
-                let users = this.value || [];
-                const idx = users.findIndex(x => x == id)
+                if(this.multiple) {
+                    let users = this.value || [];
+                    const idx = users.findIndex(x => x == id)
 
-                if(idx !== -1) {
-                    this.$delete(users, idx)
+                    if(idx !== -1) {
+                        this.$delete(users, idx)
+                    } else {
+                        users.push(id)
+                    }
+
+                    this.$emit('input', users)
                 } else {
-                    users.push(id)
+                    this.$emit('input', id)
                 }
-
-                this.$emit('input', users)
             },
 
             hide() {
@@ -242,10 +294,6 @@
             async onDelete(val) {
                 const {endpoint, server_side, storeDispatch = null} = this.config
 
-                if(!this.$hasPermission('issues.label.destroy')) {
-                    return
-                }
-
                 if(!endpoint || !server_side) {
                     return
                 }
@@ -272,7 +320,27 @@
                 } finally {
                     this.loading = false
                 }
-            }
+            },
+
+            hasValue(val) {
+                if(this.multiple) {
+                    const value = this.value || []
+
+                    return value.includes(val)
+                } else {
+                    return this.value == val
+                }
+            },
+
+            userHasPermission(key = 'create') {
+                const { permission = null, allow_creation = false } = this.config
+
+                if(!permission || allow_creation) {
+                    return true
+                }
+
+                return this.$hasPermission(`${permission}.${key}`)
+            }            
         }
     }
 </script>
@@ -284,19 +352,82 @@
     border-bottom: 1px solid #f5f5f5;
     position: relative;
 
-    .toolbar {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-end;
-        cursor: pointer;
+    &.select {
+        border-bottom: none;
+        padding-bottom: 0;
+    }
 
-        .title {
-            font-weight: 600;
-            line-height: 1.5;
+    .toolbar {
+        &.label {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            cursor: pointer;
+
+            .title {
+                font-weight: 600;
+                line-height: 1.5;
+            }
+
+            .icon {
+                font-size: 18px
+            }
         }
 
-        .icon {
-            font-size: 18px
+        &.select {
+            background: #FFFFFF;
+            border: 1px solid var(--primary);
+            border-radius: 10px;
+            min-height: 45px;
+            padding: 0.375rem 0.75rem;
+            display: flex;
+            justify-content: space-between;
+            cursor: pointer;
+
+            .placeholder {
+                font-weight: 400;
+                line-height: 2;
+                color: #495057;
+            }
+
+            .values {
+                display: flex;
+                flex-wrap: wrap;
+                overflow-x: auto;
+                max-width: 80%;
+
+                .values-item {
+                    line-height: 2.25;
+                }
+            }
+
+            .icon {
+                padding-top: 5px;
+                svg {
+                    fill: rgba(60,60,60,0.5);
+                    transform: scale(1);
+                    transition: transform 0.15s cubic-bezier(1,0.5,0.8,1);
+                    transition-timing-function: cubic-bezier(1,0.5,0.8,1);
+                    width: 14px;
+                    height: 10px;
+                }
+            }
+
+            &[state=false] {
+                border: 1px solid var(--danger);
+            }
+
+            &[state=true] {
+                border: 1px solid var(--success);
+            }
+
+            &.show {
+                .icon {
+                    svg {
+                        transform: rotate(180deg) scale(1);
+                    }
+                }
+            }
         }
     }
 
@@ -327,6 +458,10 @@
                 height: 100%;
                 background-color: rgba(225, 225, 225, .2);
             }
+        }
+
+        &.select {
+            top: 5rem
         }
     }
 

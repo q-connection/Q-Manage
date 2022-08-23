@@ -33,13 +33,23 @@
                         </div>
                     </b-button>
                 </div>
-                <div class="mb-5">
+                <div class="mb-2">
                     <b-button :to="{name: 'policies'}" variant="outline-primary" block>
                         <div class="d-flex align-items-center">
                             <div class="h2 mb-0" style="line-height: 0; width: 40px">
                                 <q-icon icon="ic:baseline-policy"/>
                             </div>
                             <div class="ml-2">Policies</div>
+                        </div>
+                    </b-button>
+                </div>
+                <div class="mb-5">
+                    <b-button :to="{name: 'leave-days'}" variant="outline-primary" block>
+                        <div class="d-flex align-items-center">
+                            <div class="h2 mb-0" style="line-height: 0; width: 40px">
+                                <q-icon icon="ic:baseline-work-history"/>
+                            </div>
+                            <div class="ml-2">Leave Days</div>
                         </div>
                     </b-button>
                 </div>

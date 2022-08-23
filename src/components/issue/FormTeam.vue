@@ -47,6 +47,10 @@
             }
         },
 
+        mounted() {
+            this.formData.name = this.name || 'Label Name'
+        },         
+
         methods: {
             async onSubmit() {
                 try {

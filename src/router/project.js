@@ -29,4 +29,22 @@ export default [
         meta: { layout: 'default', requiresAuth: true, requiresPermission: 'issues.edit' },
         component: () => import('@/views/project/IssuesEdit.vue')
     },
+    {
+        path: '/projects/:id/wiki',
+        name: 'project-wiki',
+        meta: { layout: 'default', requiresAuth: true },
+        redirect: {name: 'project-wiki-designs'}
+    },    
+    {
+        path: '/projects/:id/wiki/designs',
+        name: 'project-wiki-designs',
+        meta: { layout: 'default', requiresAuth: true, requiresPermission: 'project.design.index' },
+        component: () => import('@/views/project/Designs.vue')
+    },    
+    {
+        path: '/projects/:id/wiki/designs/create',
+        name: 'project-wiki-designs-create',
+        meta: { layout: 'default', requiresAuth: true, requiresPermission: 'project.design.create' },
+        component: () => import('@/views/project/DesignsCreate.vue')
+    },    
 ]

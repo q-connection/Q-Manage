@@ -24,14 +24,3 @@
         }        
     }
 </script>
-
-<style lang="scss" scoped>
-.page-content {
-    padding-top: 68px;
-    margin-bottom: 40px;
-
-    &.hrm {
-        padding-top: 30px;
-    }
-}
-</style>

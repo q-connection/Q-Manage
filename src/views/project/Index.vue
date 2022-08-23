@@ -226,7 +226,8 @@ export default {
     },
     computed: {
         list_customer() {
-            return this.$store.state.employees
+            const selected_customers = this.formData.form_customer_selected || []
+            return this.$store.state.employees.filter(x => !selected_customers.includes(x.id))
         }
     },
     methods: {
@@ -255,8 +256,6 @@ export default {
             }
         },
         addPeople(item) {
-            let a = this.list_customer.find(x => x.id === item.id);
-            a.show = false
             this.upsert(this.formData.list_customer_selected, this.formData.form_customer_selected, item)
         },
         upsert(array, form, item) { // (1)
@@ -268,8 +267,6 @@ export default {
             }
         },
         removePeople(id) {
-            let a = this.list_customer.find(x => x.id === id);
-            a.show = true
             const array = this.formData.list_customer_selected;
             const form = this.formData.form_customer_selected;
             // eslint-disable-next-line no-undef

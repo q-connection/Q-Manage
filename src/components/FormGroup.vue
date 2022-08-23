@@ -42,16 +42,13 @@
             :readonly="readonly"
             :options="options"
             :state="stateToString"
-            :reduce="config.reduce"
-            :searchable="config.searchable"
-            :selectable="config.selectable"
-            :clearable="config.clearable"
             :loading="loading"
             :required="required"
             :class="customClass"
             :multiple="multiple"
             :disabled="disabled"
             @input="$emit('input', $event)"
+            v-bind="config"
             v-if="mode == 'select'"        
         />
         <b-form-datepicker 

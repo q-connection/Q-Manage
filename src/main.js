@@ -16,6 +16,7 @@ import { Icon } from '@iconify/vue2';
 import vSelect from 'vue-select'
 import VueViewer from 'v-viewer'
 import VueLazyload from 'vue-lazyload'
+import ReadMore from 'vue-read-more';
 
 Object.keys(rules).forEach(rule => {
     extend(rule, rules[rule]);
@@ -57,6 +58,7 @@ Vue.use(progressBar, {
 })
 Vue.use(VueViewer)
 Vue.use(VueLazyload)
+Vue.use(ReadMore)
 
 Vue.component('default-desktop-layout', DefaultLayout)
 Vue.component('blank-desktop-layout', BlankLayout)
