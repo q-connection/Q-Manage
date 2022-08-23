@@ -6,6 +6,7 @@
                 Back
             </router-link>
         </div>
+        <div class="mb-2 h5 font-weight-bold">Create New Spec File</div>        
         <validation-observer v-slot="{handleSubmit}">
             <form @submit.prevent="handleSubmit(onSubmit)">
                 <b-row>

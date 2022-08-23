@@ -58,7 +58,7 @@
                 </b-nav-item>
                 <b-nav-form>
                     <div class="attendance-wrapper">
-                        <b-form-input :value="getTime" readonly></b-form-input>
+                        <b-form-input :value="currentTime" readonly></b-form-input>
                         <form-button variant="primary" v-if="user.today_check_in_at && !user.today_check_out_at" @click="onCheckout" :disabled="isLoggingTime" :loading="isLoggingTime" size="sm">Check Out</form-button>
                         <form-button variant="primary" v-else @click="onCheckin" :disabled="isLoggingTime" :loading="isLoggingTime" size="sm">Check In</form-button>
                     </div>
@@ -119,10 +119,12 @@ export default {
     name: "DesktopNavbar",
     data: () => ({
         issueTimer: null,
+        clock: null,
         isLoggingTime: false,
         selectedProject: '',
         issues: [],
         projects: [],
+        currentTime: '',
         issueParams: {
             search: ''
         }
@@ -132,10 +134,6 @@ export default {
         ...mapState({
             user: state => state.user || {}
         }),
-
-        getTime() {
-            return this.$mm().format('LLL')
-        },
 
         inHrmRoutes() {
             return this.$route.name.indexOf('hrm') !== -1
@@ -158,6 +156,11 @@ export default {
     },
 
     async mounted() {
+        this.currentTime = this.$mm().format('LLL')
+        this.clock = setInterval(() => {
+            this.currentTime = this.$mm().format('LLL')            
+        }, 1000)
+
         await this.fetchProjects()
     },
 
@@ -244,6 +247,10 @@ export default {
         projectDropdownBlur() {
             this.$refs.projectDropdown.hide(true)
         }
+    },
+
+    beforeDestroy() {
+        clearInterval(this.clock)
     }
 };
 </script>

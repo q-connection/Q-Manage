@@ -1,5 +1,6 @@
 <template>
     <b-card>
+        <div class="mb-2 h5 font-weight-bold">Designs</div>        
         <div class="d-flex justify-content-between align-items-center mb-2">
             <div>Release ({{total}})</div>
             <div>
