@@ -12,7 +12,7 @@
                     <div class="p-3">
                         <b-row>
                             <b-col cols=12 xl=2 lg=2>
-                                <div class="d-flex justify-content-center">
+                                <div class="d-flex justify-content-center mb-2">
                                     <div class="avatar-modal">
                                         <form-image-upload 
                                             @upload="onAvatarUpload"
@@ -21,6 +21,10 @@
                                             avatar
                                         />
                                     </div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="h5 font-weight-bold mb-1">{{ $user.fullname }}</div>
+                                    <div class="text-muted">{{ $user.username }}</div>
                                 </div>
                             </b-col>
                             <b-col cols=12 xl=10 lg=10>
