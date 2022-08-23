@@ -66,6 +66,7 @@
                             v-for="(opt, index) in optionFiltered" 
                             :key="index" 
                             :class="{active: hasValue(opt.value)}" 
+                            @click.self="onClick(opt.value)"
                         >
                             <div class="d-flex" @click="onClick(opt.value)">
                                 <div class="pr-2">
