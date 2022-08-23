@@ -20,7 +20,7 @@
                             </router-link>
                         </div>
                     </template>
-                    <b-dropdown-item class="project-names" href="javascript:;" active>
+                    <b-dropdown-form class="project-names" href="javascript:;" active>
                         <div 
                             class="project-title" 
                             :class="{active: selectedProject == project.id}" 
@@ -30,14 +30,14 @@
                         >
                             {{ project.name }}
                         </div>
-                    </b-dropdown-item>
+                    </b-dropdown-form>
                     <b-dropdown-form>
                         <b-icon class="mr-1" icon="search" variant="dark"/>
-                        <b-input placeholder="Search recenly viewed issues" v-model="issueParams.search"/>
+                        <b-input placeholder="Search issue name..." v-model="issueParams.search"/>
                     </b-dropdown-form>
                     <b-dropdown-item :to="{name: 'project-issues', params: {id: issue.project_id}, query: {issue_id: issue.id}}" v-for="(issue, index) in issues" :key="index">
                         <b-icon class="mr-1" icon="record-circle" variant="primary"/>
-                        <span class="task-title">{{ issue.name }}</span>
+                        <span class="task-title">[{{ issue.labels[0] ? issue.labels[0].name : 'N/A' }}] {{ issue.name }}</span>
                     </b-dropdown-item>
                     <b-dropdown-item href="#" v-if="issues.length <= 0">
                         <span class="task-title">No issue found.</span>
@@ -118,6 +118,7 @@ import { mapState } from 'vuex';
 export default {
     name: "DesktopNavbar",
     data: () => ({
+        issueTimer: null,
         isLoggingTime: false,
         selectedProject: '',
         issues: [],
@@ -146,6 +147,13 @@ export default {
             if(newval) {
                 await this.fetchIssues()
             }
+        },
+
+        'issueParams.search'() {
+            clearTimeout(this.issueTimer)
+            this.issueTimer = setTimeout(async () => {
+                this.fetchIssues()
+            }, 750)
         }
     },
 
@@ -217,10 +225,10 @@ export default {
         async fetchIssues()
         {
             try {
-                const { data } = await this.$http.get('projects/issue/' + this.selectedProject)
+                const { data } = await this.$http.get('projects/issue/' + this.selectedProject, {params: {order: 'assigne'}})
 
                 if(!data.error && data.data) {
-                    this.issues = data.data.issues || []
+                    this.issues = (data.data.issues || []).slice(0, 5)
                 }
             } catch (err) {
                 console.log(err)

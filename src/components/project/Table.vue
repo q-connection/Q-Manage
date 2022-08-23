@@ -24,8 +24,8 @@
                         </div>
                         <div class="small d-flex">
                             <div class="mr-3">
-                                <span>Tasks: </span>
-                                <span class="text-success font-weight-bold">{{ row.total_task || 0 }}</span>
+                                <span>Issues: </span>
+                                <span class="text-success font-weight-bold">{{ row.total_issues || 0 }}</span>
                             </div>
                             <div>
                                 <span>Bugs: </span>

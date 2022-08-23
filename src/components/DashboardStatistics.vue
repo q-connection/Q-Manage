@@ -9,29 +9,29 @@
                         </div>
                         <div class="statistic-content">
                             <div>PROJECTS</div>
-                            <div>4 projects</div>
+                            <div>{{ $user.total_project || 0 }} projects</div>
                         </div>
                     </div>
                 </div>
                 <div class="col-4 p-0">
-                    <div class="dashboard-item" style="cursor: pointer" @click="$router.push({name: 'tasks'})">
+                    <div class="dashboard-item" style="cursor: pointer">
                         <div class="statistics-icon">
                             <q-icon icon="fluent:clipboard-task-list-rtl-24-regular"/>
                         </div>
                         <div class="statistic-content">
                             <div>TASKS</div>
-                            <div>11 tasks</div>
+                            <div>{{ $user.total_task || 0 }} tasks</div>
                         </div>
                     </div>
                 </div>
                 <div class="col-4 p-0">
-                    <div class="dashboard-item" style="cursor: pointer" @click="$router.push({name: 'bugs'})">
+                    <div class="dashboard-item" style="cursor: pointer">
                         <div class="statistics-icon">
                             <q-icon icon="fluent:bug-prohibited-20-regular"/>
                         </div>
                         <div class="statistic-content">
                             <div>BUGS</div>
-                            <div>4 bugs</div>
+                            <div>{{ $user.total_bug || 0 }} bugs</div>
                         </div>
                     </div>
                 </div>                      

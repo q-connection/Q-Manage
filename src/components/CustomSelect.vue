@@ -182,7 +182,7 @@
                     this.isCreating = false
                     this.search = ''
                 }
-            }
+            },
         },
         computed: {
             optionFiltered() {
@@ -217,6 +217,9 @@
                 if(server_side && endpoint) {
                     if(storeKey && this.$store.state[storeKey]) {
                         this.parseOptions(this.$store.state[storeKey], resolveData) 
+                        this.$watch(`$store.state.${storeKey}`, async () => {
+                            await this.init()
+                        })
                     } else {
                         await this.fetchData(endpoint, params, resolveData)
                     }
