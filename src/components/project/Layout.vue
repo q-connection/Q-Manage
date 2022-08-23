@@ -3,7 +3,7 @@
     <project-tabs style="margin-top: 2rem"/>
     <div class="mt-4 mb-5">
         <div class="h5 px-3 pb-1" v-if="selectedProject.name">Project: <span class="text-primary">{{ selectedProject.name || '' }}</span></div>
-        <b-container fluid>
+        <b-container fluid v-if="selectedProject.id">
             <slot/>
         </b-container>
     </div>
