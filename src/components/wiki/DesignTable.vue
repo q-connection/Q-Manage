@@ -148,7 +148,7 @@
                     const params = Object.assign({}, this.queryParams)
                     params.tags = params.tags.join(',')
 
-                    const { data } = await this.$http.get('project_designs', {params: this.queryParams})
+                    const { data } = await this.$http.get('project_designs', {params})
 
                     if(!data.error) {
                         this.total = data.data.total
