@@ -77,9 +77,15 @@
                                 class="body"
                                 :value="getIssuesByStatus(status.name)" 
                                 @change="onPositionChange($event, status.name)"
+                                :move="onMoveCheck"
                                 v-bind="dragOptions"
                             >
-                                <div class="issue-item" v-for="(issue, issue_idx) in getIssuesByStatus(status.name)" :key="issue_idx">
+                                <div 
+                                    v-for="(issue, issue_idx) in getIssuesByStatus(status.name)" 
+                                    :key="issue_idx"
+                                    :class="getIssueClass(issue)"
+                                    class="issue-item"
+                                >
                                     <div class="issue-content-left">
                                         <div class="issue-title" @click="showIssueModal(issue)">
                                             [{{ issue.cod || 'N/A' }}] {{ issue.name }}
@@ -358,6 +364,9 @@
                     endpoint: 'issues_labels',
                     storeKey: 'labels',
                     storeDispatch: 'fetchLabels',
+                    params: {
+                        project_id: this.$route.params.id
+                    },
                     resolveData: data => ({
                         label: data.name,
                         value: data.id,
@@ -556,6 +565,28 @@
                 this.issue.assigned_customers = null
                 this.issue.teams = null
                 this.issue.labels = null
+            },
+
+            getIssueClass(issue) {
+                const classes = []
+
+                const today    = this.$mm().format('YYYYMMDD')
+                const end_date = this.$mm(issue.end_date).format('YYYYMMDD')
+                const done_at  = this.$mm(issue.dont_at || '').format('YYYYMMDD')
+
+                if(parseInt(today) > parseInt(end_date)) {
+                    classes.push('is-late')
+                }
+
+                if(issue.status == 'done' && parseInt(end_date) <= parseInt(done_at)) {
+                    classes.push('is-on-time')
+                }
+
+                return classes.join(' ')
+            },
+
+            onMoveCheck(evt) {
+                return (evt.draggedContext.element.status!=='done');
             }
         }
     }
@@ -636,6 +667,14 @@ $content: issues-content;
 
                     &:last-child {
                         margin-bottom: 0;
+                    }
+
+                    &.is-late {
+                        border: 1px solid var(--danger)
+                    }
+
+                    &.is-on-time {
+                        border: 1px solid var(--success)
                     }
 
                     .issue-content-left {

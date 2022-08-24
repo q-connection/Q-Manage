@@ -63,7 +63,8 @@
             formData: {
                 color: '#A72218',
                 name: 'Label Name',
-                description: ''
+                description: '',
+                project_id: ''
             }
         }),
 
@@ -75,6 +76,7 @@
 
         mounted() {
             this.formData.name = this.name || 'Label Name'
+            this.formData.project_id = this.$route.params.id
         },         
 
         methods: {
