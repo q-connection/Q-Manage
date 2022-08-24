@@ -88,7 +88,7 @@
                                 >
                                     <div class="issue-content-left">
                                         <div class="issue-title" @click="showIssueModal(issue)">
-                                            [{{ issue.cod || 'N/A' }}] {{ issue.name }}
+                                            <span class="badge bg-danger text-white">{{issue.point}}</span> [{{ issue.cod || 'N/A' }}] {{ issue.name }}
                                         </div>
                                         <div class="issue-team">
                                             <span  v-for="(team, index) in issue.teams" :key="index">
@@ -102,7 +102,7 @@
                                             </span>
                                         </div>
                                         <div class="issue-date">
-                                            {{ $mm(issue.created_at).format('LL') }} by {{ issue.user.fullname || 'N/A' }}
+                                            Due date: {{ $mm(issue.end_date).format('LL') }}
                                         </div>
                                     </div>
                                     <div class="issue-content-right">
@@ -179,7 +179,7 @@
                         </div>
                     </div>
                     <div class="ql-snow">
-                        <div class="issue-content ql-editor" v-html="selectedIssue.content"></div>
+                        <div class="issue-content ql-editor p-0" v-html="selectedIssue.content"></div>
                     </div>
                     <div class="mt-2" v-if="selectedIssue.files.length > 0">
                         <ul class="list-group">
@@ -230,13 +230,13 @@
                         </template>
                     </CustomSelect>                                   
                 </div>
-                <div class="d-flex justify-content-end p-2" v-if="selectedIssue.created_by.id == $user.id">
+                <div class="d-flex justify-content-end p-2">
                     <form-button
-                        :to="{name: 'project-issues-edit', params: {id: selectedIssue.project_id, issue_id: selectedIssue.id}}"
+                        :to="{name: 'project-issues-detail', params: {id: selectedIssue.project_id, issue_id: selectedIssue.id}}"
                         class="btn btn-primary w-md-100"
                         style="min-width: 150px; line-height: 1.75;"
                     >
-                        Edit Issue
+                        View Detail
                     </form-button>
                 </div>
             </div>
@@ -362,11 +362,13 @@
                     server_side: true,
                     permission: 'issues.label',
                     endpoint: 'issues_labels',
+                    storeType: 'getters',
                     storeKey: 'labels',
                     storeDispatch: 'fetchLabels',
                     params: {
                         project_id: this.$route.params.id
                     },
+                    filter: item => item.project_id == this.$route.params.id,
                     resolveData: data => ({
                         label: data.name,
                         value: data.id,
@@ -653,7 +655,7 @@ $content: issues-content;
                 .issue-item {
                     display: flex;
                     justify-content: space-between;
-                    align-items: flex-end;
+                    align-items: flex-start;
                     border-radius: 10px;
                     background-color: #F5F5F5;
                     padding: .5rem;
@@ -787,9 +789,6 @@ $content: issues-content;
 }
 
 #issue-detail {
-    overflow-y: auto;
-    max-height: 500px;
-
     .issue-section {
         margin-bottom: .75rem;
         padding: .75rem;

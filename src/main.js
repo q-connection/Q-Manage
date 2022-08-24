@@ -11,7 +11,9 @@ import progressBar from 'vue-progressbar'
 
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
 import * as rules from 'vee-validate/dist/rules';
+import { requiredHtml } from './rules'
 import { messages } from 'vee-validate/dist/locale/en.json';
+
 import { Icon } from '@iconify/vue2';
 import vSelect from 'vue-select'
 import VueViewer from 'v-viewer'
@@ -29,6 +31,11 @@ for (let [rule, validation] of Object.entries(rules)) {
         message: messages[rule]
     });
 }
+
+extend('requiredHtml', {
+    ...requiredHtml,
+    message: messages['required']
+})
 
 import DefaultLayout from '@/layouts/desktop/DefaultLayout.vue'
 import BlankLayout from '@/layouts/desktop/BlankLayout.vue'

@@ -318,7 +318,11 @@
                     permission: 'issues.label',
                     endpoint: 'issues_labels',
                     storeKey: 'labels',
-                    storeDispatch: 'fetchLabels',                    
+                    storeDispatch: 'fetchLabels',  
+                    params: {
+                        project_id: this.$route.params.id
+                    },
+                    filter: item => item.project_id == this.$route.params.id,                  
                     resolveData: data => ({
                         label: data.name,
                         value: data.id,

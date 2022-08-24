@@ -24,7 +24,9 @@
                     <template v-slot:option="option">
                         <slot name="option-data" class="option-data" v-bind="option">
                             <div class="d-flex w-100 justify-content-between">
-                                <span class="badge" :style="{backgroundColor: option.color, color: '#fff'}">{{ option.label }}</span>
+                                <div>
+                                    <span class="badge" :style="{backgroundColor: option.color, color: '#fff'}">{{ option.label }}</span>
+                                </div>
                                 <span class="small text-danger text-cursor mb-0" v-if="labels.includes(option.value)">
                                     <q-icon icon="el:remove"/>
                                 </span>
@@ -48,7 +50,8 @@
                     </div>
                     <div class="issue-name">
                         <div class="font-weight-bold d-flex align-items-center">
-                            <span class="mr-2">{{ row.name }}</span>
+                            <span class="badge bg-danger text-white">{{row.point}}</span>
+                            <span class="ml-1 mr-2">[{{ row.cod || 'N/A' }}]{{ row.name }}</span>
                             <span 
                                 class="badge mr-1" 
                                 :style="{backgroundColor: lbl.color, color: '#fff'}"

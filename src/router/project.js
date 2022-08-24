@@ -30,6 +30,12 @@ export default [
         component: () => import('@/views/project/IssuesEdit.vue')
     },
     {
+        path: '/projects/:id/issues/detail/:issue_id',
+        name: 'project-issues-detail',
+        meta: { layout: 'default', requiresAuth: true, requiresPermission: 'issues.index' },
+        component: () => import('@/views/project/IssuesDetail.vue')
+    },
+    {
         path: '/projects/:id/wiki',
         name: 'project-wiki',
         meta: { layout: 'default', requiresAuth: true },

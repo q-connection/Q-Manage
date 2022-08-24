@@ -15,7 +15,10 @@ export default new Vuex.Store({
         selected_project: null
     },
     getters: {
-        userInfo: state => state.user
+        userInfo: state => state.user,
+        getLabelsByProject: (state) => (id) => {
+            return state.labels.filter(x => x.project_id == id)
+        }
     },
     mutations: {
         SET_USER(state, data) {

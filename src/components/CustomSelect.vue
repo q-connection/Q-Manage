@@ -134,6 +134,7 @@
                     endpoint: null,
                     params: {},
                     resolveData: null,
+                    filter: null,
                     allow_creation: false,
                     storeKey: null
                 })
@@ -213,24 +214,28 @@
         },
         methods: {
             async init() {
-                const {server_side, endpoint, params, resolveData, storeKey = null} = this.config
+                const {server_side, endpoint, params, resolveData, filter = null, storeKey = null} = this.config
 
                 if(server_side && endpoint) {
                     if(storeKey && this.$store.state[storeKey]) {
-                        this.parseOptions(this.$store.state[storeKey], resolveData) 
+                        this.parseOptions(this.$store.state[storeKey], resolveData, filter) 
                         this.$watch(`$store.state.${storeKey}`, async () => {
                             await this.init()
                         })
                     } else {
-                        await this.fetchData(endpoint, params, resolveData)
+                        await this.fetchData(endpoint, params, resolveData, filter)
                     }
                 } else {
-                    this.parseOptions(this.items, resolveData)
+                    this.parseOptions(this.items, resolveData, filter)
                 }
             },
 
-            parseOptions(items, resolveData) {
+            parseOptions(items, resolveData, filter = null) {
                 let options = items
+
+                if(typeof filter == 'function') {
+                    options = options.filter(opt => filter(opt))
+                }
 
                 if(typeof resolveData == 'function') {
                     options = options.map(opt => resolveData(opt))
@@ -239,13 +244,13 @@
                 this.options = options
             },
 
-            async fetchData(endpoint, params, resolveData = null) {
+            async fetchData(endpoint, params, resolveData = null, filter = null) {
                 try {
                     this.loading = true
                     const { data } = await this.$http.get(endpoint, {params})
 
                     if(!data.error && data.data) {
-                        this.parseOptions(data.data, resolveData)
+                        this.parseOptions(data.data, resolveData, filter)
                     }
                 } catch (err) {
                     console.log(err)
@@ -260,7 +265,11 @@
                     const idx = users.findIndex(x => x == id)
 
                     if(idx !== -1) {
-                        this.$delete(users, idx)
+                        if(this.required && users.length <= 1) {
+                            return
+                        } else {
+                            this.$delete(users, idx)
+                        }                       
                     } else {
                         users.push(id)
                     }
