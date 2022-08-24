@@ -6,7 +6,12 @@
                 <TransitionGroup name="list" tag="div">            
                 <b-card class="card-issue" key="issue">
                     <div class="mb-3 pb-1 border-bottom">
-                        <h6 class="font-weight-bold mb-0">[{{formData.cod}}] {{ formData.name }}</h6>
+                        <h6 class="font-weight-bold mb-0">
+                            [{{formData.cod}}] {{ formData.name }}
+                            <router-link :to="{name: 'project-issues-edit'}" class="h4 mb-0" v-if="formData.create_by == $user.id">
+                                <q-icon icon="akar-icons:edit"/>
+                            </router-link>
+                        </h6>
                         <small class="text-muted">
                             {{ $mm(formData.created_at).format('LLLL') }} by {{ formData.created_by.fullname }}
                         </small>
@@ -74,7 +79,7 @@
                             <span v-else>Hide</span>
                         </div>
                     </div>
-                    <validation-observer v-slot="{handleSubmit, reset}">
+                    <validation-observer v-slot="{handleSubmit, reset}" v-if="formData.status != 'done'">
                         <form @submit.prevent="handleSubmit(handleCreateComment(reset))">
                             <validation-provider
                                 v-slot="{errors, valid}"
@@ -111,150 +116,138 @@
             </div>   
         </b-col>
         <b-col cols=12 xl=3 lg=3>
-            <b-card>
-                <b-card-body class="p-1">
-                    <validation-observer>
-                        <validation-provider 
-                            v-slot="{errors, valid}"
-                            name="assigned_customers"
-                            ref="assigned_customers"
-                        >                            
-                            <Assignees 
-                                v-model="formData.assigned_customers" 
-                                :error="errors[0]"
-                                @input="onChange(valid, 'assigned_customers', $event)"
-                            />
-                        </validation-provider>
-                        <validation-provider 
-                            v-slot="{errors, valid}"
-                            name="labels"
-                            ref="labels"
-                            rules="required"
-                        >                            
-                            <CustomSelect
-                                label="Labels"
-                                v-model="formData.labels"
-                                :error="errors[0]"
-                                :config="labelConfig"
-                                required
-                                multiple
-                                @input="onChange(valid, 'labels', $event)"
-                            >
-                                <template slot="creation" slot-scope="{reset, search, isCreating}">
-                                    <FormLabel :reset="reset" :name="search" v-if="isCreating"/>
-                                </template>
-                                <template slot="option" slot-scope="opt">
-                                    <div 
-                                        class="font-weight-bold" 
-                                        style="padding: 0.15rem 0.75rem; font-size: 10px; border-radius: 10px" 
-                                        :class="opt.class" 
-                                        :style="opt.style"
-                                    >
-                                        {{ opt.label }}
-                                    </div>                                        
-                                </template>
-                            </CustomSelect>
-                        </validation-provider>
-                        <validation-provider 
-                            v-slot="{errors, valid}"
-                            name="teams"
-                            ref="teams"
-                            rules="required"
-                        >                            
-                            <CustomSelect
-                                label="Team"
-                                v-model="formData.teams"
-                                :error="errors[0]"
-                                :config="teamConfig"
-                                required
-                                multiple
-                                @input="onChange(valid, 'teams', $event)"
-                            >
-                                <template slot="creation" slot-scope="{reset, search, isCreating}">
-                                    <FormTeam :reset="reset" :name="search" v-if="isCreating"/>
-                                </template>
-                            </CustomSelect>
-                        </validation-provider>
-                        <validation-provider 
-                            v-slot="{errors, valid}"
-                            name="start_date"
-                            ref="start_date"
-                            rules="required"
-                        >                            
-                            <form-group
-                                mode="datepicker"
-                                label="Start Date"
-                                placeholder="dd/mm/yyyyy"
-                                :error="errors[0]"
-                                :state="$isValid(errors, valid)"
-                                v-model="formData.start_date"
-                                :max="formData.end_date"
-                                required
-                                @input="onChange(valid, 'start_date', $event)"
-                            />
-                        </validation-provider>
-                        <validation-provider 
-                            v-slot="{errors, valid}"
-                            name="end_date"
-                            ref="end_date"
-                            rules="required"
-                        >                            
-                            <form-group
-                                mode="datepicker"
-                                label="End Date"
-                                placeholder="dd/mm/yyyyy"
-                                :error="errors[0]"
-                                :state="$isValid(errors, valid)"
-                                v-model="formData.end_date"
-                                :min="formData.start_date"
-                                required
-                                @input="onChange(valid, 'end_date', $event)"
-                            />
-                        </validation-provider>
-                        <validation-provider 
-                            v-slot="{errors, valid}"
-                            name="point"
-                            ref="point"
-                            rules="required|numeric|min:1|max:999999"
-                        >                            
-                            <form-group
-                                mode="input"
-                                type="number"
-                                label="Point"
-                                placeholder="Point (min: 1)"
-                                description="Minimum: 1 point"
-                                :error="errors[0]"
-                                :state="$isValid(errors, valid)"
-                                v-model.number="formData.point"
-                                required
-                                @input="onChange(valid,'point', $event)"
-                            />
-                        </validation-provider>
-                        <validation-provider 
-                            v-slot="{errors, valid}"
-                            name="status"
-                            ref="status"
-                            rules="required"
-                        >                            
-                            <form-group
-                                mode="select"
-                                label="Status"
-                                placeholder="Select status"
-                                :error="errors[0]"
-                                :state="$isValid(errors, valid)"
-                                v-model="formData.status"
-                                :options="statuses"
-                                required
-                                @input="onChange(valid, 'status', $event)"
-                            />
-                        </validation-provider>
-                    </validation-observer>
-                    <div class="d-flex justify-content-end">
-                        <span class="text-cursor text-primary" @click="showLogsModal">
-                            View logs
-                        </span>
+            <b-card class="position-relative">
+                <div class="overlay-disabled" v-show="formData.status == 'done'">
+                    <div class="text-center">
+                        <h2 class="text-danger">
+                            <q-icon icon="fe:disabled"/>
+                        </h2>
+                        <div class="font-weight-bold">Unable to update because issue is done.</div>
                     </div>
-                </b-card-body>
+                </div>
+                <validation-observer>
+                    <validation-provider 
+                        v-slot="{errors, valid}"
+                        name="assigned_customers"
+                        ref="assigned_customers"
+                    >                            
+                        <Assignees 
+                            v-model="formData.assigned_customers" 
+                            :error="errors[0]"
+                            @input="onChange(valid, 'assigned_customers', $event)"
+                        />
+                    </validation-provider>
+                    <validation-provider 
+                        v-slot="{errors, valid}"
+                        name="labels"
+                        ref="labels"
+                        rules="required"
+                    >                            
+                        <CustomSelect
+                            label="Labels"
+                            v-model="formData.labels"
+                            :error="errors[0]"
+                            :config="labelConfig"
+                            required
+                            multiple
+                            @input="onChange(valid, 'labels', $event)"
+                        >
+                            <template slot="creation" slot-scope="{reset, search, isCreating}">
+                                <FormLabel :reset="reset" :name="search" v-if="isCreating"/>
+                            </template>
+                            <template slot="option" slot-scope="opt">
+                                <div 
+                                    class="font-weight-bold" 
+                                    style="padding: 0.15rem 0.75rem; font-size: 10px; border-radius: 10px" 
+                                    :class="opt.class" 
+                                    :style="opt.style"
+                                >
+                                    {{ opt.label }}
+                                </div>                                        
+                            </template>
+                        </CustomSelect>
+                    </validation-provider>
+                    <validation-provider 
+                        v-slot="{errors, valid}"
+                        name="teams"
+                        ref="teams"
+                        rules="required"
+                    >                            
+                        <CustomSelect
+                            label="Team"
+                            v-model="formData.teams"
+                            :error="errors[0]"
+                            :config="teamConfig"
+                            required
+                            multiple
+                            @input="onChange(valid, 'teams', $event)"
+                        >
+                            <template slot="creation" slot-scope="{reset, search, isCreating}">
+                                <FormTeam :reset="reset" :name="search" v-if="isCreating"/>
+                            </template>
+                        </CustomSelect>
+                    </validation-provider>
+                    <validation-provider 
+                        v-slot="{errors, valid}"
+                        name="start_date"
+                        ref="start_date"
+                        rules="required"
+                    >                            
+                        <form-group
+                            mode="datepicker"
+                            label="Start Date"
+                            placeholder="dd/mm/yyyyy"
+                            :error="errors[0]"
+                            :state="$isValid(errors, valid)"
+                            v-model="formData.start_date"
+                            :max="formData.end_date"
+                            required
+                            @input="onChange(valid, 'start_date', $event)"
+                        />
+                    </validation-provider>
+                    <validation-provider 
+                        v-slot="{errors, valid}"
+                        name="end_date"
+                        ref="end_date"
+                        rules="required"
+                    >                            
+                        <form-group
+                            mode="datepicker"
+                            label="End Date"
+                            placeholder="dd/mm/yyyyy"
+                            :error="errors[0]"
+                            :state="$isValid(errors, valid)"
+                            v-model="formData.end_date"
+                            :min="formData.start_date"
+                            required
+                            @input="onChange(valid, 'end_date', $event)"
+                        />
+                    </validation-provider>
+                    <validation-provider 
+                        v-slot="{errors, valid}"
+                        name="point"
+                        ref="point"
+                        rules="required|numeric|min:1|max:999999"
+                    >                            
+                        <form-group
+                            mode="input"
+                            type="number"
+                            label="Point"
+                            placeholder="Point (min: 1)"
+                            description="Minimum: 1 point"
+                            :error="errors[0]"
+                            :state="$isValid(errors, valid)"
+                            v-model.number="formData.point"
+                            required
+                            @input="onChange(valid,'point', $event)"
+                        />
+                    </validation-provider>
+                </validation-observer>
+                <div class="d-flex justify-content-end">
+                    <span class="text-cursor text-primary" @click="showLogsModal">
+                        View logs
+                    </span>
+                </div>
             </b-card>
         </b-col>
     </b-row>
@@ -341,7 +334,8 @@
                 end_date: null,
                 point: 1,
                 teams: [],
-                status: 'to_do'
+                status: 'to_do',
+                create_by: 0
             },
             histories: [],
             historyPage: 1,
@@ -492,6 +486,7 @@
                     'files',
                     'created_at',
                     'created_by',
+                    'create_by',
                     'cod'
                 ]
 
@@ -662,5 +657,18 @@
    animations can be calculated correctly. */
 .list-leave-active {
   position: absolute;
+}
+
+.overlay-disabled {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(220, 220, 220, 0.25);
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
 }
 </style>

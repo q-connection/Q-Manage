@@ -126,6 +126,17 @@
                                             </b-form-radio-group>
                                         </b-form-group>     
                                     </validation-provider>                           
+                                    <validation-provider tag="div" class="col-12" rules="required|oneOf:0,1" name="required_timekeeping" ref="required_timekeeping" v-slot="{errors, valid}">
+                                        <b-form-checkbox
+                                            v-model="formData.required_timekeeping"
+                                            unchecked-value="0"
+                                            value="1"
+                                            :state="$isValid(errors, valid)"
+                                        >
+                                            <div style="padding-top: 2px">Required Timekeeping</div>
+                                        </b-form-checkbox>    
+                                        <div class="text-danger small">{{ errors[0] }}</div>
+                                    </validation-provider>                           
                                 </b-row>
                             </b-col>
                         </b-row>
@@ -418,7 +429,8 @@
                 social_insurance_number: '',
                 personal_tax_code: '',
                 gender: 'male',
-                status: 'active'
+                status: 'active',
+                required_timekeeping: '1'
             },
             contractColumns: [
                 {label: "Type", name: 'contract_type'},

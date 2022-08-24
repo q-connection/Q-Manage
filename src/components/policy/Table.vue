@@ -32,7 +32,7 @@
         </template>
         <template slot="row-id" slot-scope="{row}">
             <div class="text-break d-flex align-items-center">
-                <div class="d-flex justify-content-end mr-2" style="width: 60px">
+                <div class="d-flex justify-content-end mr-2" :style="`width: ${viewOnly ? 60 : 40}px`">
                     <span class="h3 mb-0 mr-1 text-warning" v-if="row.high_priority" style="line-height: 0">
                         <q-icon icon="ant-design:star-filled"/>
                     </span>
