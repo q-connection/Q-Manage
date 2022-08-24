@@ -46,6 +46,20 @@
                             })
 
                             this.$router.push({name: 'project-issues'})
+
+                            return
+                        }
+
+                        if(this.issue.status == 'done') {
+                            this.$showAlert({
+                                type: 'danger',
+                                title: 'Oops',
+                                message: "This issue is done"
+                            })
+
+                            this.$router.push({name: 'project-issues'})
+
+                            return                            
                         }
                     }
                 } catch (err) {
