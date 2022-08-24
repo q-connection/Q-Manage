@@ -610,7 +610,7 @@
 
                 const today    = this.$mm().format('YYYYMMDD')
                 const end_date = this.$mm(issue.end_date).format('YYYYMMDD')
-                const done_at  = this.$mm(issue.dont_at || '').format('YYYYMMDD')
+                const done_at  = this.$mm(issue.done_at || '').format('YYYYMMDD')
 
                 if(parseInt(today) > parseInt(end_date)) {
                     classes.push('is-late')
