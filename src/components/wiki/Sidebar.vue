@@ -36,6 +36,7 @@
 <style lang="scss" scoped>
 .wiki {
     padding-right: .75rem;
+    margin-bottom: .75rem;
     
     .list-group-item {
         border: 0;

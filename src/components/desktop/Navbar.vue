@@ -35,7 +35,7 @@
                         <b-icon class="mr-1" icon="search" variant="dark"/>
                         <b-input placeholder="Search issue name..." v-model="issueParams.search"/>
                     </b-dropdown-form>
-                    <b-dropdown-item :to="{name: 'project-issues', params: {id: issue.project_id}, query: {issue_id: issue.id}}" v-for="(issue, index) in issues" :key="index">
+                    <b-dropdown-item :to="{name: 'project-issues', params: {id: issue.project_id}, query: {issue_id: issue.id}}" v-for="(issue, index) in projectIssues" :key="index">
                         <b-icon class="mr-1" icon="record-circle" variant="primary"/>
                         <span class="task-title">[{{ issue.labels[0] ? issue.labels[0].name : 'N/A' }}] {{ issue.name }}</span>
                     </b-dropdown-item>
@@ -43,7 +43,39 @@
                         <span class="task-title">No issue found.</span>
                     </b-dropdown-item>
                 </b-nav-item-dropdown>
-                <b-nav-item href="#">Recently Viewed</b-nav-item>
+                <b-nav-item-dropdown 
+                    ref="recentlyDropdown" 
+                    class="project-dropdown" 
+                    no-caret
+                >
+                    <template #button-content>
+                        <div @mouseenter="recentlyDropdownHovered">
+                            Recently Viewed
+                        </div>
+                    </template>
+                    <b-dropdown-form class="project-names" active>
+                        <div 
+                            class="project-title" 
+                            :class="{active: selectedRecentlyProject == project.id}" 
+                            v-for="(project, index) in projects" 
+                            :key="index"
+                            @click="selectedRecentlyProject = project.id"
+                        >
+                            {{ project.name }}
+                        </div>
+                    </b-dropdown-form>
+                    <b-dropdown-form>
+                        <b-icon class="mr-1" icon="search" variant="dark"/>
+                        <b-input placeholder="Search recently issue name..." v-model="issueRecentlyParams.search"/>
+                    </b-dropdown-form>
+                    <b-dropdown-item :to="{name: 'project-issues', params: {id: issue.project_id}, query: {issue_id: issue.id}}" v-for="(issue, index) in recentlyIssues" :key="index">
+                        <b-icon class="mr-1" icon="record-circle" variant="primary"/>
+                        <span class="task-title">[{{ issue.labels[0] ? issue.labels[0].name : 'N/A' }}] {{ issue.name }}</span>
+                    </b-dropdown-item>
+                    <b-dropdown-item href="#" v-if="issues.length <= 0">
+                        <span class="task-title">No issue found.</span>
+                    </b-dropdown-item>
+                </b-nav-item-dropdown>
                 <b-nav-item 
                     v-if="$hasPermission('hrm.index') && $hasPermission('employee.index')" 
                     :to="{name: 'hrm-employees'}"
@@ -122,10 +154,14 @@ export default {
         clock: null,
         isLoggingTime: false,
         selectedProject: '',
+        selectedRecentlyProject: '',
         issues: [],
         projects: [],
         currentTime: '',
         issueParams: {
+            search: ''
+        },
+        issueRecentlyParams: {
             search: ''
         }
     }),
@@ -137,16 +173,32 @@ export default {
 
         inHrmRoutes() {
             return this.$route.name.indexOf('hrm') !== -1
-        }     
+        },
+
+        projectIssues() {
+            const project = this.projects.find(x => x.id == this.selectedProject)
+            const issues  = project ? project.issues : []
+
+            if(!this.issueParams.search) {
+                return issues
+            }
+
+            return issues.filter(x => x.name.indexOf(this.issueParams.search) !== -1)
+        },
+
+        recentlyIssues() {
+            const project = this.projects.find(x => x.id == this.selectedRecentlyProject)
+            const issues  = project ? project.issues : []
+
+            if(!this.issueRecentlyParams.search) {
+                return issues
+            }
+
+            return issues.filter(x => x.name.indexOf(this.issueRecentlyParams.search) !== -1)
+        }
     },
 
     watch: {
-        async selectedProject(newval) {
-            if(newval) {
-                await this.fetchIssues()
-            }
-        },
-
         'issueParams.search'() {
             clearTimeout(this.issueTimer)
             this.issueTimer = setTimeout(async () => {
@@ -218,20 +270,8 @@ export default {
 
                     if(this.projects.length > 0) {
                         this.selectedProject = this.projects[0].id
+                        this.selectedRecentlyProject = this.projects[0].id
                     }
-                }
-            } catch (err) {
-                console.log(err)
-            }
-        },
-
-        async fetchIssues()
-        {
-            try {
-                const { data } = await this.$http.get('projects/issue/' + this.selectedProject, {params: {order: 'assigne'}})
-
-                if(!data.error && data.data) {
-                    this.issues = (data.data.issues || []).slice(0, 5)
                 }
             } catch (err) {
                 console.log(err)
@@ -246,7 +286,17 @@ export default {
 
         projectDropdownBlur() {
             this.$refs.projectDropdown.hide(true)
-        }
+        },
+
+        recentlyDropdownHovered() {
+            if(this.projects.length > 0) {
+                this.$refs.recentlyDropdown.show()
+            }
+        },
+
+        recentlyDropdownBlur() {
+            this.$refs.recentlyDropdown.hide(true)
+        },
     },
 
     beforeDestroy() {
