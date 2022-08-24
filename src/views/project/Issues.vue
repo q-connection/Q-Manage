@@ -228,7 +228,15 @@
                         <template slot="creation" slot-scope="{reset, search, isCreating}">
                             <FormTeam :reset="reset" :name="search" v-if="isCreating"/>
                         </template>
-                    </CustomSelect>                                   
+                    </CustomSelect>      
+                    <div class="py-2 mb-3 t-2 border-bottom">
+                        <div class="font-weight-bold">Start Date</div>
+                        <div>{{ this.$mm(selectedIssue.start_date).format('DD-MM-YYYY') }}</div>
+                    </div>                             
+                    <div class="pb-2 mb-3 border-bottom">
+                        <div class="font-weight-bold">End Date</div>
+                        <div>{{ this.$mm(selectedIssue.end_date).format('DD-MM-YYYY') }}</div>
+                    </div>                             
                 </div>
                 <div class="d-flex justify-content-end p-2">
                     <form-button

@@ -12,36 +12,12 @@
             <template slot="tableHeadActions">
                 <b-select2
                     class="select-sm"
-                    v-model="labels"
-                    :options="issue_types"
+                    v-model="status"
+                    :options="issue_statuses"
                     :reduce="pj => pj.value"
                     style="min-width: 150px"
-                    :closeOnSelect="false"
-                    deselectFromDropdown
-                    placeholder="Issue types"
-                    multiple
-                >
-                    <template v-slot:option="option">
-                        <slot name="option-data" class="option-data" v-bind="option">
-                            <div class="d-flex w-100 justify-content-between">
-                                <div>
-                                    <span class="badge" :style="{backgroundColor: option.color, color: '#fff'}">{{ option.label }}</span>
-                                </div>
-                                <span class="small text-danger text-cursor mb-0" v-if="labels.includes(option.value)">
-                                    <q-icon icon="el:remove"/>
-                                </span>
-                                <span class="m-0 p-0 text-success text-cursor" v-else>
-                                    <q-icon icon="carbon:add-filled"/>
-                                </span>
-                            </div>
-                        </slot>
-                    </template>
-                    <template #selected-option-container="{option}">
-                        <div class="mt-1" style="padding: .25rem .15rem">
-                            <span class="badge" :style="{backgroundColor: option.color, color: '#fff'}">{{ option.label }}</span>
-                        </div>
-                    </template>
-                </b-select2>
+                    placeholder="Issue status"
+                />
             </template>
             <template slot="row-name" slot-scope="{row}">
                 <div class="d-flex align-items-center">
@@ -55,10 +31,10 @@
                             <span 
                                 class="badge mr-1" 
                                 :style="{backgroundColor: lbl.color, color: '#fff'}"
-                                v-for="(lbl, index) in issue_types"
+                                v-for="(lbl, index) in row.labels"
                                 :key="index"
                             >
-                                {{ lbl.label }}
+                                {{ lbl.name }}
                             </span>
                         </div>
                         <div class="small">{{ $mm(row.created_at).format('LL') }} by {{ row.created_by.fullname || 'N/A' }}</div>
@@ -94,19 +70,19 @@
             tableConfig: {
                 url: 'issues',
                 params: {
-                    labels: []
+                    status: ''
                 }
             },            
         }),
 
         computed: {
-            labels: {
+            status: {
                 get() {
-                    return this.tableConfig.params.labels
+                    return this.tableConfig.params.status
                 },
 
                 set(val) {
-                    this.tableConfig.params.labels = val
+                    this.tableConfig.params.status = val
                 }
             },
             columns() {
@@ -114,51 +90,26 @@
                     {label: 'Name', name: 'name', rowClass: 'text-cursor p-3', rowClicked: this.handleClicked},
                     {label: 'Customers', name: 'customers', rowClass: 'text-cursor p-3', rowClicked: this.handleClicked},
                 ]
+            },
+            issue_statuses() {
+                return [
+                    {label: 'Pending', value: 'to_do'},
+                    {label: 'In Progress', value: 'inprogress'},
+                    {label: 'Pending', value: 'pending'},
+                    {label: 'Done', value: 'done'},
+                ]
             }          
         },
 
         watch: {
-            labels() {
+            status() {
                 this.$nextTick(() => {
                     this.$refs.table.refresh(true)
                 })
             }
         },
 
-        async mounted() {
-            await this.fetchTypes()
-        },
-
         methods: {
-            async fetchTypes() {
-                try {
-                    const { data } = await this.$http.get('issues_labels')
-
-                    if(!data.error) {
-                        this.issue_types = data.data.map(lbl => ({
-                            label: lbl.name,
-                            value: lbl.id,
-                            color: lbl.color
-                        }))
-                    }
-                } catch (err) {
-                    console.log(err)
-                }
-            },
-
-            handleTypeCheck(value, checked) {
-                if(!checked) {
-                    const idx = this.labels.findIndex(x => x == value)
-                    if(idx !== false) {
-                        this.$delete(this.labels, idx)
-                    }
-                } else {
-                    this.labels.push(value)
-                }
-
-                    console.log(this.labels)
-            },
-
             handleClicked(row) {
                 this.$router.push({
                     name: 'project-issues-detail', 
