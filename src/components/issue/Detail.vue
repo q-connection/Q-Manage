@@ -266,14 +266,17 @@
                         <q-icon icon="bx:history"/>
                     </div>
                     <div class="w-100">
-                        <div>Change <b>{{ parseHistoryActionName(item.action) }}</b> to {{ parseHistoryActionValues(item.action, item.action_values) }}</div>
+                        <div><b>{{ item.updated_by.fullname }}</b> change <b>{{ parseHistoryActionName(item.action) }}</b> to {{ parseHistoryActionValues(item.action, item.action_values) }}</div>
                         <div class="text-muted small">{{ getTimeDuration(item.created_at) }}</div>
                     </div>
                 </div>
             </b-list-group-item>
-            <b-list-group-item href="javascript:;" active v-if="historyPage < historyLastPage" @click="fetchHistories(historyPage + 1)">
-                <div class="text-center">
+            <b-list-group-item href="javascript:;" active v-if="historyPage < historyLastPage" @click="fetchHistories(historyPage + 1)" :disabled="historyLoading">
+                <div class="text-center" v-if="!historyLoading">
                     View More
+                </div>
+                <div class="text-center" v-else>
+                    Loading...
                 </div>
             </b-list-group-item>
         </b-list-group>
@@ -310,6 +313,7 @@
         },
 
         data: () => ({
+            historyLoading: false,
             isSubmitting: false,
             show_all: false,
             statuses: [
@@ -443,17 +447,25 @@
             
             async fetchHistories(page = 1) {
                 try {
+                    this.historyLoading = true
                     const { data } = await this.$http.get('issues_histories', {params: {
-                        page
+                        page,
+                        per_page: 5
                     }})
 
                     if(!data.error) {
+                        if(page == 1) {
+                            this.histories = []
+                        }
+
                         this.histories = this.histories.concat(data.data.data)
                         this.historyPage = page
                         this.historyLastPage = data.data.last_page 
                     }
                 } catch (err) {
                     console.log(err)
+                } finally {
+                    this.historyLoading = false
                 }
             },
 
@@ -510,6 +522,8 @@
                     await this.$http.post('issues/update_data/' + id, formData)
                 } catch (err) {
                     console.log(err)
+                } finally {
+                    await this.fetchHistories(1)
                 }
             },            
 

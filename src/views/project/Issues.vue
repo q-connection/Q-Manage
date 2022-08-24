@@ -457,18 +457,46 @@
                     await this.$http.put('issues/update_status/' + id, {status})
                 } catch (err) {
                     console.log(err)
+
+                    if(err.response) {
+                        this.$showAlert({
+                            type: 'danger',
+                            title: 'Oops!',
+                            message: err.response.data.message
+                        })
+                    }
                 }
             },
 
             async onPositionChange(event, status) {
                 if(event.added) {
-                    const obj = event.added.element
-                    const idx  = this.issues.findIndex(x => x.id == obj.id)
+                    if(status == 'done') {
+                        this.$showAlert({
+                            type: 'confirm',
+                            title: 'Warning!',
+                            message: 'Do you really want to confirm the completion of this issue? This process cannot be undone.',
+                            callback: async ({dismiss}) => {
+                                const obj = event.added.element
+                                const idx  = this.issues.findIndex(x => x.id == obj.id)
 
-                    if(idx !== -1) {
-                        obj.status = status
-                        this.$set(this.issues, idx, obj)
-                        await this.updateStatus(obj.id, status)
+                                if(idx !== -1) {
+                                    obj.status = status
+                                    this.$set(this.issues, idx, obj)
+                                    await this.updateStatus(obj.id, status)
+                                }                                
+
+                                dismiss()
+                            }
+                        })
+                    } else {
+                        const obj = event.added.element
+                        const idx  = this.issues.findIndex(x => x.id == obj.id)
+
+                        if(idx !== -1) {
+                            obj.status = status
+                            this.$set(this.issues, idx, obj)
+                            await this.updateStatus(obj.id, status)
+                        }                          
                     }
                 }
 
