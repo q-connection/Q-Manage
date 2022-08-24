@@ -161,9 +161,8 @@
 
             handleClicked(row) {
                 this.$router.push({
-                    name: 'project-issues', 
-                    params: {id: row.project_id},
-                    query: {issue_id: row.id}
+                    name: 'project-issues-detail', 
+                    params: {id: row.project_id, issue_id: row.id}
                 })
             }
         }
