@@ -14,16 +14,18 @@
                 <organization-chart :datasource="ds" zoom pan/>          
             </div>
         </b-modal>        
+        <DailyReportVue/>
     </div>
 </template>
 
 <script>
 import OrganizationChart from 'vue-organization-chart'
+import DailyReportVue from './components/daily-report/DailyReport.vue';
 import { mapActions } from 'vuex';
 
 export default {
     name: "App",
-    components: {OrganizationChart},
+    components: {OrganizationChart,DailyReportVue},
 
     data: () => ({
         innerWidth: 0,
