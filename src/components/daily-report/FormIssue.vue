@@ -10,21 +10,21 @@
                 </b-button>
             </div>
             <div class="issue-item--status mr-2">
-                <b-select2 @change="$emit('changeIssue', { 'id': issue.id, 'type': 'status', 'value': this.status })"
-                    v-model="status" :options="issue_statuses" :reduce="pj => pj.value"
-                    style="min-width: 150px;min-height: 45px;" placeholder="Issue status" />
+                <b-select2 v-model="issue_status" :options="issue_statuses" :reduce="pj => pj.value"
+                    style="min-width: 160px;min-height: 45px;" placeholder="Issue status" />
             </div>
 
             <div class="mr-2 issue-item--number">
-                <b-input-group type="number" style="border-right: 0px;" value="issue.process" v-model="process"
-                    @change="$emit('changeIssue', { 'id': this.issue.id, 'type': 'process', 'value': 100 })" required>
+                <b-input-group style="border-right: 0px;max-width: 160px;" :value="issue.process" v-model="process"
+                    @keyup="$emit('changeIssue', { 'id': issue.id, 'type': 'process', 'value': parseInt(process.target.value) })"
+                    required>
                     <template #append>
                         <b-input-group-text>%</b-input-group-text>
                     </template>
-                    <b-form-input></b-form-input>
+                    <b-form-input min="0" max="100" type="number" :value="issue.process"></b-form-input>
                 </b-input-group>
             </div>
-            <div class="issue-item--refresh mr-5">
+            <div class="issue-item--refresh mr-5" @click="rotation" :class="{ clicked }">
                 <q-icon icon="ri:refresh-fill" color="#197130" width="30" height="30" />
             </div>
             <div class="issue-item--delete" @click="$emit('removeIssue', issue.id)">
@@ -40,7 +40,8 @@ export default {
     data: () => ({
         issue_types: [],
         process: 0,
-        status: '',
+        issue_status: '',
+        clicked: false,
         tableConfig: {
             url: 'issues',
             params: {
@@ -50,22 +51,48 @@ export default {
     }),
     props: {
         issue: {
-            default: {}
+            default: {
+                process: 0,
+                status: 'to_do'
+            }
         },
     },
     mounted() {
-        console.log(this.issue.name)
+        this.issue_status = this.issue.status
     },
     computed: {
+        status: {
+            get() {
+                return this.issue_status
+            },
+
+            set(val) {
+                this.$emit('changeIssue', { 'id': this.issue.id, 'type': 'status', 'value': val })
+                this.issue_status = val
+            }
+        },
         issue_statuses() {
             return [
-                { label: 'Pending', value: 'to_do' },
+                { label: 'To Do', value: 'to_do' },
                 { label: 'In Progress', value: 'inprogress' },
                 { label: 'Pending', value: 'pending' },
                 { label: 'Done', value: 'done' },
             ]
         }
+    },
+    watch: {
+        issue_status(val) {
+            if (val == 'done') this.process = 100
+            this.$emit('changeIssue', { 'id': this.issue.id, 'type': 'status', 'value': val })
+        }
+    },
+    methods: {
+        rotation() {
+            this.$emit('refreshIssue',this.issue.id)
+            this.clicked = !this.clicked
+        }
     }
+
 }
 </script>
 
@@ -92,10 +119,13 @@ export default {
         cursor: pointer;
     }
 
-    --vs-dropdown-min-height: 350px;
+    .issue-item--refresh {
+        cursor: pointer;
 
-    .v-select .vs__dropdown-toggle {
-        min-height: 451px !important;
+        &.clicked {
+            transform: rotate(360deg);
+            transition: transform 0.5s ease-in-out;
+        }
     }
 }
 

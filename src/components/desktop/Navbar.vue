@@ -242,24 +242,7 @@ export default {
         },
 
         async onCheckout() {
-            try {
-                console.log('oke');
-                this.$bvModal.show('modal-daily-report');
-                this.isLoggingTime = true
-                const { data } = await this.$http.post('log-time/checkout/' + this.user.last_checkin_id)
-
-                if(!data.error) {
-                    this.$showAlert({type: 'success', message: 'Checkout successfully'})
-                    await this.$store.dispatch('fetchUser')
-                } else {
-                    this.$showAlert({type: 'danger', message: data.message})
-                }
-            } catch (err) {
-                console.log(err)
-                this.$showAlert({type: 'danger', message: err.response.data.message})
-            } finally {
-                this.isLoggingTime = false
-            }
+            this.$bvModal.show('modal-daily-report'); 
         },
 
         async fetchProjects()
