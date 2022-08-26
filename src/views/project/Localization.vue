@@ -116,6 +116,13 @@
                                         </td>
                                     </template>
                                 </tr>
+                                <tr v-if="strings.length <= 0">
+                                    <td colspan="4">
+                                        <div class="text-center">
+                                            No records to show.
+                                        </div>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
