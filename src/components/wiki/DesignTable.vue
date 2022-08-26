@@ -133,7 +133,9 @@
         methods: {
             async fetchTags() {
                 try {
-                    const { data } = await this.$http.get('design_tags')
+                    const { data } = await this.$http.get('design_tags', {params: {
+                        project_id: this.$route.params.id
+                    }})
 
                     if(!data.error) {
                         this.tags = data.data

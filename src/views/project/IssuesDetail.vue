@@ -40,16 +40,6 @@
 
                     if(!data.error) {
                         this.issue = data.data
-
-                        if(this.$user.super_user != 1 && this.issue.created_by.id != this.$user.id) {
-                            this.$showAlert({
-                                type: 'danger',
-                                title: 'Oops',
-                                message: "You are not author of this issue."
-                            })
-
-                            this.$router.push({name: 'project-issues'})
-                        }
                     }
                 } catch (err) {
                     console.log(err)

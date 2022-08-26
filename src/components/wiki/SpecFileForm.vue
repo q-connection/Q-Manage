@@ -139,7 +139,10 @@
                 return {
                     server_side: true,
                     permission: 'project.version',
-                    endpoint: 'versions',                  
+                    endpoint: 'versions',
+                    params: {
+                        project_id: this.$route.param.id
+                    },
                     resolveData: data => ({
                         label: data.name,
                         value: data.id,
@@ -152,7 +155,10 @@
                 return {
                     server_side: true,
                     permission: 'project.tag',
-                    endpoint: 'design_tags',                  
+                    endpoint: 'design_tags',  
+                    params: {
+                        project_id: this.$route.param.id
+                    },                                    
                     resolveData: data => ({
                         label: data.name,
                         value: data.id,
