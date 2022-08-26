@@ -241,6 +241,7 @@
                         message: 'Please select or create new screen to import strings.'
                     })
 
+                    e.target.value = ''
                     return                    
                 }
         
@@ -251,6 +252,7 @@
                         message: 'Only allow excel files: .xls, .xlsx.'
                     })
 
+                    e.target.value = ''
                     return
                 }
 
@@ -272,6 +274,7 @@
 
                         await this.fetchStrings()
                     } else {
+                        e.target.value = ''
                         this.$showAlert({
                             type: 'danger',
                             title: 'Oops',
@@ -279,6 +282,7 @@
                         })                        
                     }
                 } catch (err) {
+                    e.target.value = ''
                     console.log(err)
 
                     if(err.response && err.response.data) {
