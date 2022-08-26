@@ -109,6 +109,8 @@
 
             async onCheckout() {
                 try {
+                    
+                    this.$bvModal.show('modal-daily-report');
                     this.isLoggingTime = true
                     const { data } = await this.$http.post('log-time/checkout/' + this.$user.last_checkin_id)
 
