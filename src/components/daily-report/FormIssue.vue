@@ -24,7 +24,8 @@
                         max="100" 
                         type="number" 
                         v-model.number="process" 
-                        @input="checkProcess">
+                        @input="checkProcess"
+                    >
                     </b-form-input>
                 </b-input-group>
             </div>
@@ -94,15 +95,16 @@ export default {
             this.$emit('refreshIssue',this.issue.id)
             this.clicked = !this.clicked
         },
+        
 
-        checkProcess(val) {
-            if(val > 0 && val <= 100) {
+        checkProcess(val) {            
+            if(parseInt(val) >= 0 && parseInt(val) <= 100) {
                 this.$emit('changeIssue', { 'id': this.issue.id, 'type': 'process', 'value': parseInt(val) })
 
-                return
+                return true
             }
-            
-            this.process = 0
+
+            return false
         }
     }
 

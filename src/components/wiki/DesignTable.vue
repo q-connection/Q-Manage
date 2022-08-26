@@ -41,7 +41,7 @@
             <b-col cols=12 v-for="(item, index) in designs" :key="index">
                 <div class="design-item">
                     <div class="design-item--title mb-1">
-                        <span class="badge bg-primary text-white">{{ item.version.name }}</span>
+                        <span class="badge bg-primary text-white">{{ item.version ? item.version.name : 'N/A' }}</span>
                         <span class="ml-1">Link: </span>
                         <a :href="item.url">Click here</a>
                     </div>
@@ -62,9 +62,9 @@
                     <div class="design-item--tag">
                         <span 
                             class="badge mr-2" 
-                            :style="{backgroundColor: item.tag.color, color: '#fff'}"
+                            :style="{backgroundColor: item.tag ? item.tag.color : '#333', color: '#fff'}"
                         >
-                            {{ item.tag.name }}
+                            {{ item.tag ? item.tag.name : 'N/A' }}
                         </span>
                     </div>
                 </div>
@@ -124,8 +124,6 @@
         },
 
         async mounted() {
-            this.queryParams.project_id = this.$route.params.id
-
             await this.fetchTags()
             await this.fetchDesigns()
         },
@@ -149,6 +147,7 @@
                 try {
                     const params = Object.assign({}, this.queryParams)
                     params.tags = params.tags.join(',')
+                    params.project_id = this.$route.params.id
 
                     const { data } = await this.$http.get('project_designs', {params})
 
