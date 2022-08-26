@@ -15,13 +15,17 @@
             </div>
 
             <div class="mr-2 issue-item--number">
-                <b-input-group style="border-right: 0px;max-width: 160px;" :value="issue.process" v-model="process" 
-                    @keyup="$emit('changeIssue', { 'id': issue.id, 'type': 'process', 'value': parseInt(process.target.value) })"
-                    required>
+                <b-input-group style="border-right: 0px;max-width: 160px;" required>
                     <template #append>
                         <b-input-group-text>%</b-input-group-text>
                     </template>
-                    <b-form-input min="0" max="100" type="number" :value="issue.process"></b-form-input>
+                    <b-form-input 
+                        min="0" 
+                        max="100" 
+                        type="number" 
+                        v-model.number="process" 
+                        @input="checkProcess">
+                    </b-form-input>
                 </b-input-group>
             </div>
             <div class="issue-item--refresh mr-5" @click="rotation" :class="{ clicked }">
@@ -75,8 +79,7 @@ export default {
             return [
                 { label: 'To Do', value: 'to_do' },
                 { label: 'In Progress', value: 'inprogress' },
-                { label: 'Pending', value: 'pending' },
-                { label: 'Done', value: 'done' },
+                { label: 'Pending', value: 'pending' }
             ]
         }
     },
@@ -90,6 +93,16 @@ export default {
         rotation() {
             this.$emit('refreshIssue',this.issue.id)
             this.clicked = !this.clicked
+        },
+
+        checkProcess(val) {
+            if(val > 0 && val <= 100) {
+                this.$emit('changeIssue', { 'id': this.issue.id, 'type': 'process', 'value': parseInt(val) })
+
+                return
+            }
+            
+            this.process = 0
         }
     }
 

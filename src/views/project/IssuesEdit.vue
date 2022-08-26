@@ -20,52 +20,49 @@
             issue: null
         }),
 
-        mounted() {
+        async mounted() {
             if(!this.$route.params.issue_id) {
                 this.$router.push({name: 'project-issues'})
 
                 return
             }
 
-            this.fetchIssue()
+            await this.fetchIssue()
         },
 
         methods: {
             async fetchIssue() {
-                try {
-                    const { data } = await this.$http.get('issues/' + this.$route.params.issue_id)
+                const result = await this.$store.dispatch('project/fetchIssue', this.$route.params.issue_id)
 
-                    if(!data.error) {
-                        this.issue = data.data
+                if(!result) {
+                    this.$router.push({name: 'not_found'})
 
-                        if(this.$user.super_user != 1 && this.issue.created_by.id != this.$user.id) {
-                            this.$showAlert({
-                                type: 'danger',
-                                title: 'Oops',
-                                message: "You are not author of this issue."
-                            })
+                    return
+                }
 
-                            this.$router.push({name: 'project-issues'})
-
-                            return
-                        }
-
-                        if(this.issue.status == 'done') {
-                            this.$showAlert({
-                                type: 'danger',
-                                title: 'Oops',
-                                message: "This issue is done"
-                            })
-
-                            this.$router.push({name: 'project-issues'})
-
-                            return                            
-                        }
-                    }
-                } catch (err) {
-                    console.log(err)
+                this.issue = this.$store.state.project.issue
+                if(this.$user.super_user != 1 && this.issue.created_by.id != this.$user.id) {
+                    this.$showAlert({
+                        type: 'danger',
+                        title: 'Oops',
+                        message: "You are not author of this issue."
+                    })
 
                     this.$router.push({name: 'project-issues'})
+
+                    return
+                }
+
+                if(this.issue.status == 'done') {
+                    this.$showAlert({
+                        type: 'danger',
+                        title: 'Oops',
+                        message: "This issue is done"
+                    })
+
+                    this.$router.push({name: 'project-issues'})
+
+                    return                            
                 }
             },
 

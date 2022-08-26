@@ -1,8 +1,11 @@
 import $http from '@/axios'
 
 export default {
+    namespaced: true,
+    
     state: () => ({
         projects: [],
+        issues: [],
         issue: null
     }),
 
@@ -11,25 +14,31 @@ export default {
             return state.projects.find(x => x.id == id)
         },
 
-        getIssueInProject: (state) => (project_id, issue_id) => {
-            const project = state.projects.find(x => x.id == project_id)
-
-            if(!project) {
-                return null
-            }
-
-            return project.issues.find(x => x.id == issue_id)
+        getIssueById: (state) => (issue_id) => {
+            return state.issues.find(x => x.id == issue_id)
         },
     },
 
     mutations: {
+        SET_PROJECTS(state, data) {
+            state.projects = data
+        },
+
+        SET_ISSUES(state, data) {
+            state.issues = data
+        },
+
         SET_ISSUE(state, data) {
             state.issue = data
         }
     },
 
     actions: {
-        async fetchIssue({commit}, id) {
+        async fetchIssue({commit, state}, id, force = false) {
+            if(!force && state.issue && state.issue.id == id) {
+                return true
+            }
+
             try {
                 const { data } = await $http.get(`issues/${id}`)
 

@@ -13,6 +13,7 @@
 </template>
 
 <script>
+    import {mapState} from 'vuex'
     import ProjectLayout from '@/components/project/Layout.vue'
     import IssueDetail from '@/components/issue/Detail.vue'
 
@@ -20,31 +21,32 @@
         components: {ProjectLayout, IssueDetail},
         data:() => ({
             formLoading: false,
-            issue: null
         }),
 
-        mounted() {
+        computed: {
+            ...mapState({
+                issue: state => state.project.issue
+            })
+        },
+
+        async mounted() {
             if(!this.$route.params.issue_id) {
                 this.$router.push({name: 'project-issues'})
 
                 return
             }
 
-            this.fetchIssue()
+            await this.fetchIssue()
         },
 
         methods: {
             async fetchIssue() {
-                try {
-                    const { data } = await this.$http.get('issues/' + this.$route.params.issue_id)
+                const result = await this.$store.dispatch('project/fetchIssue', this.$route.params.issue_id)
 
-                    if(!data.error) {
-                        this.issue = data.data
-                    }
-                } catch (err) {
-                    console.log(err)
+                if(!result) {
+                    this.$router.push({name: 'not_found'})
 
-                    this.$router.push({name: 'project-issues'})
+                    return
                 }
             },
 

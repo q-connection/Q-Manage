@@ -240,7 +240,7 @@
                 </div>
                 <div class="d-flex justify-content-end p-2">
                     <form-button
-                        :to="{name: 'project-issues-detail', params: {id: selectedIssue.project_id, issue_id: selectedIssue.id}}"
+                        @click="$redirectTo('project-issues-detail', {id: selectedIssue.project_id, issue_id: selectedIssue.id}, addToStore())"
                         class="btn btn-primary w-md-100"
                         style="min-width: 150px; line-height: 1.75;"
                     >
@@ -616,7 +616,7 @@
                     classes.push('is-late')
                 }
 
-                if(issue.status == 'done' && parseInt(end_date) <= parseInt(done_at)) {
+                if(issue.status == 'done' && parseInt(done_at) <= parseInt(end_date)) {
                     classes.push('is-on-time')
                 }
 
@@ -625,6 +625,10 @@
 
             onMoveCheck(evt) {
                 return (evt.draggedContext.element.status!=='done');
+            },
+
+            addToStore() {
+                this.$store.commit('project/SET_ISSUE', this.selectedIssue)
             }
         }
     }

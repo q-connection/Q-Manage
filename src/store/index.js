@@ -2,6 +2,10 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import $http from '@/axios'
 import router from '@/router'
+import moment from 'moment'
+
+//Modules
+import project from './project'
 
 Vue.use(Vuex)
 
@@ -64,23 +68,33 @@ export default new Vuex.Store({
             return is_success
         },
 
-        async fetchUser({commit}) {
+        async fetchUser({commit, state}) {
+            const lastFetchedAt = moment(localStorage.getItem('last_fetched_at') || '')
+            const now           = moment()
+            const duration      = moment.duration(now.diff(lastFetchedAt))
+
             let is_loggedin = false
 
-            try {
-                const { data } = await $http.get('employee/info')
+            if(!state.user || duration.asMinutes() >= 5) {
+                localStorage.setItem('last_fetched_at', now.format('YYYY-MM-DD HH:mm:ss'))
 
-                if(!data.error) {
-                    commit('SET_USER', data.data)
-                    is_loggedin = true
-                } else {
+                try {
+                    const { data } = await $http.get('employee/info')
+
+                    if(!data.error) {
+                        commit('SET_USER', data.data)
+                        is_loggedin = true
+                    } else {
+                        commit('SET_USER', null)
+                        localStorage.removeItem("access_token")
+                    }
+                } catch (err) {
+                    console.log(err)
                     commit('SET_USER', null)
                     localStorage.removeItem("access_token")
                 }
-            } catch (err) {
-                console.log(err)
-                commit('SET_USER', null)
-                localStorage.removeItem("access_token")
+            } else {
+                is_loggedin = true
             }
 
             return is_loggedin
@@ -207,5 +221,6 @@ export default new Vuex.Store({
         },
     },
     modules: {
+        project
     }
 })

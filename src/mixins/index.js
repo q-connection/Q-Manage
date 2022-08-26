@@ -104,7 +104,15 @@ export default {
 
                 return arr[arr.length - 1]
             }
-        }
+        },
+
+        $redirectTo(name, params, resolveBeforeRedirect = null) {
+            if(typeof resolveReforeRedirect == 'function') {
+                resolveBeforeRedirect({name, params})
+            }
+
+            this.$router.push({name, params})
+        }        
     }
 }
 
