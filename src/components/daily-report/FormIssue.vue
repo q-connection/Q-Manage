@@ -4,12 +4,12 @@
             <div class="issue-item--name font-weight-bold">
                 {{ issue?.name }}
             </div>
-            <div class="issue-item--project-name mr-2">
+            <div class="issue-item--project-name">
                 <b-button variant="primary">
                     {{ issue?.projects?.name }}
                 </b-button>
             </div>
-            <div class="issue-item--status mr-2">
+            <div class="issue-item--status">
                 <b-select2 v-model="issue_status" :options="issue_statuses" :reduce="pj => pj.value" :clearable="false"
                     style="min-width: 160px;min-height: 45px;" placeholder="Issue status" />
             </div>
@@ -29,7 +29,7 @@
                     </b-form-input>
                 </b-input-group>
             </div>
-            <div class="issue-item--refresh mr-5" @click="rotation" :class="{ clicked }">
+            <div class="issue-item--refresh" @click="rotation" :class="{ clicked }">
                 <q-icon icon="ri:refresh-fill" color="#197130" width="30" height="30" />
             </div>
             <div class="issue-item--delete" @click="$emit('removeIssue', issue.id)">
@@ -118,9 +118,19 @@ export default {
     padding: 0.7rem 0px 0.7rem;
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: .5rem;
 
     .issue-item--name {
         min-width: 40%;
+    }
+
+    .issue-item--project-name {
+        margin-right: .5rem;
+    }
+
+    .issue-item--status {
+        margin-right: .5rem;
     }
 
     .issue-item--number {
@@ -136,6 +146,7 @@ export default {
 
     .issue-item--refresh {
         cursor: pointer;
+        margin-right: 1.25rem;
 
         &.clicked {
             transform: rotate(360deg);
@@ -148,5 +159,28 @@ export default {
     white-space: pre-wrap;
     word-wrap: break-word;
     font-family: inherit;
+}
+
+@media screen and (max-width: 992px) {
+    .issue-item {
+        .issue-item--name {
+            width: 100%;
+            margin-bottom: .75rem
+        }
+
+        .issue-item--project-name {
+            width: 100%;
+            margin-bottom: .75rem;
+            margin-right: 0;
+
+            .btn {
+                width: 100%;
+            }
+        }
+
+        .issue-item--refresh {
+            margin-right: 0;
+        }
+    }
 }
 </style>

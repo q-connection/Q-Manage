@@ -95,7 +95,7 @@
 
                     if(!data.error) {
                         this.$showAlert({type: 'success', message: 'Checkin successfully'})
-                        await this.$store.dispatch('fetchUser')
+                        await this.$store.dispatch('fetchUser', true)
                     } else {
                         this.$showAlert({type: 'danger', message: data.message})
                     }
@@ -108,24 +108,23 @@
             },
 
             async onCheckout() {
-                try {
-                    
-                    this.$bvModal.show('modal-daily-report');
-                    this.isLoggingTime = true
-                    const { data } = await this.$http.post('log-time/checkout/' + this.$user.last_checkin_id)
+                this.$bvModal.show('modal-daily-report');
+                // try {
+                //     this.isLoggingTime = true
+                //     const { data } = await this.$http.post('log-time/checkout/' + this.$user.last_checkin_id)
 
-                    if(!data.error) {
-                        this.$showAlert({type: 'success', message: 'Checkout successfully'})
-                        await this.$store.dispatch('fetchUser')
-                    } else {
-                        this.$showAlert({type: 'danger', message: data.message})
-                    }
-                } catch (err) {
-                    console.log(err)
-                    this.$showAlert({type: 'danger', message: err.response.data.message})
-                } finally {
-                    this.isLoggingTime = false
-                }
+                //     if(!data.error) {
+                //         this.$showAlert({type: 'success', message: 'Checkout successfully'})
+                //         await this.$store.dispatch('fetchUser')
+                //     } else {
+                //         this.$showAlert({type: 'danger', message: data.message})
+                //     }
+                // } catch (err) {
+                //     console.log(err)
+                //     this.$showAlert({type: 'danger', message: err.response.data.message})
+                // } finally {
+                //     this.isLoggingTime = false
+                // }
             },            
         }
     }
