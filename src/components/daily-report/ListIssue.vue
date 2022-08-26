@@ -5,14 +5,14 @@
                 <span class="font-weight-bold d-flex align-items-center">{{ issue.name }}</span>
             </div>
             <div class="issue-item--description mb-2">
-                <span class="text-muted font-weight-500 mr-2">
+                <span class="text-muted font-weight-500 mr-1">
                     Project Name:
                 </span>
                 <span class="text-dark-yellow font-weight-bold">
                     {{ issue?.projects?.name }}
                 </span>
             </div>
-            <div class="issue-item--description mb-2">
+            <div class="issue-item--description">
                 <span class="text-muted font-weight-500">
                     Status:
                 </span>

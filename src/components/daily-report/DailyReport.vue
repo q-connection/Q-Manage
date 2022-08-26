@@ -1,46 +1,38 @@
 <template>
-    <div class="daily-report">
-        <b-modal id="modal-daily-report" hide-header hide-footer size="xl">
-            <div class="p-2">
-                <modal-custom-header title="DAILY REPORT" modal-id="modal-daily-report" />
-                <validation-observer ref="profileForm" v-slot="{ handleSubmit }">
-                    <b-form @submit.prevent="handleSubmit(onSubmitIssue)">
-                        <!-- <validation-provider tag="div" class="col-12" rules="required" name="report list"
-                            ref="report_list" v-slot="{ errors, valid }"> -->
-                        <div class="mb-3">
-                            <div for="preview" class="h5 pb-1">Report List</div>
+    <b-modal id="modal-daily-report" hide-header hide-footer size="xl">
+        <div class="daily-report p-2">
+            <modal-custom-header title="DAILY REPORT" modal-id="modal-daily-report" />
+            <validation-observer ref="profileForm" v-slot="{ handleSubmit }">
+                <b-form @submit.prevent="handleSubmit(onSubmitIssue)">
+                    <!-- <validation-provider tag="div" class="col-12" rules="required" name="report list"
+                        ref="report_list" v-slot="{ errors, valid }"> -->
+                    <b-select2 class="mb-3" v-model="issue_id" placeholder="Search Options" :options="select_issues"
+                        :filter-by="issueFilter" :closeOnSelect="false">
+                        <template v-slot:option="option">
+                            <slot name="option-data" v-bind="option">
+                                <ListIssue :issue="option" @addIssue="addIssue" />
+                            </slot>
+                        </template>
+                    </b-select2>
+                    <div class="mb-2" v-if="report_list.length > 0">
+                        <div for="preview" class="h5 pb-1">Report List</div>
+                    </div>
+                    <div v-for="(item, idx) in report_list" :key="idx">
+                        <FormIssue :issue="item" @removeIssue="removeIssue" @changeIssue="changeIssue"
+                            v-on:load="refreshIssue" @refreshIssue="refreshIssue" :isRefresh="isRefresh" />
+                    </div>
 
-                        </div>
-                        <b-select2 v-model="issue_id" placeholder="Search Options" :options="select_issues"
-                            :filter-by="issueFilter" :closeOnSelect="false">
-                            <template v-slot:option="option">
-                                <slot name="option-data" class="option-data" v-bind="option">
-                                    <ListIssue :issue="option" @addIssue="addIssue" />
-                                </slot>
-                            </template>
-                        </b-select2>
-                        <!-- <input type="hidden" v-model="report_list" :state="$isValid(errors, valid)"/>
-                            <div class="text-danger text-center mt-1 small">
-                                {{ errors[0] }}
-                            </div> -->
-                        <!-- </validation-provider> -->
-                        <div v-for="(item) in report_list" :key="item.status-item.id">
-                            <FormIssue :issue="item" @removeIssue="removeIssue" @changeIssue="changeIssue"
-                                v-on:load="refreshIssue" @refreshIssue="refreshIssue" :isRefresh="isRefresh" />
-                        </div>
-
-                        <div class="d-flex justify-content-end mt-3">
-                            <form-button :block="$device.mobile" type="submit" variant="primary"
-                                :disabled="isSubmitting || user.today_check_out_at" :loading="isSubmitting"
-                                loading-without-hidden-text>
-                                SUBMIT
-                            </form-button>
-                        </div>
-                    </b-form>
-                </validation-observer>
-            </div>
-        </b-modal>
-    </div>
+                    <div class="d-flex justify-content-end mt-3">
+                        <form-button :block="$device.mobile" type="submit" variant="primary"
+                            :disabled="isSubmitting || !!user.today_check_out_at" :loading="isSubmitting"
+                            loading-without-hidden-text>
+                            SUBMIT
+                        </form-button>
+                    </div>
+                </b-form>
+            </validation-observer>
+        </div>
+    </b-modal>
 </template>
 
 <script>
@@ -119,7 +111,16 @@ export default {
         },
         async onSubmitIssue() {
             if (this.report_list.length == 0) {
-                this.onCheckOut()
+                this.$bvModal.hide('modal-daily-report')
+                this.$showAlert({
+                    type: 'confirm',
+                    title: 'Warning!',
+                    message: "Are you sure you want to checkout without select any report?",
+                    callback: async ({dismiss}) => {
+                        await this.onCheckOut(dismiss)
+                    }
+                })
+                
                 return
             }
 
@@ -143,6 +144,7 @@ export default {
                     'processes': process,
                     'status': status
                 }
+                this.isSubmitting = true
                 const { data } = await this.$http.post('daily_reports', payload)
 
                 if (!data.error) {
@@ -158,19 +160,22 @@ export default {
                     this.$showAlert({ type: 'danger', message: err.response.data.message })
                 }
             } finally {
+                this.isSubmitting = false
                 await this.onCheckOut()
             }
         },
-        async onCheckOut() {
-            this.isSubmitting = false
+        async onCheckOut(dismiss = null) {
             try {
-                this.$bvModal.show('modal-daily-report');
                 this.isLoggingTime = true
                 const { data } = await this.$http.post('log-time/checkout/' + this.user.last_checkin_id)
 
                 if (!data.error) {
+                    if(typeof dismiss == 'function') {
+                        dismiss()
+                    }                    
                     this.$showAlert({ type: 'success', message: 'Checkout successfully' })
-                    await this.$store.dispatch('fetchUser')
+
+                    await this.$store.dispatch('fetchUser', true)
                 } else {
                     this.$showAlert({ type: 'danger', message: data.message })
                 }
@@ -208,12 +213,14 @@ export default {
     components: { ListIssue }
 }
 </script>
-<style lang="scss" scoped>
-.option-data {
-    --vs-dropdown-min-width: 100%;
-    --vs-dropdown-option-padding: 13px 210px;
-    --vs-search-input-placeholder-color: red;
-    --vs-dropdown-option--active-bg: red;
-    --vs-dropdown-option--active-color: red;
+<style lang="scss">
+.daily-report {
+    .vs__dropdown-option {
+        --vs-dropdown-min-width: 100%;
+        --vs-dropdown-option-padding: 0 0;
+        --vs-search-input-placeholder-color: red;
+        --vs-dropdown-option--active-bg: red;
+        --vs-dropdown-option--active-color: red;
+    }
 }
 </style>

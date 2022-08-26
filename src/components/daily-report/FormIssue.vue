@@ -6,7 +6,7 @@
             </div>
             <div class="issue-item--project-name mr-2">
                 <b-button variant="primary">
-                    {{ issue?.projects.name }}
+                    {{ issue?.projects?.name }}
                 </b-button>
             </div>
             <div class="issue-item--status mr-2">

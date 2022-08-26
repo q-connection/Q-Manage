@@ -45,7 +45,7 @@
                 <div class="d-none d-xl-flex d-lg-flex align-items-center justify-content-end">
                     <div class="issue-avatar-wrapper" v-for="(customer, index) in row.assignes" :key="index">
                         <img-lazy-load 
-                            :src="customer.avatar_url" 
+                            :src="customer.avatar_thumb_url" 
                             error="/images/avatar-placeholder.png"
                             class="avatar" 
                         />                        
@@ -111,6 +111,8 @@
 
         methods: {
             handleClicked(row) {
+                this.$store.commit('project/SET_ISSUE', row)
+
                 this.$router.push({
                     name: 'project-issues-detail', 
                     params: {id: row.project_id, issue_id: row.id}

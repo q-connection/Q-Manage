@@ -68,14 +68,14 @@ export default new Vuex.Store({
             return is_success
         },
 
-        async fetchUser({commit, state}) {
+        async fetchUser({commit, state}, force = false) {
             const lastFetchedAt = moment(localStorage.getItem('last_fetched_at') || '')
             const now           = moment()
             const duration      = moment.duration(now.diff(lastFetchedAt))
 
             let is_loggedin = false
 
-            if(!state.user || duration.asMinutes() >= 5) {
+            if(!state.user || duration.asMinutes() >= 5 || force == true) {
                 localStorage.setItem('last_fetched_at', now.format('YYYY-MM-DD HH:mm:ss'))
 
                 try {

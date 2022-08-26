@@ -116,7 +116,7 @@
                                         <div class="issue-members">
                                             <img-lazy-load 
                                                 class="member-avatar text-cursor"
-                                                :src="member.avatar_url"
+                                                :src="member.avatar_thumb_url"
                                                 error="/images/avatar-placeholder.png"
                                                 v-for="(member, member_idx) in splitAssginees(issue.assignes)" 
                                                 :key="member_idx"
@@ -149,7 +149,7 @@
                     >
                         <img-lazy-load
                             class="assigne-avatar mb-1 mx-auto"
-                            :src="member.avatar_url"
+                            :src="member.avatar_thumb_url"
                             error="/images/avatar-placeholder.png"
                         />
                         <div class="text-muted text-break small">{{ member.fullname }}</div>
@@ -170,7 +170,7 @@
                     <div class="issue-author">
                         <img-lazy-load
                             class="author-avatar"
-                            :src="selectedIssue.created_by.avatar_url"
+                            :src="selectedIssue.created_by.avatar_thumb_url"
                             error="/images/default-avatar.png"
                         />
                         <div class="author-name">
@@ -489,6 +489,7 @@
 
                                 if(idx !== -1) {
                                     obj.status = status
+                                    obj.done_at = this.$mm().format('YYYY-MM-DD HH:mm:ss')
                                     this.$set(this.issues, idx, obj)
                                     await this.updateStatus(obj.id, status)
                                 }                                

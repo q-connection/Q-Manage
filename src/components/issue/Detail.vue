@@ -38,7 +38,7 @@
                         <div class="d-flex align-items-center">
                             <img-lazy-load
                                 class="avatar"
-                                :src="comment.created_by.avatar_url"
+                                :src="comment.created_by.avatar_thumb_url"
                                 error="/images/default-avatar.png"
                             />
                             <div class="ml-2">
@@ -79,8 +79,8 @@
                             <span v-else>Hide</span>
                         </div>
                     </div>
-                    <validation-observer v-slot="{handleSubmit, reset}" v-if="formData.status != 'done'">
-                        <form @submit.prevent="handleSubmit(handleCreateComment(reset))">
+                    <validation-observer ref="commentForm" v-slot="{handleSubmit}" v-if="formData.status != 'done'">
+                        <form @submit.prevent="handleSubmit(handleCreateComment)">
                             <validation-provider
                                 v-slot="{errors, valid}"
                                 name="content"
@@ -444,7 +444,8 @@
                     this.historyLoading = true
                     const { data } = await this.$http.get('issues_histories', {params: {
                         page,
-                        per_page: 5
+                        per_page: 5,
+                        issue_id: this.issue.id
                     }})
 
                     if(!data.error) {
@@ -534,14 +535,14 @@
                 }
             },
 
-            async handleCreateComment(reset) {
+            async handleCreateComment() {
                 try {
                     this.isSubmitting = true
                     const { data } = await this.$http.post('issues_comments', this.commentData)
 
                     if(!data.error) {
                         this.commentData.content = ''
-                        reset()
+                        this.$refs.commentForm.reset()
 
                         this.$showAlert({
                             type: 'success',

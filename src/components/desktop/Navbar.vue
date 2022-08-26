@@ -229,7 +229,7 @@ export default {
 
                 if(!data.error) {
                     this.$showAlert({type: 'success', message: 'Checkin successfully'})
-                    await this.$store.dispatch('fetchUser')
+                    await this.$store.dispatch('fetchUser', true)
                 } else {
                     this.$showAlert({type: 'danger', message: data.message})
                 }

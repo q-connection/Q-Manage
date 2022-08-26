@@ -15,7 +15,7 @@
                 <div class="left">
                     <img-lazy-load 
                         class="avatar" 
-                        :src="user.avatar_url" 
+                        :src="user.avatar_thumb_url" 
                         error="/images/avatar-placeholder.png"
                     />
                     <div>
@@ -57,7 +57,7 @@
                         <div class="left">
                             <img-lazy-load 
                                 class="avatar" 
-                                :src="user.avatar_url" 
+                                :src="user.avatar_thumb_url" 
                                 error="/images/avatar-placeholder.png"
                             />
                             <div>
