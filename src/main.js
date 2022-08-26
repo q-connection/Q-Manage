@@ -13,6 +13,7 @@ import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
 import * as rules from 'vee-validate/dist/rules';
 import { requiredHtml } from './rules'
 import { messages } from 'vee-validate/dist/locale/en.json';
+import VueToast from 'vue-toast-notification';
 
 import { Icon } from '@iconify/vue2';
 import vSelect from 'vue-select'
@@ -66,6 +67,7 @@ Vue.use(progressBar, {
 Vue.use(VueViewer)
 Vue.use(VueLazyload)
 Vue.use(ReadMore)
+Vue.use(VueToast);
 
 Vue.component('default-desktop-layout', DefaultLayout)
 Vue.component('blank-desktop-layout', BlankLayout)

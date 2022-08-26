@@ -337,6 +337,8 @@
                 status: 'to_do',
                 create_by: 0
             },
+            timers: {},
+            toasts: {},
             histories: [],
             historyPage: 1,
             historyLastPage: 1,
@@ -347,7 +349,7 @@
                 if(newval) {
                     this.initIssue()
                 }
-            }
+            },
         },
 
         computed: {
@@ -521,16 +523,33 @@
                 } finally {
                     await this.fetchHistories(1)
                 }
-            },            
+            },
+            
+            updateData(key, val) {
+                clearTimeout(this.timers[key])
+                this.timers[key] = setTimeout(async () => {
+                    this.toasts[key] = this.$toast.info(`Saving changes...`, {position: 'bottom-right'})
 
-            async onChange(valid, key, val) {
-                if(valid) {
                     if(['labels', 'teams'].includes(key) && val.length > 0) {
                         await this.quickUpdate(key, val)
                     } else if(key == 'assigned_customers') {
                         await this.quickUpdate(key, val)
                     } else {
                         await this.quickUpdate(key, val)
+                    }
+
+                    if(typeof this.toasts[key].dismiss == 'function') {
+                        this.toasts[key].dismiss()
+                    }
+                }, 750)                
+            },
+
+            onChange(valid, key, val) {
+                if(valid) {
+                    this.updateData(key, val)
+                } else {
+                    if(['start_date', 'end_date'].includes(key)) {
+                        this.updateData(key, val)
                     }
                 }
             },

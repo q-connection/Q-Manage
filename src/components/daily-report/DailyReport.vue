@@ -6,7 +6,7 @@
                 <b-form @submit.prevent="handleSubmit(onSubmitIssue)">
                     <!-- <validation-provider tag="div" class="col-12" rules="required" name="report list"
                         ref="report_list" v-slot="{ errors, valid }"> -->
-                    <b-select2 class="mb-3" v-model="issue_id" placeholder="Search Options" :options="select_issues"
+                    <b-select2 class="mb-3" v-model="issue_id" placeholder="Choose Options" :options="select_issues"
                         :filter-by="issueFilter" :closeOnSelect="false">
                         <template v-slot:option="option">
                             <slot name="option-data" v-bind="option">
@@ -173,7 +173,9 @@ export default {
                     if(typeof dismiss == 'function') {
                         dismiss()
                     }                    
+
                     this.$showAlert({ type: 'success', message: 'Checkout successfully' })
+                    this.$bvModal.hide('modal-daily-report')
 
                     await this.$store.dispatch('fetchUser', true)
                 } else {
