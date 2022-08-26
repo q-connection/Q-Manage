@@ -7,6 +7,10 @@
                     <b-form @submit.prevent="handleSubmit(onSubmitIssue)">
                         <!-- <validation-provider tag="div" class="col-12" rules="required" name="report list"
                             ref="report_list" v-slot="{ errors, valid }"> -->
+                        <div class="mb-3">
+                            <div for="preview" class="h5 pb-1">Report List</div>
+
+                        </div>
                         <b-select2 v-model="issue_id" placeholder="Search Options" :options="select_issues"
                             :filter-by="issueFilter" :closeOnSelect="false">
                             <template v-slot:option="option">
@@ -27,7 +31,8 @@
 
                         <div class="d-flex justify-content-end mt-3">
                             <form-button :block="$device.mobile" type="submit" variant="primary"
-                                :disabled="isSubmitting" :loading="isSubmitting" loading-without-hidden-text>
+                                :disabled="isSubmitting || user.today_check_out_at" :loading="isSubmitting"
+                                loading-without-hidden-text>
                                 SUBMIT
                             </form-button>
                         </div>
@@ -87,21 +92,14 @@ export default {
             this.report_list[issueIndex][issue.type] = issue.value
             // this.report_list = issueC
         },
-         refreshIssue(id) {
-    
-    
-                let issueIndex = this.report_list.findIndex((c) => id == c.id)
-                let issueOriginIndex = this.issues.findIndex((c) => id == c.id)
-                this.report_list[issueIndex] = this.$lodash.clone(this.issues[issueOriginIndex])
-                let listTmp  = this.$lodash.cloneDeep(this.report_list)
-                this.report_list =[]
-                this.report_list =listTmp
-                console.log('listTmp',listTmp)
-           
-      
-     
+        refreshIssue(id) {
+            let issueIndex = this.report_list.findIndex((c) => id == c.id)
+            let issueOriginIndex = this.issues.findIndex((c) => id == c.id)
+            this.report_list[issueIndex] = this.$lodash.clone(this.issues[issueOriginIndex])
+            this.report_list = this.$lodash.cloneDeep(this.report_list)
         },
         async onSubmitIssue() {
+
             try {
                 this.isSubmitting = true
                 let projects = this.report_list.map(function (obj) {
@@ -137,26 +135,29 @@ export default {
                     this.$showAlert({ type: 'danger', message: err.response.data.message })
                 }
             } finally {
-                this.isSubmitting = false
-                try {
-                    this.$bvModal.show('modal-daily-report');
-                    this.isLoggingTime = true
-                    const { data } = await this.$http.post('log-time/checkout/' + this.user.last_checkin_id)
-
-                    if (!data.error) {
-                        this.$showAlert({ type: 'success', message: 'Checkout successfully' })
-                        await this.$store.dispatch('fetchUser')
-                    } else {
-                        this.$showAlert({ type: 'danger', message: data.message })
-                    }
-                } catch (err) {
-                    console.log(err)
-                    this.$showAlert({ type: 'danger', message: err.response.data.message })
-                } finally {
-                    this.isLoggingTime = false
-                }
+                await this.onCheckOut()
             }
         },
+        async onCheckOut() {
+            this.isSubmitting = false
+            try {
+                this.$bvModal.show('modal-daily-report');
+                this.isLoggingTime = true
+                const { data } = await this.$http.post('log-time/checkout/' + this.user.last_checkin_id)
+
+                if (!data.error) {
+                    this.$showAlert({ type: 'success', message: 'Checkout successfully' })
+                    await this.$store.dispatch('fetchUser')
+                } else {
+                    this.$showAlert({ type: 'danger', message: data.message })
+                }
+            } catch (err) {
+                console.log(err)
+                this.$showAlert({ type: 'danger', message: err.response.data.message })
+            } finally {
+                this.isLoggingTime = false
+            }
+        }
     },
     data: () => ({
         issues: [],
