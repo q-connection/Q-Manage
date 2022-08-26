@@ -34,7 +34,7 @@
                     </div>                    
                 </b-card>
                 <b-card class="card-issue" v-for="(comment, index) in listComments" :key="index">
-                    <div class="mb-3 pb-1 border-bottom d-flex justify-content-between align-items-center">
+                    <div class="mb-3 pb-1 d-flex justify-content-between align-items-center">
                         <div class="d-flex align-items-center">
                             <img-lazy-load
                                 class="avatar"
@@ -559,7 +559,7 @@
 
             async toggleConfirmComment(id) {
                 try {
-                    const cmt = this.comments.find(x => x.id == id)
+                    const cmt = this.comments.find(x => x.id == id && x.is_solved == 0)
 
                     if(cmt) {
                         const idx = this.comments.findIndex(x => x.id == id)
@@ -635,7 +635,6 @@
 
     &:nth-child(n+2) {
         &:not(:last-child) {
-            border-top: none;
             border-bottom: none;
         }
     }
