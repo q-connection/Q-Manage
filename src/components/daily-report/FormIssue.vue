@@ -10,12 +10,12 @@
                 </b-button>
             </div>
             <div class="issue-item--status mr-2">
-                <b-select2 v-model="issue_status" :options="issue_statuses" :reduce="pj => pj.value"
+                <b-select2 v-model="issue_status" :options="issue_statuses" :reduce="pj => pj.value" :clearable="false"
                     style="min-width: 160px;min-height: 45px;" placeholder="Issue status" />
             </div>
 
             <div class="mr-2 issue-item--number">
-                <b-input-group style="border-right: 0px;max-width: 160px;" :value="issue.process" v-model="process"
+                <b-input-group style="border-right: 0px;max-width: 160px;" :value="issue.process" v-model="process" 
                     @keyup="$emit('changeIssue', { 'id': issue.id, 'type': 'process', 'value': parseInt(process.target.value) })"
                     required>
                     <template #append>
