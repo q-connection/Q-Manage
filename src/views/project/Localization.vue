@@ -233,6 +233,16 @@
 
             async onImport(e) {
                 const file = e.target.files[0]
+
+                if(!this.queryParams.feature_id) {
+                    this.$showAlert({
+                        type: 'danger',
+                        title: 'Oops',
+                        message: 'Please select or create new screen to import strings.'
+                    })
+
+                    return                    
+                }
         
                 if(!['application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'].includes(file.type)) {
                     this.$showAlert({
