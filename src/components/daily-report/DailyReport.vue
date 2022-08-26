@@ -24,7 +24,7 @@
                                 {{ errors[0] }}
                             </div> -->
                         <!-- </validation-provider> -->
-                        <div v-for="(item) in report_list" :key="item.status">
+                        <div v-for="(item) in report_list" :key="item.status-item.id">
                             <FormIssue :issue="item" @removeIssue="removeIssue" @changeIssue="changeIssue"
                                 v-on:load="refreshIssue" @refreshIssue="refreshIssue" :isRefresh="isRefresh" />
                         </div>
@@ -51,6 +51,9 @@ export default {
     name: "DailReport",
     async mounted() {
         await this.fetchIssues();
+        if (this.user.today_check_out_at) {
+            this.fetchReportList()
+        }
     },
     watch: {
         item: {
@@ -63,12 +66,28 @@ export default {
     },
     methods: {
         async fetchIssues() {
-            const params = Object.assign({}, this.queryParams);
             try {
-                const { data } = await this.$http.get("issues", params);
+                const { data } = await this.$http.get("issues?process=true");
                 if (!data.error) {
-                    this.issues = this.$lodash.cloneDeep(data.data.data);
-                    this.select_issues = this.$lodash.cloneDeep(data.data.data)
+                    this.issues = this.$lodash.cloneDeep(data.data.data.filter((el) => {
+                        return el !== null && typeof el !== 'undefined';
+                    }));
+                    this.select_issues = this.$lodash.cloneDeep(data.data.data.filter((el) => {
+                        return el !== null && typeof el !== 'undefined';
+                    }))
+                }
+            }
+            catch (err) {
+                console.log(err);
+            }
+        },
+        async fetchReportList() {
+            try {
+                const { data } = await this.$http.get("daily_reports?order=now", {
+                    'order': 'now'
+                });
+                if (!data.error) {
+                    this.report_list = this.$lodash.cloneDeep(data.data.data);
                 }
             }
             catch (err) {
@@ -99,6 +118,10 @@ export default {
             this.report_list = this.$lodash.cloneDeep(this.report_list)
         },
         async onSubmitIssue() {
+            if (this.report_list.length == 0) {
+                this.onCheckOut()
+                return
+            }
 
             try {
                 this.isSubmitting = true
