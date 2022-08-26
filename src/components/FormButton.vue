@@ -9,7 +9,7 @@
                 <b-spinner type="grow" :variant="loadingVariant" label="Loading..." :small="this.size != 'lg'"></b-spinner>
                 <slot/>
             </div>
-            <div v-else>
+            <div class="d-flex justify-content-center w-100" v-else>
                 <b-spinner type="grow" :variant="loadingVariant" label="Loading..." :small="this.size != 'lg'"></b-spinner>
             </div>
         </div>

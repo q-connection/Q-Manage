@@ -1,6 +1,6 @@
 <template>
     <div class="options-wrapper" :class="mode" v-click-outside="hide">
-        <legend class="bv-no-focus-ring col-form-label pt-0 font-weight-medium" :class="{'label-required': required}" v-show="mode == 'select'">
+        <legend class="bv-no-focus-ring col-form-label pt-0 font-weight-medium" :class="{'label-required': required}" v-show="mode == 'select' && label">
             {{ label }}
         </legend>
         <div class="toolbar" @click="show" :class="[mode, {show: isDropdown}]" :state="stateToString">
@@ -41,7 +41,7 @@
             </div>
             <div class="text-danger small my-1">{{error}}</div>
         </div>
-        <div class="options-dropdown" :class="mode" v-show="isDropdown">
+        <div class="options-dropdown" :class="[mode, {'no-label': !!label === false }]" v-show="isDropdown">
             <div class="options-dropdown--content">
                 <div class="loading" v-show="loading">
                     <b-spinner variant="secondary"/>
@@ -214,23 +214,23 @@
         },
         methods: {
             async init() {
-                const {server_side, endpoint, params, resolveData, filter = null, storeKey = null} = this.config
+                const {server_side, endpoint, params, resolveData, filter = null, storeKey = null, auto_select_first = false} = this.config
 
                 if(server_side && endpoint) {
                     if(storeKey && this.$store.state[storeKey]) {
-                        this.parseOptions(this.$store.state[storeKey], resolveData, filter) 
+                        this.parseOptions(this.$store.state[storeKey], resolveData, filter, auto_select_first) 
                         this.$watch(`$store.state.${storeKey}`, async () => {
                             await this.init()
                         })
                     } else {
-                        await this.fetchData(endpoint, params, resolveData, filter)
+                        await this.fetchData(endpoint, params, resolveData, filter, auto_select_first)
                     }
                 } else {
-                    this.parseOptions(this.items, resolveData, filter)
+                    this.parseOptions(this.items, resolveData, filter, auto_select_first)
                 }
             },
 
-            parseOptions(items, resolveData, filter = null) {
+            parseOptions(items, resolveData, filter = null, auto_select_first = false) {
                 let options = items
 
                 if(typeof filter == 'function') {
@@ -241,16 +241,21 @@
                     options = options.map(opt => resolveData(opt))
                 }
 
+                if(auto_select_first) {
+                    this.$emit('selected', options[0])
+                    this.$emit('input', options[0].value)
+                }
+
                 this.options = options
             },
 
-            async fetchData(endpoint, params, resolveData = null, filter = null) {
+            async fetchData(endpoint, params, resolveData = null, filter = null, auto_select_first = false) {
                 try {
                     this.loading = true
                     const { data } = await this.$http.get(endpoint, {params})
 
                     if(!data.error && data.data) {
-                        this.parseOptions(data.data, resolveData, filter)
+                        this.parseOptions(data.data, resolveData, filter, auto_select_first)
                     }
                 } catch (err) {
                     console.log(err)
@@ -271,11 +276,13 @@
                             this.$delete(users, idx)
                         }                       
                     } else {
+                        this.$emit('selected', this.options.find(x => x.value == id))
                         users.push(id)
                     }
 
                     this.$emit('input', users)
                 } else {
+                    this.$emit('selected', this.options.find(x => x.value == id))
                     this.$emit('input', id)
                 }
             },
@@ -474,7 +481,11 @@
         }
 
         &.select {
-            top: 5rem
+            top: 5rem;
+
+            &.no-label {
+                top: 3rem
+            }
         }
     }
 

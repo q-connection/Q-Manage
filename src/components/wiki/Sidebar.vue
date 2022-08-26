@@ -16,14 +16,14 @@
                 <div>Design</div>
             </div>
         </b-list-group-item>
-        <!-- <b-list-group-item  :to="{name: 'project-wiki-envs'}" :active="$route.name.indexOf('env') !== -1">
+        <b-list-group-item  :to="{name: 'project-wiki-localization'}" :active="$route.name.indexOf('localization') !== -1">
             <div class="d-flex align-items-center">
                 <div class="h3 mb-0" style="line-height: 1; width: 36px">
-                    <q-icon icon="mdi:responsive"/>
+                    <q-icon icon="cil:language"/>
                 </div>
-                <div>Environment testing</div>
+                <div>Localization string</div>
             </div>
-        </b-list-group-item> -->
+        </b-list-group-item>
     </b-list-group>
 </template>
 

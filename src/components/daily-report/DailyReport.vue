@@ -43,9 +43,6 @@ export default {
     name: "DailReport",
     async mounted() {
         await this.fetchIssues();
-        if (this.user.today_check_out_at) {
-            this.fetchReportList()
-        }
     },
     watch: {
         item: {
@@ -103,11 +100,15 @@ export default {
             this.report_list[issueIndex][issue.type] = issue.value
             // this.report_list = issueC
         },
-        refreshIssue(id) {
+        async refreshIssue(id, stopSpin) {
+            await this.fetchIssues()
+
             let issueIndex = this.report_list.findIndex((c) => id == c.id)
             let issueOriginIndex = this.issues.findIndex((c) => id == c.id)
             this.report_list[issueIndex] = this.$lodash.clone(this.issues[issueOriginIndex])
             this.report_list = this.$lodash.cloneDeep(this.report_list)
+
+            stopSpin()
         },
         async onSubmitIssue() {
             if (this.report_list.length == 0) {

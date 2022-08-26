@@ -206,19 +206,7 @@ export default new Vuex.Store({
             } catch (err) {
                 console.log(err)
             }
-        },
-
-        async fetchProject({commit}, id) {
-            try {
-                const { data } = await $http.get('projects/' + id)
-
-                if(!data.error) {
-                    commit('SET_PROJECT', data.data)
-                }
-            } catch (err) {
-                console.log(err)
-            }
-        },
+        }
     },
     modules: {
         project

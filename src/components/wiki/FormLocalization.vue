@@ -62,7 +62,7 @@
                 try {
                     this.isSubmitting = true
                     this.formData.project_id = this.$route.params.id
-                    const { data } = await this.$http.post('versions', this.formData)
+                    const { data } = await this.$http.post('localization_features', this.formData)
 
                     if(!data.error) {
                         if(typeof this.reset == 'function') {

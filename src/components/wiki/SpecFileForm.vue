@@ -141,7 +141,7 @@
                     permission: 'project.version',
                     endpoint: 'versions',
                     params: {
-                        project_id: this.$route.param.id
+                        project_id: this.$route.params.id
                     },
                     resolveData: data => ({
                         label: data.name,
@@ -157,7 +157,7 @@
                     permission: 'project.tag',
                     endpoint: 'design_tags',  
                     params: {
-                        project_id: this.$route.param.id
+                        project_id: this.$route.params.id
                     },                                    
                     resolveData: data => ({
                         label: data.name,

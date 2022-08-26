@@ -1,13 +1,11 @@
 <template>
     <div class="project-table">
-        <table-default :columns="columns" :config="tableConfig" :show-columns="false" searchable hover
-            @redirect="redirect">
+        <table-default :columns="columns" :config="tableConfig" :show-columns="false" searchable hover>
             <template slot="tableHeadActions" v-if="showCreateButton">
                 <b-button variant="outline-primary" size="sm" class="px-3 py-2" @click="$emit('create', $event)">
                     Create
                 </b-button>
             </template>
-
             <template slot="row-name" slot-scope="{row}">
                 <div class="d-flex align-items-center">
                     <div class="h3 mr-3" v-if="!showThumbnail">
@@ -67,18 +65,24 @@ export default {
             default: false
         }
     },
-    data: () => ({
-        columns: [
-            { label: 'Name', name: 'name', rowClass: 'text-cursor p-3' },
-            { label: 'Customers', name: 'customers', rowClass: 'text-cursor p-3' },
-        ],
-        tableConfig: {
-            url: 'projects'
+    computed: {
+        columns() {
+            return [
+                { label: 'Name', name: 'name', rowClass: 'text-cursor p-3', rowClicked: this.redirect },
+                { label: 'Customers', name: 'customers', rowClass: 'text-cursor p-3', rowClicked: this.redirect},
+            ]
         },
-    }),
+        tableConfig() {
+            return {
+                url: 'projects'
+            }
+        },
+    },
     methods: {
-        redirect(id) {
-            this.$router.push({ name: 'project-detail', params: { id: id } })
+        redirect(row) {
+            this.$redirectTo('project-issues', {id: row.id}, (() => {
+                this.$store.commit('project/SET_DETAIL', row)
+            })())            
         }
     },
 }

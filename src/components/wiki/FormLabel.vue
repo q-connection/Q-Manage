@@ -63,7 +63,8 @@
             formData: {
                 color: '#A72218',
                 name: 'Label Name',
-                description: ''
+                description: '',
+                project_id: ''
             }
         }),
 
@@ -81,6 +82,7 @@
             async onSubmit() {
                 try {
                     this.isSubmitting = true
+                    this.formData.project_id = this.$route.params.id
                     const { data } = await this.$http.post('design_tags', this.formData)
 
                     if(!data.error) {

@@ -2,9 +2,13 @@
 <div>
     <project-tabs style="margin-top: 2rem"/>
     <div class="mt-4 mb-5">
-        <div class="h5 px-3 pb-1" v-if="selectedProject.name">Project: <span class="text-primary">{{ selectedProject.name || '' }}</span></div>
-        <b-container fluid v-if="selectedProject.id">
-            <slot/>
+        <div class="h5 px-3 pb-1" v-if="project">Project: <span class="text-primary">{{ project.name || '' }}</span></div>
+        <b-container fluid v-if="project">
+            <transition-group name="fade" appear>
+                <div key="project-content">
+                    <slot/>
+                </div>
+            </transition-group>
         </b-container>
     </div>
 </div>
@@ -12,21 +16,23 @@
 
 <script>
     import ProjectTabs from '@/components/project/Tabs.vue'
+    import { mapState, mapActions } from 'vuex'
 
     export default {
         name: 'ProjectLayout',
         components: {ProjectTabs},
         computed: {
-            selectedProject() {
-                return this.$store.state.selected_project || {}
-            }
+            ...mapState({
+                project: state => state.project.detail
+            })
+        },
+        methods: {
+            ...mapActions({
+                fetchProject: 'project/fetchProject'
+            })
         },
         async mounted() {
-            await this.$store.dispatch('fetchProject', this.$route.params.id)
+            await this.fetchProject(this.$route.params.id)
         }
     }
 </script>
-
-<style lang="scss" scoped>
-
-</style>

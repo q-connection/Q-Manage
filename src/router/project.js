@@ -65,4 +65,10 @@ export default [
         meta: { layout: 'default', requiresAuth: true, requiresPermission: 'project.spec.create' },
         component: () => import('@/views/project/SpecFilesCreate.vue')
     },    
+    {
+        path: '/projects/:id/wiki/localization',
+        name: 'project-wiki-localization',
+        meta: { layout: 'default', requiresAuth: true },
+        component: () => import('@/views/project/Localization.vue')
+    },     
 ]

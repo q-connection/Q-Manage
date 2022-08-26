@@ -5,9 +5,7 @@
                 {{ issue?.name }}
             </div>
             <div class="issue-item--project-name">
-                <b-button variant="primary">
-                    {{ issue?.projects?.name }}
-                </b-button>
+                {{ issue?.projects?.name }}
             </div>
             <div class="issue-item--status">
                 <b-select2 v-model="issue_status" :options="issue_statuses" :reduce="pj => pj.value" :clearable="false"
@@ -19,17 +17,18 @@
                     <template #append>
                         <b-input-group-text>%</b-input-group-text>
                     </template>
-                    <b-form-input 
-                        min="0" 
+                    <input
+                        min="1" 
                         max="100" 
-                        type="number" 
+                        type="tel" 
+                        class="form-control"
                         v-model.number="process" 
                         @input="checkProcess"
+                        @keyup="checkProcess"
                     >
-                    </b-form-input>
                 </b-input-group>
             </div>
-            <div class="issue-item--refresh" @click="rotation" :class="{ clicked }">
+            <div class="issue-item--refresh" @click="rotation" :class="{ spin: clicked }">
                 <q-icon icon="ri:refresh-fill" color="#197130" width="30" height="30" />
             </div>
             <div class="issue-item--delete" @click="$emit('removeIssue', issue.id)">
@@ -44,7 +43,7 @@ export default {
     name: 'TableIssues',
     data: () => ({
         issue_types: [],
-        process: 0,
+        process: 1,
         issue_status: '',
         clicked: false,
         tableConfig: {
@@ -91,20 +90,46 @@ export default {
         }
     },
     methods: {
+        stopSpin() {
+            this.clicked = false
+        },
+
         rotation() {
-            this.$emit('refreshIssue',this.issue.id)
-            this.clicked = !this.clicked
+            if(this.clicked) {
+                return
+            }
+
+            this.$emit('refreshIssue',this.issue.id, this.stopSpin)
+            this.clicked = true
         },
         
 
-        checkProcess(val) {            
-            if(parseInt(val) >= 0 && parseInt(val) <= 100) {
-                this.$emit('changeIssue', { 'id': this.issue.id, 'type': 'process', 'value': parseInt(val) })
+        checkProcess(e) {    
+            if(e.keyCode) {
+                const key = e.keyCode
 
-                return true
+                if(![8, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57].includes(key)) {
+                    this.process = 1
+
+                    return
+                }
             }
 
-            return false
+            const val = e.target.value
+
+            if(parseInt(val) > 0 && parseInt(val) <= 100) {
+                this.$emit('changeIssue', { 'id': this.issue.id, 'type': 'process', 'value': parseInt(val) })
+
+                return
+            }
+
+            if(!val) {
+                this.process = 1
+            }
+
+            if(parseInt(val) > 100) {
+                this.process = 100
+            }
         }
     }
 
@@ -127,6 +152,14 @@ export default {
 
     .issue-item--project-name {
         margin-right: .5rem;
+        font-weight: 700;
+        font-size: 1rem;
+        line-height: 2;
+        min-height: 45px;
+        border-radius: 10px;
+        color: #fff;
+        background-color: var(--primary);
+        padding: 0.375rem 0.75rem
     }
 
     .issue-item--status {
@@ -148,9 +181,8 @@ export default {
         cursor: pointer;
         margin-right: 1.25rem;
 
-        &.clicked {
-            transform: rotate(360deg);
-            transition: transform 0.5s ease-in-out;
+        &.spin {
+            cursor: not-allowed;
         }
     }
 }
