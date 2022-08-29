@@ -7,11 +7,5 @@ module.exports = defineConfig({
             ...config.optimization.get('splitChunks'),
             automaticNameDelimiter: '-'
         })
-    },
-    pwa:{
-        workboxPluginMode: "InjectManifest",
-        workboxOptions:{
-            swSrc:"./src/sw.js",
-        }
-    }    
+    } 
 })

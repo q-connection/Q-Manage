@@ -43,7 +43,7 @@
                         <span class="task-title">No issue found.</span>
                     </b-dropdown-item>
                 </b-nav-item-dropdown>
-                <b-nav-item-dropdown 
+                <!-- <b-nav-item-dropdown 
                     ref="recentlyDropdown" 
                     class="project-dropdown" 
                     no-caret
@@ -75,7 +75,7 @@
                     <b-dropdown-item href="#" v-if="issues.length <= 0">
                         <span class="task-title">No issue found.</span>
                     </b-dropdown-item>
-                </b-nav-item-dropdown>
+                </b-nav-item-dropdown> -->
                 <b-nav-item 
                     v-if="$hasPermission('hrm.index') && $hasPermission('employee.index')" 
                     :to="{name: 'hrm-employees'}"

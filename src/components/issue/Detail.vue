@@ -545,12 +545,8 @@
             },
 
             onChange(valid, key, val) {
-                if(valid) {
+                if(val) {
                     this.updateData(key, val)
-                } else {
-                    if(['start_date', 'end_date'].includes(key)) {
-                        this.updateData(key, val)
-                    }
                 }
             },
 

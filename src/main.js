@@ -1,11 +1,12 @@
 import Vue from 'vue'
 import App from './App.vue'
 import device from 'vue-device-detector'
-import './registerServiceWorker'
 
 import router from './router'
 import store from './store'
 import customMixins from '@/mixins'
+import firebase from './firebase'
+import './registerServiceWorker'
 
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 import progressBar from 'vue-progressbar'
@@ -87,6 +88,7 @@ componentContext.keys().forEach((componentFilePath) => {
 });
 
 Vue.mixin(customMixins)
+Vue.prototype.$firebase = firebase
 
 export default new Vue({
     router,
