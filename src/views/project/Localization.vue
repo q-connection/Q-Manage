@@ -31,7 +31,7 @@
                         </b-col>
                     </b-row>
                     <div class="text-right mb-2">
-                        <a href="/localization-string-exmple.xlsx" target="_blank">
+                        <a href="https://manage.qconnection.vn/localization-string-example.xlsx" target="_blank">
                             <q-icon icon="eva:attach-fill"/>
                             <i>Download example</i>
                         </a>
