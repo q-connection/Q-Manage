@@ -7,7 +7,7 @@
             <b-col cols=12 xl=9 lg=9>
                 <b-card>
                     <input class="d-none" ref="importFile" type="file" accept=".xlsx, .xls, .csv" @change="onImport">
-                    <b-row class="pb-1 border-bottom">
+                    <b-row class="pb-1 border-bottom mb-3">
                         <b-col cols=12 xl=8 lg=8>
                             <b-form-input
                                 class="mb-3"

@@ -14,8 +14,15 @@
                     v-if="!isSubmitting" />
             </b-col>
         </b-row>
-        <b-modal id="bv-modal-create-project" header-class="custom-header" content-class="custom-content" hide-footer
-            size="xl" hide-header-close>
+        <b-modal 
+            id="bv-modal-create-project" 
+            header-class="custom-header" 
+            content-class="custom-content" 
+            hide-footer
+            size="xl" 
+            hide-header-close
+            @hide="clearFormData"
+        >
             <template #modal-title>
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h5 class="mb-0"> CREATE PROJECT</h5>
@@ -90,36 +97,34 @@
                                         <b-select2 
                                             v-model="customer_selected" 
                                             class="search-customer"
-                                            placeholder="Search by employee ID or email" :options="list_customer"
+                                            placeholder="Search by employee ID or email" :options="list_customer_filtered"
                                             :filter-by="customerFilter"
                                             :closeOnSelect="false"
+                                            label="fullname"
                                         >
                                             <template v-slot:option="option">
-                                                <slot name="option-data" class="option-data" v-bind="option"
-                                                    v-if="option?.show != false">
-                                                    <div class="p-1">
-                                                        <div class="user-item">
-                                                            <b-img :src="option.avatar_url" class="avatar" rounded="circle"
-                                                                alt="Circle image"></b-img>
-                                                            <b-col class="info">
-                                                                <div class="full-name">
-                                                                    {{ option.full_name }}
-                                                                </div>
-                                                                <div class="email">
-                                                                    {{ option.email }}
-                                                                </div>
-                                                                <div class="username">
-                                                                    {{ option.username }}
-                                                                </div>
-                                                            </b-col>
-                                                            <div @click="addPeople(option)"
-                                                                class="btn-add-people align-items-center">
-                                                                <QIcon icon="fluent:add-circle-16-filled" color="#197130"
-                                                                    width="22" height="22" />
+                                                <div class="p-1">
+                                                    <div class="user-item">
+                                                        <b-img :src="option.avatar_url" class="avatar" rounded="circle"
+                                                            alt="Circle image"></b-img>
+                                                        <b-col class="info">
+                                                            <div class="full-name">
+                                                                {{ option.full_name }}
                                                             </div>
+                                                            <div class="email">
+                                                                {{ option.email }}
+                                                            </div>
+                                                            <div class="username">
+                                                                {{ option.username }}
+                                                            </div>
+                                                        </b-col>
+                                                        <div @click="addPeople(option)"
+                                                            class="btn-add-people align-items-center">
+                                                            <QIcon icon="fluent:add-circle-16-filled" color="#197130"
+                                                                width="22" height="22" />
                                                         </div>
                                                     </div>
-                                                </slot>
+                                                </div>
                                             </template>
                                         </b-select2>
                                     </div>
@@ -226,6 +231,10 @@ export default {
     },
     computed: {
         list_customer() {
+            return this.$store.state.employees
+        },
+
+        list_customer_filtered() {
             const selected_customers = this.formData.form_customer_selected || []
             return this.$store.state.employees.filter(x => !selected_customers.includes(x.id))
         }
@@ -242,6 +251,7 @@ export default {
                     this.formData.thumbnail = this.project_detail.thumbnail
                     this.formData.type = 'edit'
                     this.formData.id = this.project_detail.id
+                    this.formData.form_customer_selected = this.project_detail.customers.map(x => x.customer_id)
                     this.formData.list_customer_selected = this.list_customer.filter((elem) => this.project_detail.customers.find(({ customer_id }) => {
                         if (elem.id === customer_id) {
                             elem.show = false
@@ -340,12 +350,9 @@ export default {
             this.urlImage = ''
             this.formData.thumbnail = ''
             this.formData.description = '',
-                this.formData.name = '',
-                this.projectTableLoaded = true,
-                this.$bvModal.hide('bv-modal-create-project')
-            // this.formData.status = ''
-
-
+            this.formData.name = '',
+            this.projectTableLoaded = true,
+            this.$bvModal.hide('bv-modal-create-project')
         }
 
 
