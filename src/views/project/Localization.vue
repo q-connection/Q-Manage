@@ -276,7 +276,6 @@
 
                         await this.fetchStrings()
                     } else {
-                        e.target.value = ''
                         this.$showAlert({
                             type: 'danger',
                             title: 'Oops',
@@ -284,7 +283,6 @@
                         })                        
                     }
                 } catch (err) {
-                    e.target.value = ''
                     console.log(err)
 
                     if(err.response && err.response.data) {
@@ -296,6 +294,7 @@
                     }
                 } finally {
                     loading.dismiss()
+                    e.target.value = ''
                 }
             },
 
