@@ -5,6 +5,7 @@
         <hrm-tabs v-if="inHrmRoutes"/>
         <slot/>
         <sticky-footer/>
+        <popup-notification :show="showPopupNotification"/>
     </div>
 </template>
 
@@ -16,6 +17,18 @@
         components: {
             DesktopNavbar,
             StickyFooter
+        },
+
+        data: () => ({
+            showPopupNotification: false
+        }),
+
+        mounted() {
+            if(!localStorage.getItem('notification-initialized')) {
+                setTimeout(() => {
+                    this.showPopupNotification = true
+                }, 3000)
+            }
         },
     }
 </script>

@@ -1,5 +1,4 @@
 const { defineConfig } = require('@vue/cli-service')
-const webpack = require('webpack')
 
 module.exports = defineConfig({
     transpileDependencies: true,
@@ -8,5 +7,11 @@ module.exports = defineConfig({
             ...config.optimization.get('splitChunks'),
             automaticNameDelimiter: '-'
         })
-    }  
+    },
+    pwa:{
+        workboxPluginMode: "InjectManifest",
+        workboxOptions:{
+            swSrc:"./src/sw.js",
+        }
+    }    
 })

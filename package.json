@@ -24,6 +24,7 @@
     "quill-image-drop-module": "^1.0.3",
     "quill-image-resize-module": "^3.0.0",
     "quill-task-list": "^1.1.0",
+    "register-service-worker": "^1.7.2",
     "uuid": "^8.3.2",
     "v-viewer": "^1.6.4",
     "vee-validate": "3",
