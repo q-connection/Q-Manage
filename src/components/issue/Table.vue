@@ -69,13 +69,7 @@
     export default {
         name: 'TableIssues',
         data: () => ({
-            issue_types: [],
-            tableConfig: {
-                url: 'issues',
-                params: {
-                    status: ''
-                }
-            },            
+            issue_types: [],   
         }),
 
         computed: {
@@ -101,7 +95,15 @@
                     {label: 'Pending', value: 'pending'},
                     {label: 'Done', value: 'done'},
                 ]
-            }          
+            },
+            tableConfig() {
+                return {
+                    url: 'issues',
+                    params: {
+                        status: ''
+                    }
+                }  
+            }               
         },
 
         watch: {
