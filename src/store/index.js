@@ -75,7 +75,7 @@ export default new Vuex.Store({
 
             let is_loggedin = false
 
-            if(!state.user || duration.asMinutes() >= 5 || force == true) {
+            if(!state.user || duration.asMinutes() >= 10 || force == true) {
                 localStorage.setItem('last_fetched_at', now.format('YYYY-MM-DD HH:mm:ss'))
 
                 try {

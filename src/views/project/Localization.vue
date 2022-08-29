@@ -30,7 +30,13 @@
                             </custom-select>
                         </b-col>
                     </b-row>
-                    <div class="d-flex justify-content-between align-items-center mb-3 px-1">
+                    <div class="text-right mb-2">
+                        <a href="/localization-string-exmple.xlsx" target="_blank">
+                            <q-icon icon="eva:attach-fill"/>
+                            <i>Download example</i>
+                        </a>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
                         <div class="font-weight-bold">
                             {{ localization.label || 'N/A' }}
                         </div>
