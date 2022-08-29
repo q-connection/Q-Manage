@@ -70,18 +70,10 @@
         name: 'TableIssues',
         data: () => ({
             issue_types: [],   
+            status: ''
         }),
 
         computed: {
-            status: {
-                get() {
-                    return this.tableConfig.params.status
-                },
-
-                set(val) {
-                    this.tableConfig.params.status = val
-                }
-            },
             columns() {
                 return [
                     {label: 'Name', name: 'name', rowClass: 'text-cursor p-3', rowClicked: this.handleClicked},
@@ -90,28 +82,28 @@
             },
             issue_statuses() {
                 return [
-                    {label: 'Pending', value: 'to_do'},
+                    {label: 'To Do', value: 'to_do'},
                     {label: 'In Progress', value: 'inprogress'},
                     {label: 'Pending', value: 'pending'},
                     {label: 'Done', value: 'done'},
                 ]
             },
             tableConfig() {
+                const status = this.status || 'done'
+                let operator = ''
+
+                if(!this.status) {
+                    operator = '<>'
+                }
+
                 return {
                     url: 'issues',
                     params: {
-                        status: ''
+                        status,
+                        status_operator: operator
                     }
                 }  
             }               
-        },
-
-        watch: {
-            status() {
-                this.$nextTick(() => {
-                    this.$refs.table.refresh(true)
-                })
-            }
         },
 
         methods: {

@@ -100,12 +100,6 @@
             ]            
         }),
 
-        watch: {
-            search() {
-                this.$refs.table.refresh(true)
-            }
-        },
-
         computed: {
             tableConfig() {
                 return {

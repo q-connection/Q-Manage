@@ -260,6 +260,13 @@
 
             async 'queryParams.search'() {
                 await this.fetchItems()
+            },
+
+            config: {
+                deep: true,
+                async handler() {
+                    await this.initData()
+                }
             }
         },
 
