@@ -122,8 +122,8 @@
                     </b-dropdown-form>                    
                     <b-dropdown-item href="#" v-for="(noti, index) in notification.items" :key="index" @click="updateNotiSeen(noti.id)">
                         <div class="noti-content-title" :class="{seen: noti.seen}">
-                            <span class="text-primary" v-if="noti.project">[{{ noti.project?.name }}]</span> 
-                            {{ noti.title }}
+                            <span class="text-primary">[{{ noti.title }}]</span> 
+                            {{ noti.action_value }}
                         </div>
                     </b-dropdown-item>
                     <b-dropdown-item href="#" v-if="notification.items.length <= 0">
@@ -311,7 +311,7 @@ export default {
         async fetchNotifications()
         {
             try {
-                const { data } = await this.$http.get('notifications', {per_page: 5, page: 1, type: this.notification.selected})
+                const { data } = await this.$http.get('notifications', {params: {per_page: 5, page: 1, type: this.notification.selected}})
 
                 if(!data.error) {
                     this.notification.items = data.data.data
