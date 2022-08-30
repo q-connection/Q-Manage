@@ -3,7 +3,7 @@
         <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
         <b-collapse id="nav-collapse" is-nav>
-            <b-navbar-nav>
+            <b-navbar-nav class="navbar-left">
                 <b-nav-item :to="{name: 'dashboard'}">Dashboard</b-nav-item>
                 <b-nav-item-dropdown 
                     ref="projectDropdown" 
@@ -99,11 +99,38 @@
 
             <!-- Right aligned nav items -->
             <b-navbar-nav class="ml-auto">
-                <b-nav-item :to="{name: 'announcements'}">
-                    <span class="h3">
-                        <q-icon icon="clarity:bell-solid"/>
-                    </span>                    
-                </b-nav-item>
+                <b-nav-item-dropdown 
+                    ref="notificationDropdown" 
+                    class="notification-dropdown" 
+                    no-caret
+                >
+                    <template #button-content>
+                        <span class="h3">
+                            <q-icon icon="clarity:bell-solid"/>
+                        </span>   
+                    </template>
+                    <b-dropdown-form class="noti-names" href="javascript:;" active>
+                        <div 
+                            class="noti-title" 
+                            :class="{active: notification.selected == type.value}" 
+                            v-for="(type, index) in notification.types" 
+                            :key="index"
+                            @click="notification.selected = type.value"
+                        >
+                            {{ type.name }}
+                        </div>
+                    </b-dropdown-form>                    
+                    <b-dropdown-item href="#" v-for="(noti, index) in notification.items" :key="index">
+                        <b-icon class="mr-1" icon="record-circle" variant="primary"/>
+                        <span class="task-title">
+                            <span class="text-primary">[{{ noti.project?.name }}]</span> 
+                            {{ noti.title }}
+                        </span>
+                    </b-dropdown-item>
+                    <b-dropdown-item href="#" v-if="issues.length <= 0">
+                        <span class="task-title">No notifications found.</span>
+                    </b-dropdown-item>
+                </b-nav-item-dropdown>
 
                 <b-nav-item href="#">
                     <span class="h3">
@@ -163,6 +190,14 @@ export default {
         },
         issueRecentlyParams: {
             search: ''
+        },
+        notification: {
+            items: [],
+            types: [
+                {name: 'Projects', value: 'projects'},
+                {name: 'Others', value: 'others'},
+            ],
+            selected: 'projects'
         }
     }),
 

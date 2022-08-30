@@ -34,6 +34,7 @@
                                 :state="$isValid(errors, valid)"
                                 :error="errors[0]"
                                 v-model="formData.contract_start_date"
+                                :max="formData.contract_end_date"
                                 required
                             />
                         </validation-provider>
@@ -51,6 +52,7 @@
                                 :state="$isValid(errors, valid)"
                                 :error="errors[0]"
                                 v-model="formData.contract_end_date"
+                                :min="formData.contract_start_date"
                                 required
                             />
                         </validation-provider>

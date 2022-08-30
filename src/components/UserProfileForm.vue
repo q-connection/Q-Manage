@@ -579,12 +579,12 @@
             },
 
             onViewContracts() {
-                this.$nextTick(() => {
-                    this.tabIndex = 0
-                })
-
                 if(this.contractSecurityPassed) {
                     return
+                } else {
+                    this.$nextTick(() => {
+                        this.tabIndex = 0
+                    })                    
                 }
 
                 this.$showAlert({

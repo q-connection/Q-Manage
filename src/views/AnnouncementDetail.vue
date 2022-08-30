@@ -15,7 +15,9 @@
                             {{ getSplitedFile(anno.files) }}
                         </a>
                     </div>
-                    <div class="mt-3" v-html="anno.description"></div>
+                    <div class="mt-3">
+                        <div style='white-space: pre-wrap; word-wrap: break-word; font-family: inherit' v-html="anno.description"></div>
+                    </div>
                     <div class="mt-3 w-100 border" v-if="anno.files">
                         <embed :src="fileUrl(anno.files)" style="width: 100%; min-height: 500px" type="application/pdf">
                     </div>
