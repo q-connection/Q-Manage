@@ -8,15 +8,29 @@
                 <b-card>
                     <input class="d-none" ref="importFile" type="file" accept=".xlsx, .xls, .csv" @change="onImport">
                     <b-row class="pb-1 border-bottom mb-3">
-                        <b-col cols=12 xl=8 lg=8>
+                        <b-col cols=12 xl=6 lg=6>
                             <b-form-input
                                 class="mb-3"
                                 placeholder="Search..."
                                 v-model="queryParams.search"
                             />
                         </b-col>
-                        <b-col cols=12 xl=4 lg=4>
+                        <b-col cols=12 xl=3 lg=3>
                             <custom-select
+                                class="mb-3"
+                                label=""
+                                mode="select"
+                                :config="versionConfig"
+                                v-model="queryParams.version_id"
+                            >
+                                <template slot="creation" slot-scope="{reset, search}">
+                                    <FormVersion :reset="reset" :name="search"/>
+                                </template>
+                            </custom-select>
+                        </b-col>
+                        <b-col cols=12 xl=3 lg=3>
+                            <custom-select
+                                ref="featureSelect"
                                 class="mb-3"
                                 label=""
                                 mode="select"
@@ -25,7 +39,7 @@
                                 @selected="onSelected"
                             >
                                 <template slot="creation" slot-scope="{reset, search}">
-                                    <FormLocalization :reset="reset" :name="search"/>
+                                    <FormLocalization :reset="reset" :name="search" :version="queryParams.version_id"/>
                                 </template>
                             </custom-select>
                         </b-col>
@@ -144,10 +158,11 @@
     import WikiSidebar from '@/components/wiki/Sidebar.vue'
     import ProjectLayout from '@/components/project/Layout.vue'
     import FormLocalization from '@/components/wiki/FormLocalization.vue'
+    import FormVersion from '@/components/wiki/FormVersion.vue'
 
     export default {
         name: 'LocalizationPage',
-        components: {ProjectLayout, WikiSidebar, FormLocalization},
+        components: {ProjectLayout, WikiSidebar, FormLocalization, FormVersion},
         data: () => ({
             timer: null,
             editing: [],
@@ -156,7 +171,8 @@
             strings: [],
             queryParams: {
                 search: '',
-                feature_id: ''
+                feature_id: '',
+                version_id: ''
             }
         }),
         computed: {
@@ -166,8 +182,10 @@
                     auto_select_first: true,
                     permission: 'localization-string',
                     endpoint: 'localization_features',
+                    fetch_on_mounted: false,
                     params: {
-                        project_id: this.$route.params.id
+                        project_id: this.$route.params.id,
+                        version_id: this.queryParams.version_id
                     },
                     resolveData: data => ({
                         label: data.name,
@@ -176,7 +194,24 @@
                     })
                 }
             },
-            
+
+            versionConfig() {
+                return {
+                    server_side: true,
+                    auto_select_first: true,
+                    permission: 'project.version',
+                    endpoint: 'versions',
+                    params: {
+                        project_id: this.$route.params.id
+                    },
+                    resolveData: data => ({
+                        label: data.name,
+                        value: data.id,
+                        style: 'font-size: 14px; color: var(--primary); font-weight: bold'
+                    })
+                }
+            },
+                        
             exportUrl() {
                 return `${process.env.VUE_APP_API_ENDPOINT}/feature_values/export/${this.queryParams.feature_id}`
             }
@@ -219,7 +254,7 @@
             async saveString(item) {
                 try {
                     this.saving.push(item.id)
-                    await this.$http.put('feature_values/' + item.id, {value: item.value_record})
+                    await this.$http.put('feature_values/' + item.id, {value: item.value_record.value})
                     this.$toast.success(`Updated string <b>${item.value_record.key}</b>`, {
                         position: 'bottom-right'
                     })                    

@@ -1,14 +1,14 @@
-import { initializeApp } from "firebase/app";
+import firebase from "firebase/app";
+import "firebase/messaging";
 
-const firebaseApp = initializeApp({
-    apiKey: 'api-key',
-    authDomain: 'project-id.firebaseapp.com',
-    databaseURL: 'https://project-id.firebaseio.com',
-    projectId: 'project-id',
-    storageBucket: 'project-id.appspot.com',
-    messagingSenderId: 'sender-id',
-    appId: 'app-id',
-    measurementId: 'G-measurement-id',
-});
+firebase.initializeApp({
+    apiKey: "AIzaSyAlt9MamcsaRVdcVm6DzKnbPBy04Lx8F-M",
+    authDomain: "nova-577bb.firebaseapp.com",
+    projectId: "nova-577bb",
+    storageBucket: "nova-577bb.appspot.com",
+    messagingSenderId: "1029261034194",
+    appId: "1:1029261034194:web:b39a3a50687ece9f61a30b",
+    measurementId: "G-WBN29SL961"
+})
 
-export default firebaseApp
+export default firebase

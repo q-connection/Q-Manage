@@ -37,24 +37,29 @@
 
 <script>
     export default {
-        props: ['reset', 'name'],
+        props: ['reset', 'name', 'version'],
 
         data: () => ({
             isSubmitting: false,
             formData: {
                 name: '',
-                project_id: ''
+                project_id: '',
+                version_id: ''
             }            
         }),
 
         watch: {
             name(newval) {
                 this.formData.name = newval || 'Label Name'
-            }
+            },
+            version(newval) {
+                this.formData.version_id = newval || ''
+            },
         },        
 
         mounted() {
             this.formData.name = this.name || 'Label Name'
+            this.formData.version_id = this.version || ''
         },
 
         methods: {

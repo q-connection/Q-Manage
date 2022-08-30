@@ -23,8 +23,6 @@ import OrganizationChart from 'vue-organization-chart'
 import DailyReportVue from './components/daily-report/DailyReport.vue';
 import { mapActions } from 'vuex';
 
-import { getMessaging, onMessage } from "firebase/messaging";
-
 export default {
     name: "App",
     components: {OrganizationChart,DailyReportVue},
@@ -60,13 +58,10 @@ export default {
             that.innerHeight = window.innerHeight;
         });     
 
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/firebase-mesaging-sw.js')
-        }
-
-        const messaging = getMessaging(this.$firebase);
-        onMessage(messaging, (payload) => {
+        const messaging = this.$firebase.messaging();
+        messaging.onMessage((payload) => {
             console.log('Message received. ', payload);
+            // ...
         });
 
         this.fetchOrgChartData()

@@ -23,7 +23,7 @@
                 <div class="d-flex align-items-center">
                     <div class="h3 mr-3">
                         <q-icon icon="codicon:target" v-if="row.status == 'to_do'"/>
-                        <q-icon icon="mdi:progress-wrench" v-if="row.status == 'inprogress'"/>
+                        <q-icon icon="mdi:progress-wrench" v-if="row.status == 'inprogess'"/>
                         <q-icon icon="mdi:progress-pencil" v-if="row.status == 'pending'"/>
                         <q-icon icon="mdi:progress-check" v-if="row.status == 'done'"/>
                     </div>

@@ -1,5 +1,5 @@
 <template>
-    <b-modal id="modal-daily-report" hide-header hide-footer size="xl">
+    <b-modal id="modal-daily-report" hide-header hide-footer size="xl" @show="fetchIssues">
         <div class="daily-report p-2">
             <modal-custom-header title="DAILY REPORT" modal-id="modal-daily-report" />
             <validation-observer ref="profileForm" v-slot="{ handleSubmit }">
@@ -7,7 +7,7 @@
                     <!-- <validation-provider tag="div" class="col-12" rules="required" name="report list"
                         ref="report_list" v-slot="{ errors, valid }"> -->
                     <b-select2 class="mb-3" v-model="issue_id" placeholder="Choose Options" :options="select_issues"
-                        :filter-by="issueFilter" :closeOnSelect="false">
+                        :filter-by="issueFilter" :closeOnSelect="false" :loading="isLoading" label="name">
                         <template v-slot:option="option">
                             <slot name="option-data" v-bind="option">
                                 <ListIssue :issue="option" @addIssue="addIssue" />
@@ -41,9 +41,6 @@ import ListIssue from './ListIssue.vue';
 
 export default {
     name: "DailReport",
-    async mounted() {
-        await this.fetchIssues();
-    },
     watch: {
         item: {
             reportList(val) {
@@ -56,6 +53,7 @@ export default {
     methods: {
         async fetchIssues() {
             try {
+                this.isLoading = true
                 const { data } = await this.$http.get("issues?process=true");
                 if (!data.error) {
                     this.issues = this.$lodash.cloneDeep(data.data.data.filter((el) => {
@@ -68,6 +66,8 @@ export default {
             }
             catch (err) {
                 console.log(err);
+            } finally {
+                this.isLoading = false
             }
         },
         async fetchReportList() {
@@ -196,6 +196,7 @@ export default {
         report_list: [],
         issue_id: '',
         isSubmitting: false,
+        isLoading: false,
         isRefresh: false,
         issueFilter: (option, label, search) => {
             let temp = search.toLowerCase();

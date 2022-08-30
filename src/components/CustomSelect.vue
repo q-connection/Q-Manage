@@ -136,7 +136,8 @@
                     resolveData: null,
                     filter: null,
                     allow_creation: false,
-                    storeKey: null
+                    storeKey: null,
+                    fetch_on_mounted: true
                 })
             },
 
@@ -175,6 +176,7 @@
             isCreating: false,
             loading: false,
             isSubmitting: false,
+            is_mounted: false,
             search: '',
             options: []
         }),
@@ -185,6 +187,15 @@
                     this.search = ''
                 }
             },
+            
+            config: {
+                deep: true,
+                async handler(newval, oldval) {                    
+                    if(!this.$lodash.isEqual(newval.params || {}, oldval.params || {})) {
+                        await this.init()
+                    }
+                }
+            }
         },
         computed: {
             optionFiltered() {
@@ -214,7 +225,16 @@
         },
         methods: {
             async init() {
-                const {server_side, endpoint, params, resolveData, filter = null, storeKey = null, auto_select_first = false} = this.config
+                const {
+                    server_side, 
+                    endpoint, 
+                    params, 
+                    resolveData, 
+                    filter = null, 
+                    storeKey = null, 
+                    auto_select_first = false, 
+                    fetch_on_mounted = true
+                } = this.config
 
                 if(server_side && endpoint) {
                     if(storeKey && this.$store.state[storeKey]) {
@@ -223,11 +243,15 @@
                             await this.init()
                         })
                     } else {
-                        await this.fetchData(endpoint, params, resolveData, filter, auto_select_first)
+                        if(fetch_on_mounted || this.is_mounted) {
+                            await this.fetchData(endpoint, params, resolveData, filter, auto_select_first)
+                        }
                     }
                 } else {
                     this.parseOptions(this.items, resolveData, filter, auto_select_first)
                 }
+
+                this.is_mounted = true
             },
 
             parseOptions(items, resolveData, filter = null, auto_select_first = false) {

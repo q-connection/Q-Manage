@@ -8,7 +8,12 @@
                 <h5 class="mb-1">{{ user.fullname }}</h5>
                 <div class="text-primary">{{ user.department_name }}</div>
                 <div>Position: <b>{{ user.role_name }}</b></div>
-                <div>Point: <b>{{ user.point || 0 }}</b></div>
+                <div class="d-flex align-items-center">
+                    <div>Point: <b>{{ user.point || 0 }}</b></div> 
+                    <router-link :to="{name: 'point-history'}" class="h5 mb-0 ml-1 pb-1">
+                        <q-icon icon="clarity:list-line"></q-icon>
+                    </router-link>
+                </div>
                 <div>Check-in at: <b class="text-danger">{{ formatTime(user.today_check_in_at) }}</b></div>
                 <div>Check-out at: <b class="text-danger">{{ formatTime(user.today_check_out_at) }}</b></div>
                 <hr v-if="!$device.mobile">

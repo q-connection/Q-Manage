@@ -6,7 +6,6 @@ import router from './router'
 import store from './store'
 import customMixins from '@/mixins'
 import firebase from './firebase'
-import './registerServiceWorker'
 
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 import progressBar from 'vue-progressbar'

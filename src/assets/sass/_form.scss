@@ -148,6 +148,10 @@
         .vs__dropdown-toggle {
             background: var(--vs-disabled-bg);
         }
+
+        .vs__search {
+            background: transparent;
+        }
     }
 
     &[state=true] {
@@ -238,10 +242,6 @@ $text-color: #000 !default;
 
 .ql-editor ul.task-list {
     padding-left: 1rem;
-}
-
-.ql-editor ul.task-list > li {
-  pointer-events: none
 }
 
 .ql-editor ul.task-list > li::before {

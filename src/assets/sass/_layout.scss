@@ -1,0 +1,21 @@
+.page-sidebar {
+    padding-right: .75rem;
+    margin-bottom: .75rem;
+    
+    .list-group-item {
+        border: 0;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+        color: #000;
+
+        &.active {
+            background: #F8F8F8;
+            color: #000
+        }
+    }
+}
+
+@media screen and (max-width: 1024px) {
+    .page-sidebar {
+        padding: 0
+    }
+}

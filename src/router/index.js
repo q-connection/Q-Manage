@@ -56,6 +56,12 @@ const base_routes = [
         component: () => import('@/views/UserSecurity.vue')
     },
     {
+        path: '/user/point-history',
+        name: 'point-history',
+        meta: { layout: 'default', requiresAuth: true },
+        component: () => import('@/views/UserPointHistory.vue')
+    },
+    {
         path: '/auth/login',
         name: 'login',
         meta: { layout: 'blank', requiresGuest: true },

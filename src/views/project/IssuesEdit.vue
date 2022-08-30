@@ -79,6 +79,12 @@
                         })
 
                         this.issue = data.data
+                        this.$store.commit('project/SET_ISSUE', this.issue)
+
+                        this.$router.push({
+                            name: 'project-issues-detail', 
+                            params: {id: this.issue.project_id, issue_id: this.issue.id}
+                        })                        
                     }
                 } catch (err) {
                     console.log(err)

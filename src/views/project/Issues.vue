@@ -87,7 +87,7 @@
                                     class="issue-item"
                                 >
                                     <div class="issue-content-left">
-                                        <div class="issue-title" @click="showIssueModal(issue)">
+                                        <div class="issue-title" @click="redirectToIssue(issue)">
                                             <span class="badge bg-danger text-white">{{issue.point}}</span> [{{ issue.cod || 'N/A' }}] {{ issue.name }}
                                         </div>
                                         <div class="issue-team">
@@ -157,123 +157,21 @@
                 </div>
             </div>
         </b-modal>
-        <b-modal 
-            :title="selectedIssue ? `[${selectedIssue.cod || 'N/A'}] ${selectedIssue.name}` : 'N/A'" 
-            id="issue-detail-modal" 
-            size="lg" 
-            body-class="p-0"
-            hide-footer
-            @hide="onIssueDetailHide"
-        >
-            <div id="issue-detail" class="p-1" v-if="selectedIssue">
-                <div class="issue-section">
-                    <div class="issue-author">
-                        <img-lazy-load
-                            class="author-avatar"
-                            :src="selectedIssue.created_by.avatar_thumb_url"
-                            error="/images/default-avatar.png"
-                        />
-                        <div class="author-name">
-                            <div class="font-weight-bold">{{ selectedIssue.created_by.fullname }}</div>  
-                            <div class="text-muted">{{ this.$mm(selectedIssue.created_at).format('LLL') }}</div>  
-                        </div>
-                    </div>
-                    <div class="ql-snow">
-                        <div class="issue-content ql-editor p-0" v-html="selectedIssue.content"></div>
-                    </div>
-                    <div class="mt-2" v-if="selectedIssue.files.length > 0">
-                        <ul class="list-group">
-                            <li 
-                                class="list-group-item"
-                                v-for="(file, fileIdx) in selectedIssue.files" 
-                                :key="fileIdx"                                
-                            >
-                                <a :href="file">
-                                    {{ $parseFileName(file) }}
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="issue-section">
-                    <Assignees 
-                        v-model="issue.assigned_customers" 
-                    />
-                    <CustomSelect
-                        label="Labels"
-                        v-model="issue.labels"
-                        :config="labelConfig"
-                        multiple
-                    >
-                        <template slot="creation" slot-scope="{reset, search, isCreating}">
-                            <FormLabel :reset="reset" :name="search" v-if="isCreating"/>
-                        </template>
-                        <template slot="option" slot-scope="opt">
-                            <div 
-                                class="font-weight-bold" 
-                                style="padding: 0.15rem 0.75rem; font-size: 10px; border-radius: 10px" 
-                                :class="opt.class" 
-                                :style="opt.style"
-                            >
-                                {{ opt.label }}
-                            </div>                                        
-                        </template>
-                    </CustomSelect>     
-                    <CustomSelect
-                        label="Team"
-                        v-model="issue.teams"
-                        :config="teamConfig"
-                        multiple
-                    >
-                        <template slot="creation" slot-scope="{reset, search, isCreating}">
-                            <FormTeam :reset="reset" :name="search" v-if="isCreating"/>
-                        </template>
-                    </CustomSelect>      
-                    <div class="py-2 mb-3 t-2 border-bottom">
-                        <div class="font-weight-bold">Start Date</div>
-                        <div>{{ this.$mm(selectedIssue.start_date).format('DD-MM-YYYY') }}</div>
-                    </div>                             
-                    <div class="pb-2 mb-3 border-bottom">
-                        <div class="font-weight-bold">End Date</div>
-                        <div>{{ this.$mm(selectedIssue.end_date).format('DD-MM-YYYY') }}</div>
-                    </div>                             
-                </div>
-                <div class="d-flex justify-content-end p-2">
-                    <form-button
-                        @click="$redirectTo('project-issues-detail', {id: selectedIssue.project_id, issue_id: selectedIssue.id}, addToStore())"
-                        class="btn btn-primary w-md-100"
-                        style="min-width: 150px; line-height: 1.75;"
-                    >
-                        View Detail
-                    </form-button>
-                </div>
-            </div>
-        </b-modal>
     </project-layout>
 </template>
 
 <script>
     import draggable from 'vuedraggable'
-    import ProjectLayout from '@/components/project/Layout.vue'
-    import Assignees from '@/components/issue/SelectAssignees.vue'
-    import CustomSelect from '@/components/CustomSelect.vue'
-    import FormLabel from '@/components/issue/FormLabel.vue'
-    import FormTeam from '@/components/issue/FormTeam.vue'    
+    import ProjectLayout from '@/components/project/Layout.vue'  
 
     export default {
         name: 'ProjectIssues',
-        components: {ProjectLayout, draggable, Assignees, CustomSelect, FormLabel, FormTeam},
+        components: {ProjectLayout, draggable},
         data: () => ({
             timer: null,
             isLoading: false,
             issues: [],
-            selectedIssue: null,
             assignees: [],
-            issue: {
-                assigned_customers: null,
-                labels: null,
-                teams: null
-            },
             filtering: {
                 label: null,
                 team: null,
@@ -312,27 +210,6 @@
                 this.timer = setTimeout(async () => {
                     await this.fetchIssues()
                 }, 750)
-            },
-            'issue.assigned_customers': {
-                async handler(newval, oldval) {
-                    if(oldval !== null && newval !== null) {
-                        await this.quickUpdate('assigned_customers', newval)
-                    }
-                }
-            },
-            'issue.labels': {
-                async handler(newval, oldval) {
-                    if(oldval !== null && newval !== null) {
-                        await this.quickUpdate('labels', newval)
-                    }
-                }
-            },
-            'issue.teams': {
-                async handler(newval, oldval) {
-                    if(oldval !== null && newval !== null) {
-                        await this.quickUpdate('teams', newval)
-                    }
-                }
             }
         },
 
@@ -415,14 +292,6 @@
 
                     if(!data.error) {
                         this.issues = data.data.issues
-
-                        if(this.$route.query.issue_id && !this.selectedIssue) {
-                            const issue = this.issues.find(x => x.id == this.$route.query.issue_id)
-
-                            if(issue) {
-                                this.showIssueModal(issue)
-                            }
-                        }
                     }
                 } catch (err) {
                     console.log(err)
@@ -566,35 +435,13 @@
                 this.$bvModal.show('assignees-modal')
             },
 
-            showIssueModal(issue) {
-                this.selectedIssue = issue
-                const {assigned_customers = [], teams = [], labels = []} = issue
+            redirectToIssue(issue) {
+                this.$store.commit('project/SET_ISSUE', issue)
 
-                this.issue.assigned_customers = assigned_customers
-                this.issue.teams = teams.map(team => team.team_id)
-                this.issue.labels = labels.map(label => label.label_id)
-
-                this.$bvModal.show('issue-detail-modal')
-            },
-
-            async quickUpdate(key, data) {
-                try {
-                    const formData = {},
-                          {id} = this.selectedIssue
-
-                    formData[key] = data
-                    const resp = await this.$http.post('issues/update_data/' + id, formData)
-
-                    if(!resp.data.error) {
-                        const issue_idx = this.issues.findIndex(x => x.id == id)
-
-                        if(issue_idx !== -1) {
-                            this.$set(this.issues, issue_idx, resp.data.data)
-                        }
-                    }
-                } catch (err) {
-                    console.log(err)
-                }
+                this.$router.push({
+                    name: 'project-issues-detail', 
+                    params: {id: issue.project_id, issue_id: issue.id}
+                })
             },
 
             onIssueDetailHide() {

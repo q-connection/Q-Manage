@@ -17,7 +17,7 @@
                         </small>
                     </div>
                     <div class="ql-snow">
-                        <div class="issue-content ql-editor p-0" v-html="formData.content"></div>
+                        <div class="issue-content ql-editor p-0" v-html="formData.content" :data-issue-id="$route.params.issue_id"></div>
                     </div>
                     <div class="mt-2" v-if="formData.files.length > 0">
                         <ul class="list-group">
@@ -203,6 +203,7 @@
                             :max="formData.end_date"
                             required
                             @input="onChange(valid, 'start_date', $event)"
+                            :disabled="formData.status == 'done'"
                         />
                     </validation-provider>
                     <validation-provider 
@@ -221,6 +222,7 @@
                             :min="formData.start_date"
                             required
                             @input="onChange(valid, 'end_date', $event)"
+                            :disabled="formData.status == 'done'"
                         />
                     </validation-provider>
                     <validation-provider 
@@ -240,8 +242,18 @@
                             v-model.number="formData.point"
                             required
                             @input="onChange(valid,'point', $event)"
+                            :disabled="formData.status == 'done'"
                         />
                     </validation-provider>
+                    <b-select2
+                        class="mb-3"
+                        :options="statuses"
+                        :reduce="opt => opt.value"
+                        :value="formData.status"
+                        @input="onStatusChange"
+                        :clearable="false"
+                        :disabled="formData.status == 'done'"
+                    />
                 </validation-observer>
                 <div class="d-flex justify-content-end">
                     <span class="text-cursor text-primary" @click="showLogsModal">
@@ -259,7 +271,7 @@
                         <q-icon icon="bx:history"/>
                     </div>
                     <div class="w-100">
-                        <div><b>{{ item.updated_by.fullname }}</b> change <b>{{ parseHistoryActionName(item.action) }}</b> to {{ parseHistoryActionValues(item.action, item.action_values) }}</div>
+                        <div><b>{{ item.updated_by.fullname }}</b> changed <b>{{ parseHistoryActionName(item.action) }}</b> {{ parseHistoryActionValues(item.action, item.action_values) }}</div>
                         <div class="text-muted small">{{ getTimeDuration(item.created_at) }}</div>
                     </div>
                 </div>
@@ -416,9 +428,18 @@
                                 e.target.classList.toggle('checked');
 
                                 const comment_id = elem.getAttribute('data-comment-id')
-                                await this.updateComment(comment_id, elem.innerHTML)
+                                const issue_id = elem.getAttribute('data-issue-id')
+
+                                if(comment_id) {
+                                    await this.updateComment(comment_id, elem.innerHTML)
+                                }
+
+                                if(issue_id) {
+                                    await this.updateIssueContent(issue_id, elem.innerHTML)
+                                }
                             }
                         });   
+
                         elem.setAttribute('data-issue-initialized', 'true')
                     }
                 })
@@ -469,6 +490,14 @@
             async updateComment(id, content) {
                 try {
                     await this.$http.put('issues_comments/' + id, {content})
+                } catch (err) {
+                    console.log(err)
+                }
+            },
+
+            async updateIssueContent(id, content) {
+                try {
+                    await this.$http.put('issues/content/' + id, {content})
                 } catch (err) {
                     console.log(err)
                 }
@@ -601,19 +630,36 @@
             },
 
             parseHistoryActionValues(key, values) {
+                let str = ''
+
                 if(['labels', 'teams'].includes(key) && Array.isArray(values)) {
-                    return values.map(x => x.name).join(', ')
+                    str = 'to ' + values.map(x => x.name).join(', ')
+                } else if(key == 'assigned_customers' && Array.isArray(values)) {
+                    str = 'to ' + values.map(x => x.username).join(', ')
+                } else if(Array.isArray(values) && values.length > 0) {
+                    str = 'to ' + values.join(',')
                 }
 
-                if(key == 'assigned_customers' && Array.isArray(values)) {
-                    return values.map(x => x.username).join(', ')
-                }
+                return str
+            },
 
-                if(Array.isArray(values)) {
-                    return values.join(',')
-                }
+            async onStatusChange(val) {
+                if(val == 'done') {
+                    this.$showAlert({
+                        type: 'confirm',
+                        title: 'Warning!',
+                        message: 'Do you really want to confirm the completion of this issue? This process cannot be undone.',
+                        callback: async ({dismiss}) => {
+                            this.formData.status = 'done'
+                            await this.quickUpdate('status', 'done')                           
 
-                return values
+                            dismiss()
+                        }
+                    })                    
+                } else {
+                    this.formData.status = val
+                    await this.quickUpdate('status', val)                        
+                }
             }
         }
     }

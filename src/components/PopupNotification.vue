@@ -10,18 +10,20 @@
                     variant="outline-dark"
                     size="sm"
                     class="mr-2 p-2"
-                    @click="cancel"
+                    @click="cancel(2)"
                 >
                     Cancel
                 </b-button>
-                <b-button
+                <form-button
                     variant="outline-success"
                     size="sm"
                     class="p-2"
                     @click="subscribe"
+                    :loading="is_loading"
+                    :disabled="is_loading"
                 >
                     Allow
-                </b-button>
+                </form-button>
             </div>
         </div>
     </div>
@@ -29,18 +31,10 @@
 
 <script>
     export default {
-        props: ['show'],
         data: () => ({
-            isShow: false
+            isShow: false,
+            is_loading: false
         }),
-        watch: {
-            show: {
-                immediate: true,
-                handler(val) {
-                    this.isShow = val
-                }
-            },
-        },
         mounted() {
             this.initialState()
         },
@@ -75,31 +69,46 @@
                     return;
                 }
 
-                navigator.serviceWorker.ready.then( serviceWorkerRegistration => {
-                    serviceWorkerRegistration.pushManager.getSubscription()
-                    .then(subscription => this.sendSubscriptionToServer(subscription))
-                    .catch(err => console.log(err))
-                })
+                let cached_data = localStorage.getItem('notification-initialized')
+
+                if(!cached_data) {
+                    cached_data = {}
+                } else {
+                    cached_data = JSON.parse(cached_data)
+                }
+
+                const expired_at = parseInt(this.$mm(cached_data.expired_at || null).format('YYYYMMDD'))
+                const now = parseInt(this.$mm().format('YYYYMMDD'))
+                
+                if(!cached_data.expired_at || expired_at <= now) {
+                    localStorage.removeItem('notification-initialized')
+                    this.isShow = true
+                } else {
+                    this.isShow = false
+                }                
             },
 
             subscribe() {
-                navigator.serviceWorker.ready.then( serviceWorkerRegistration => {
-                    serviceWorkerRegistration.pushManager.subscribe({
-                        userVisibleOnly: true,
-                        applicationServerKey: 'BG1idf27fhLin4lnhLIyS3jbOdfg2hEU8YNDtzFqBhUtSVp-OopFC2pxgv7gTlnnmhAtQZHz9aqM0m4hYVmfdCg'
-                    })
-                    .then(subscription => this.sendSubscriptionToServer(subscription))
-                    .catch(err => {
-                        if (Notification.permission === 'denied') {
-                            this.$toast.error('Permission for Notifications was denied')
+                this.is_loading = true
+                const vapidKey  = process.env.VUE_APP_VAPID_KEY || ''
+                const messaging = this.$firebase.messaging()
+                
+                messaging.getToken({ vapidKey })
+                .then(async (currentToken) => {
+                    if (currentToken) {
+                        this.cancel(30)
+                    } else {
+                        const permission = await this.requestPermission()
+
+                        if(permission == 'granted') {
+                            this.subscribe()
                         } else {
-                            console.log(err)
+                            this.$toast.error("Notification has been denied.")
                         }
-                    })
-                    .finally(() => this.isShow = false)
-                }).finally(() => {
-                    this.cancel(30)               
-                });
+                    }
+                })
+                .catch(err => console.log(err))
+                .finally(() => this.is_loading = false)
             },
 
             sendSubscriptionToServer(subscription) {

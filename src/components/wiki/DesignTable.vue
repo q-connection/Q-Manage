@@ -16,7 +16,7 @@
             </div>
         </div>
         <b-row class="mb-3">
-            <b-col cols=12 xl=8 lg=8>
+            <b-col cols=12 xl=6 lg=6>
                 <form-input-group class="d-none d-xl-block d-lg-block search-form">
                     <b-form-input style="min-width: 285px;" placeholder="Search versions and description" v-model.lazy="queryParams.search"></b-form-input>
                     <template #append>
@@ -26,7 +26,17 @@
                     </template>
                 </form-input-group>                
             </b-col>
-            <b-col cols=12 xl=4 lg=4>
+            <b-col cols=12 xl=3 lg=3>
+                <b-select2
+                    placeholder="Select versions"
+                    label="name"
+                    v-model="queryParams.versions"
+                    :reduce="version => version.id"
+                    :options="versions"
+                    multiple
+                />
+            </b-col>
+            <b-col cols=12 xl=3 lg=3>
                 <b-select2
                     placeholder="Select labels"
                     label="name"
@@ -102,12 +112,14 @@
             total: 0, 
             tags: [],
             designs: [],
+            versions: [],
             queryParams: {
                 page: 1,
                 per_page: 5,
                 search: '',
                 tags: [],
-                project_id: ''
+                project_id: '',
+                versions: []
             }
         }),
 
@@ -124,7 +136,8 @@
         },
 
         async mounted() {
-            await this.fetchTags()
+            this.fetchTags()
+            this.fetchVersions()
             await this.fetchDesigns()
         },
 
@@ -143,10 +156,25 @@
                 }
             },
 
+            async fetchVersions() {
+                try {
+                    const { data } = await this.$http.get('versions', {params: {
+                        project_id: this.$route.params.id
+                    }})
+
+                    if(!data.error) {
+                        this.versions = data.data
+                    }
+                } catch (err) {
+                    console.log(err)
+                }
+            },
+
             async fetchDesigns() {
                 try {
                     const params = Object.assign({}, this.queryParams)
                     params.tags = params.tags.join(',')
+                    params.versions = params.versions.join(',')
                     params.project_id = this.$route.params.id
 
                     const { data } = await this.$http.get('project_designs', {params})

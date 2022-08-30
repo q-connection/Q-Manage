@@ -1,5 +1,5 @@
 <template>
-    <b-list-group class="wiki">
+    <b-list-group class="page-sidebar">
         <b-list-group-item :to="{name: 'project-wiki-spec-files'}" :active="$route.name.indexOf('spec-files') !== -1">
             <div class="d-flex align-items-center">
                 <div class="h3 mb-0" style="line-height: 1; width: 36px">
@@ -32,27 +32,3 @@
         name: 'WikiSidebar',
     }
 </script>
-
-<style lang="scss" scoped>
-.wiki {
-    padding-right: .75rem;
-    margin-bottom: .75rem;
-    
-    .list-group-item {
-        border: 0;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.125);
-        color: #000;
-
-        &.active {
-            background: #F8F8F8;
-            color: #000
-        }
-    }
-}
-
-@media screen and (max-width: 1024px) {
-    .wiki {
-        padding: 0
-    }
-}
-</style>
