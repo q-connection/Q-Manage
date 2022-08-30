@@ -108,7 +108,8 @@
     }
 
     .dropdown-menu {
-        min-width: 10rem;
+        min-width: 360px;
+        max-width: 360px;
         padding: 0;
         right: 0;
         left: auto;
@@ -117,14 +118,21 @@
             border-bottom: 1px solid var(--light);
         
             .dropdown-item {
-                padding: 0.25rem 0.5rem;
+                padding: 0.35rem 0.5rem;
                 font-size: 14px;
                 color: rgb(102, 102, 102);
                 display: flex;
                 width: 100%;
 
-                .task-title {
-                    font-size: 14px
+                .noti-content-title {
+                    font-size: 14px;
+                    overflow: hidden;
+                    text-overflow: ellipsis;      
+                    font-weight: bold;
+
+                    &.seen {
+                        opacity: .65;
+                    }
                 }
             }
 
@@ -167,7 +175,7 @@
                         border-radius: 5px;
                         margin-right: .25rem;
                         flex-shrink: 0;
-                        width: 180px;
+                        width: 50%;
 
                         &.active {
                             background-color: rgba(255, 250, 250, 0.85);

@@ -15,6 +15,21 @@
             </div>
         </b-modal>        
         <DailyReportVue/>
+        <div class="notification-wrapper">
+            <transition-group name="fade" tag="div" class="notification-content">
+                <div class="notification-item" v-for="(noti, index) in notifications" :key="index">
+                    <div class="d-flex w-100">
+                        <div class="notification-logo">
+                            <img src="/images/favicon.png">
+                        </div>
+                        <div class="notification-body pl-3 pt-2 w-100">
+                            <div class="title">{{ noti.title }}</div>
+                            <div class="text-muted">{{ noti.datetime }}</div>
+                        </div>
+                    </div>
+                </div>
+            </transition-group>
+        </div>
     </div>
 </template>
 
@@ -22,6 +37,7 @@
 import OrganizationChart from 'vue-organization-chart'
 import DailyReportVue from './components/daily-report/DailyReport.vue';
 import { mapActions } from 'vuex';
+import {v4 as uuid} from 'uuid'
 
 export default {
     name: "App",
@@ -30,7 +46,8 @@ export default {
     data: () => ({
         innerWidth: 0,
         innerHeight: 0,
-        ds: null
+        ds: null,
+        notifications: []
     }),
 
     computed: {
@@ -57,13 +74,8 @@ export default {
             that.innerWidth = window.innerWidth;
             that.innerHeight = window.innerHeight;
         });     
-
-        const messaging = this.$firebase.messaging();
-        messaging.onMessage((payload) => {
-            console.log('Message received. ', payload);
-            // ...
-        });
-
+        
+        this.initFirebase()
         this.fetchOrgChartData()
         this.fetchBasicData()
     },    
@@ -80,10 +92,84 @@ export default {
             } catch (err) {
                 console.log(err)
             }
+        },
+        initFirebase() {
+            const messaging = this.$firebase.messaging();
+            messaging.onMessage((payload) => {
+                this.pushNotification(payload)
+            });            
+        },
+        pushNotification(payload) {
+            const noti = payload.notification,
+                  data = payload.data || {},
+                  id   = uuid().toString().split('-')[0];
+
+            this.notifications.push({
+                id,
+                title: noti.title,
+                datetime: this.$mm().format('LLLL'),
+                data: {
+                    type: data.type || 'none',
+                    id: data.id || null
+                }
+            })
+
+            setTimeout(() => {
+                const idx = this.notifications.findIndex(x => x.id == id)
+
+                if(idx !== -1) {
+                    this.$delete(this.notifications, idx)
+                }
+            }, 10000)
         }
     }
 };
 </script>
+
+<style lang="scss" scoped>
+.notification-wrapper {
+    position: fixed;
+    z-index: 9999;
+    bottom: 1.5rem;
+    right: 1.5rem;    
+
+    .notification-content {
+        position: relative;
+
+        .notification-item {
+            width: 360px;
+            max-width: 95%;
+            background: #fff;
+            box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+            border-radius: 10px;
+            padding: .75rem;
+            margin-bottom: .75rem;
+            cursor: pointer;
+
+            .notification-logo {
+                width: 48px;
+                height: 48px;
+
+                img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: contain;
+                    -o-object-fit: contain
+                }
+            }
+
+            .title {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                display: -webkit-box;
+                -webkit-box-orient: vertical;
+                -webkit-line-clamp: 2;         
+                font-weight: bold       
+            }
+        }
+    }
+}
+</style>
 
 <style lang="scss">
 @import "@/assets/sass/main.scss";

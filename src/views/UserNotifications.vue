@@ -1,32 +1,24 @@
 <template>
     <div class="page-content">
         <b-container fluid>
-            <h5 class="mb-4">Point History</h5>
+            <h5 class="mb-4">Notifications</h5>
             <b-row>
                 <b-col cols=12 xl=3 lg=3>
                     <b-list-group class="page-sidebar">
-                        <b-list-group-item href="javascript:;" :active="!queryParams.type" @click="switchType('')">
+                        <b-list-group-item href="javascript:;" :active="queryParams.type == 'project'" @click="switchType('project')">
                             <div class="d-flex align-items-center">
                                 <div class="h3 mb-0" style="line-height: 1; width: 36px">
-                                    <q-icon icon="bi:check-all"/>
+                                    <q-icon icon="ant-design:project-outlined"/>
                                 </div>
-                                <div>All</div>
+                                <div>Projects</div>
                             </div>
                         </b-list-group-item>
-                        <b-list-group-item href="javascript:;" :active="queryParams.type == 'in'" @click="switchType('in')">
+                        <b-list-group-item href="javascript:;" :active="queryParams.type == 'others'" @click="switchType('others')">
                             <div class="d-flex align-items-center">
                                 <div class="h3 mb-0" style="line-height: 1; width: 36px">
-                                    <q-icon icon="bx:log-in"/>
+                                    <q-icon icon="carbon:warning-other"/>
                                 </div>
-                                <div>In</div>
-                            </div>
-                        </b-list-group-item>
-                        <b-list-group-item href="javascript:;" :active="queryParams.type == 'out'" @click="switchType('out')">
-                            <div class="d-flex align-items-center">
-                                <div class="h3 mb-0" style="line-height: 1; width: 36px">
-                                    <q-icon icon="bx:log-out"/>
-                                </div>
-                                <div>Out</div>
+                                <div>Others</div>
                             </div>
                         </b-list-group-item>
                     </b-list-group>                    
@@ -41,15 +33,11 @@
                                 </div>
                             </b-col>
                             <b-col cols=12 v-for="(item, index) in history" :key="index">
-                                <div class="history-item">
+                                <div class="notification-item" :class="{seen: item.seen}" @click="updateNotiSeen(item.id)">
                                     <div class="pr-2">
-                                        <div class="font-weight-bold" v-html="item.note || 'No Title'"></div>
-                                        <div class="text-muted">{{ $mm(item.created_at).format('LLLL') }}</div>
+                                        <div class="font-weight-bold text-break" v-html="item.title || 'No Title'"></div>
                                     </div>
-                                    <div class="text-right">
-                                        <div class="h4 font-weight-bold mb-0" :class="{'text-success': item.amount > 0, 'text-danger': item.amount <= 0}">{{ item.amount > 0 ? `+${item.amount}` : item.amount }}</div>
-                                        <div class="text-primary font-weight-bold">Balance: {{ item.balance_after }}</div>
-                                    </div>
+                                    <div class="text-muted">{{ $mm(item.created_at).format('LLLL') }}</div>
                                 </div>
                             </b-col>
                             <b-col cols=12 v-if="history.length <= 0">
@@ -80,14 +68,13 @@
             queryParams: {
                 page: 1,
                 per_page: 10,
-                type: ''
+                type: 'project'
             }
         }),
 
         computed: {
             title() {
-                const title = this.queryParams.type || 'All'
-                return this.$lodash.upperFirst(title.replace('_', ' '))
+                return this.queryParams.type == 'project' ? 'Projects' : 'Others'
             }
         },
 
@@ -108,7 +95,9 @@
             async fetchHistory() {
                 try {
                     this.is_loading = true
-                    const { data } = await this.$http.get('employee/point-history', {params: this.queryParams})
+                    const params = Object.assign({}, this.queryParams)
+                    
+                    const { data } = await this.$http.get('notifications', {params})
 
                     if(!data.error) {
                         this.total = data.data.total
@@ -129,20 +118,41 @@
 
             viewMore() {
                 this.queryParams.page += 1
+            },
+
+            async updateNotiSeen(id) {
+                try {
+                    const idx = this.history.findIndex(x => x.id == id)
+                    if(idx !== -1) {
+                        const obj = this.history[idx]
+                        obj.seen = true
+
+                        this.$set(this.history, idx, obj)
+                        await this.$http.put('notifications/seen/' + id)
+                    }
+                } catch (err) {
+                    console.log(err)
+                }
             }
         }
     }
 </script>
 
 <style lang="scss" scoped>
-.history-item {
+.notification-item {
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
+    flex-wrap: wrap;
     padding: .5rem 1rem;
+    border-bottom: 1px solid #F5F5F5;
 
     &:hover {
         background-color: #F5F5F5;
+    }
+
+    &.seen {
+        opacity: .65;
     }
 }
 </style>

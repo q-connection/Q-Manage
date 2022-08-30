@@ -62,6 +62,12 @@ const base_routes = [
         component: () => import('@/views/UserPointHistory.vue')
     },
     {
+        path: '/user/notifications',
+        name: 'notifications',
+        meta: { layout: 'default', requiresAuth: true },
+        component: () => import('@/views/UserNotifications.vue')
+    },
+    {
         path: '/auth/login',
         name: 'login',
         meta: { layout: 'blank', requiresGuest: true },

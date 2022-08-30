@@ -82,9 +82,12 @@
                 
                 if(!cached_data.expired_at || expired_at <= now) {
                     localStorage.removeItem('notification-initialized')
-                    this.isShow = true
+                    setTimeout(() => {
+                        this.isShow = true
+                    }, 1000)
                 } else {
                     this.isShow = false
+                    this.subscribe()
                 }                
             },
 
@@ -96,7 +99,13 @@
                 messaging.getToken({ vapidKey })
                 .then(async (currentToken) => {
                     if (currentToken) {
-                        this.cancel(30)
+                        const { data } = await this.$http.post('employee/fcm-token', {token: currentToken})
+
+                        if(!data.error) {
+                            this.cancel(30)
+                        } else {
+                            this.$toast.error(data.message)
+                        }
                     } else {
                         const permission = await this.requestPermission()
 
@@ -107,7 +116,10 @@
                         }
                     }
                 })
-                .catch(err => console.log(err))
+                .catch(err => {
+                    console.log(err)
+                    this.$toast.error("Something went wrong, please try again later.")
+                })
                 .finally(() => this.is_loading = false)
             },
 

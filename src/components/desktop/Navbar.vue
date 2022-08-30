@@ -83,13 +83,13 @@
                 >
                     HRM
                 </b-nav-item>
-                <b-nav-item href="#">
+                <!-- <b-nav-item href="#">
                     <span class="h2">
                         <q-icon icon="bxs:message-square-add"/>
                     </span>
-                </b-nav-item>
+                </b-nav-item> -->
                 <b-nav-form>
-                    <div class="attendance-wrapper">
+                    <div class="attendance-wrapper ml-3">
                         <b-form-input :value="currentTime" readonly></b-form-input>
                         <form-button variant="primary" v-if="user.today_check_in_at && !user.today_check_out_at" @click="onCheckout" :disabled="isLoggingTime" :loading="isLoggingTime" size="sm">Check Out</form-button>
                         <form-button variant="primary" v-else @click="onCheckin" :disabled="isLoggingTime" :loading="isLoggingTime" size="sm">Check In</form-button>
@@ -120,15 +120,19 @@
                             {{ type.name }}
                         </div>
                     </b-dropdown-form>                    
-                    <b-dropdown-item href="#" v-for="(noti, index) in notification.items" :key="index">
-                        <b-icon class="mr-1" icon="record-circle" variant="primary"/>
-                        <span class="task-title">
-                            <span class="text-primary">[{{ noti.project?.name }}]</span> 
+                    <b-dropdown-item href="#" v-for="(noti, index) in notification.items" :key="index" @click="updateNotiSeen(noti.id)">
+                        <div class="noti-content-title" :class="{seen: noti.seen}">
+                            <span class="text-primary" v-if="noti.project">[{{ noti.project?.name }}]</span> 
                             {{ noti.title }}
-                        </span>
+                        </div>
                     </b-dropdown-item>
-                    <b-dropdown-item href="#" v-if="issues.length <= 0">
-                        <span class="task-title">No notifications found.</span>
+                    <b-dropdown-item href="#" v-if="notification.items.length <= 0">
+                        <span class="text-muted">No notifications found.</span>
+                    </b-dropdown-item>
+                    <b-dropdown-item :to="{name: 'notifications'}" v-if="notification.items.length > 0">
+                        <div class="text-right text-primary w-100">
+                            View All
+                        </div>
                     </b-dropdown-item>
                 </b-nav-item-dropdown>
 
@@ -194,10 +198,10 @@ export default {
         notification: {
             items: [],
             types: [
-                {name: 'Projects', value: 'projects'},
+                {name: 'Projects', value: 'project'},
                 {name: 'Others', value: 'others'},
             ],
-            selected: 'projects'
+            selected: 'project'
         }
     }),
 
@@ -239,6 +243,11 @@ export default {
             this.issueTimer = setTimeout(async () => {
                 this.fetchIssues()
             }, 750)
+        },
+
+        async 'notification.selected'() {
+            this.notification.items = []
+            await this.fetchNotifications()
         }
     },
 
@@ -249,6 +258,7 @@ export default {
         }, 1000)
 
         await this.fetchProjects()
+        await this.fetchNotifications()
     },
 
     methods: {
@@ -298,6 +308,19 @@ export default {
             }
         },
 
+        async fetchNotifications()
+        {
+            try {
+                const { data } = await this.$http.get('notifications', {per_page: 5, page: 1, type: this.notification.selected})
+
+                if(!data.error) {
+                    this.notification.items = data.data.data
+                }
+            } catch (err) {
+                console.log(err)
+            }
+        },
+
         projectDropdownHovered() {
             if(this.projects.length > 0) {
                 this.$refs.projectDropdown.show()
@@ -317,6 +340,21 @@ export default {
         recentlyDropdownBlur() {
             this.$refs.recentlyDropdown.hide(true)
         },
+
+        async updateNotiSeen(id) {
+            try {
+                const idx = this.notification.items.findIndex(x => x.id == id)
+                if(idx !== -1) {
+                    const obj = this.notification.items[idx]
+                    obj.seen = true
+
+                    this.$set(this.notification.items, idx, obj)
+                    await this.$http.put('notifications/seen/' + id)
+                }
+            } catch (err) {
+                console.log(err)
+            }
+        }
     },
 
     beforeDestroy() {

@@ -2,13 +2,13 @@ import firebase from "firebase/app";
 import "firebase/messaging";
 
 firebase.initializeApp({
-    apiKey: "AIzaSyAlt9MamcsaRVdcVm6DzKnbPBy04Lx8F-M",
-    authDomain: "nova-577bb.firebaseapp.com",
-    projectId: "nova-577bb",
-    storageBucket: "nova-577bb.appspot.com",
-    messagingSenderId: "1029261034194",
-    appId: "1:1029261034194:web:b39a3a50687ece9f61a30b",
-    measurementId: "G-WBN29SL961"
+    apiKey: "AIzaSyDdCzvhm00Tr1JuanWnAdbiAOmX91mkrNA",
+    authDomain: "ohrey-5014e.firebaseapp.com",
+    projectId: "ohrey-5014e",
+    storageBucket: "ohrey-5014e.appspot.com",
+    messagingSenderId: "903825059301",
+    appId: "1:903825059301:web:1292bbb7e70a9636c1d30c",
+    measurementId: "G-V7GJMNGBKQ"
 })
 
 export default firebase
