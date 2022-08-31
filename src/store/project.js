@@ -6,7 +6,8 @@ export default {
     state: () => ({
         detail: null,
         issue: null,
-        document: null
+        document: null,
+        spec: null
     }),
 
     mutations: {
@@ -20,6 +21,10 @@ export default {
 
         SET_DOCUMENT(state, data) {
             state.document = data
+        },
+
+        SET_SPEC(state, data) {
+            state.spec = data
         },
     },
 

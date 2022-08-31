@@ -39,20 +39,20 @@ export default [
         path: '/projects/:id/wiki',
         name: 'project-wiki',
         meta: { layout: 'default', requiresAuth: true },
-        redirect: {name: 'project-wiki-designs'}
+        redirect: {name: 'project-wiki-spec-files'}
     },    
-    {
-        path: '/projects/:id/wiki/designs',
-        name: 'project-wiki-designs',
-        meta: { layout: 'default', requiresAuth: true, requiresPermission: 'project.design.index' },
-        component: () => import('@/views/project/Designs.vue')
-    },    
-    {
-        path: '/projects/:id/wiki/designs/create',
-        name: 'project-wiki-designs-create',
-        meta: { layout: 'default', requiresAuth: true, requiresPermission: 'project.design.create' },
-        component: () => import('@/views/project/DesignsCreate.vue')
-    },    
+    // {
+    //     path: '/projects/:id/wiki/designs',
+    //     name: 'project-wiki-designs',
+    //     meta: { layout: 'default', requiresAuth: true, requiresPermission: 'project.design.index' },
+    //     component: () => import('@/views/project/Designs.vue')
+    // },    
+    // {
+    //     path: '/projects/:id/wiki/designs/create',
+    //     name: 'project-wiki-designs-create',
+    //     meta: { layout: 'default', requiresAuth: true, requiresPermission: 'project.design.create' },
+    //     component: () => import('@/views/project/DesignsCreate.vue')
+    // },    
     {
         path: '/projects/:id/wiki/spec-files',
         name: 'project-wiki-spec-files',
@@ -64,6 +64,18 @@ export default [
         name: 'project-wiki-spec-files-create',
         meta: { layout: 'default', requiresAuth: true, requiresPermission: 'project.spec.create' },
         component: () => import('@/views/project/SpecFilesCreate.vue')
+    },    
+    {
+        path: '/projects/:id/wiki/spec-files/detail/:spec_id',
+        name: 'project-wiki-spec-files-detail',
+        meta: { layout: 'default', requiresAuth: true, requiresPermission: 'project.spec.index' },
+        component: () => import('@/views/project/SpecFilesDetail.vue')
+    },    
+    {
+        path: '/projects/:id/wiki/spec-files/edit/:spec_id',
+        name: 'project-wiki-spec-files-edit',
+        meta: { layout: 'default', requiresAuth: true, requiresPermission: 'project.spec.edit' },
+        component: () => import('@/views/project/SpecFilesEdit.vue')
     },    
     {
         path: '/projects/:id/wiki/localization',

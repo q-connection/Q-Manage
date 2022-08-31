@@ -85,7 +85,13 @@ export default {
                 if(obj[keys[i]]) {
                     if(Array.isArray(obj[keys[i]])) {
                         obj[keys[i]].forEach((item, index) => {
-                            formData.append(`${keys[i]}[${index}]`, item)
+                            if(typeof item == 'object') {
+                                Object.keys(item).forEach(objKey => {
+                                    formData.append(`${keys[i]}[${index}][${objKey}]`, item[objKey])
+                                })
+                            } else {
+                                formData.append(`${keys[i]}[${index}]`, item)
+                            }
                         })
                     } else {
                         formData.append(keys[i], obj[keys[i]])

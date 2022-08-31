@@ -148,7 +148,7 @@
                         this.$showAlert({
                             type: 'success',
                             title: 'Congratulations!',
-                            message: "Created new spec file successfully."
+                            message: this.editing ? 'Saved changes successfully!' : 'Created new spec file successfully.'
                         })
 
                         this.$router.push({name: 'project-wiki-documents', params: {id: this.$route.params.id}})

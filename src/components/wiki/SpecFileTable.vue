@@ -1,6 +1,6 @@
 <template>
     <b-card>
-        <div class="mb-2 h5 font-weight-bold">Spec Files</div>
+        <div class="mb-2 h5 font-weight-bold">Specification</div>
         <div class="d-flex justify-content-between align-items-center mb-2">
             <div>Release ({{total}})</div>
             <div>
@@ -16,15 +16,15 @@
             </div>
         </div>
         <b-row class="mb-3">
-            <b-col cols=12 xl=6 lg=6>
-                <form-input-group class="d-none d-xl-block d-lg-block search-form">
-                    <b-form-input style="min-width: 285px;" placeholder="Search versions and description" v-model.lazy="queryParams.search"></b-form-input>
-                    <template #append>
-                        <span class="h3">
-                            <q-icon icon="bx:search-alt"/>
-                        </span>
-                    </template>
-                </form-input-group>                
+            <b-col cols=12 xl=3 lg=3>
+                <b-select2
+                    placeholder="Select screens"
+                    label="name"
+                    v-model="queryParams.screens"
+                    :reduce="screen => screen.id"
+                    :options="screens"
+                    multiple
+                />            
             </b-col>
             <b-col cols=12 xl=3 lg=3>
                 <b-select2
@@ -49,21 +49,10 @@
         </b-row>
         <b-row>
             <b-col cols=12 v-for="(item, index) in designs" :key="index">
-                <div class="design-item">
+                <div class="design-item" @click="onShowDetailSpec(item)">
                     <div class="design-item--title mb-1">
-                        <span class="badge bg-primary text-white">{{ item.version ? item.version.name : 'N/A' }}</span>
-                        <span class="ml-1">Link: </span>
-                        <a :href="item.file_url">Click here</a>
-                    </div>
-                    <div class="design-item--description mb-2">
-                        <read-more 
-                            class="read-more" 
-                            more-str="show more" 
-                            :text="`<div style='white-space: pre-wrap; word-wrap: break-word; font-family: inherit'>${item.description}</div>`" 
-                            link="#" 
-                            less-str="show less" 
-                            :max-chars="200"
-                        />
+                        <span class="bg-primary text-white font-weight-medium rounded-lg" style="font-weight: 600; padding: 2px 4px">{{ item.version ? item.version.name : 'N/A' }}</span>
+                        <span class="ml-1 h5 mb-0" style="font-weight: 600">{{ item.screen ? item.screen.name : 'Unknown' }}</span>
                     </div>
                     <div class="design-item--author">
                         <div class="text-muted">{{ $mm(item.created_at).format('LLLL') }}</div>
@@ -71,8 +60,8 @@
                     </div>
                     <div class="design-item--tag">
                         <span 
-                            class="badge mr-2" 
-                            :style="{backgroundColor: item.tag ? item.tag.color : '#333', color: '#fff'}"
+                            class="rounded-lg ml-2" 
+                            :style="{backgroundColor: item.tag ? item.tag.color : '#333', color: '#fff', padding: '2px 4px'}"
                         >
                             {{ item.tag ? item.tag.name : 'N/A' }}
                         </span>
@@ -113,13 +102,15 @@
             tags: [],
             designs: [],
             versions: [],
+            screens: [],
             queryParams: {
                 page: 1,
                 per_page: 5,
                 search: '',
                 tags: [],
                 project_id: '',
-                versions: []
+                versions: [],
+                screens: []
             }
         }),
 
@@ -129,7 +120,7 @@
                 async handler() {
                     clearTimeout(this.timer)
                     this.timer = setTimeout(async () => {
-                        await this.fetchDesigns()
+                        await this.fetchSpecs()
                     },750)
                 }
             }
@@ -138,7 +129,8 @@
         async mounted() {
             this.fetchTags()
             this.fetchVersions()
-            await this.fetchDesigns()
+            this.fetchScreens()
+            await this.fetchSpecs()
         },
 
         methods: {
@@ -170,11 +162,26 @@
                 }
             },
 
-            async fetchDesigns() {
+            async fetchScreens() {
+                try {
+                    const { data } = await this.$http.get('localization_features', {params: {
+                        project_id: this.$route.params.id
+                    }})
+
+                    if(!data.error) {
+                        this.screens = data.data
+                    }
+                } catch (err) {
+                    console.log(err)
+                }
+            },
+
+            async fetchSpecs() {
                 try {
                     const params = Object.assign({}, this.queryParams)
                     params.tags = params.tags.join(',')
                     params.versions = params.versions.join(',')
+                    params.screens = params.screens.join(',')
                     params.project_id = this.$route.params.id
 
                     const { data } = await this.$http.get('project_specs', {params})
@@ -186,6 +193,15 @@
                 } catch (err) {
                     console.log(err)
                 }
+            },
+
+            onShowDetailSpec(item) {
+                this.$store.commit('project/SET_SPEC', item)
+
+                this.$router.push({name: 'project-wiki-spec-files-detail', params: {
+                    id: this.$route.params.id,
+                    spec_id: item.id
+                }})
             }
         }
     }
@@ -199,6 +215,12 @@
     border-radius: 5px;
     margin-bottom: .75rem;
     position: relative;
+    cursor: pointer;
+    transition: .25s;
+    
+    &:hover {
+        transform: scale(1.01);
+    }
 
     .design-item--author {
         display: flex;

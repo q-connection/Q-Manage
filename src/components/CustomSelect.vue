@@ -3,7 +3,7 @@
         <legend class="bv-no-focus-ring col-form-label pt-0 font-weight-medium" :class="{'label-required': required}" v-show="mode == 'select' && label">
             {{ label }}
         </legend>
-        <div class="toolbar" @click="show" :class="[mode, {show: isDropdown}]" :state="stateToString">
+        <div class="toolbar" @click="show" :class="[mode, {show: isDropdown, disabled: disabled}]" :state="stateToString">
             <div class="title" :class="{'label-required': required}" v-show="mode == 'label'">{{ label }}</div>
             <div class="placeholder" v-show="mode == 'select' && !value">{{ placeholder }}</div>
             <div class="values" v-show="mode == 'select' && value">
@@ -157,6 +157,10 @@
                 default: 'Options'
             },
             required: {
+                type: Boolean,
+                default: false
+            },
+            disabled: {
                 type: Boolean,
                 default: false
             },
@@ -318,6 +322,8 @@
             },
 
             show() {
+                if(this.disabled) return
+
                 this.isDropdown = !this.isDropdown
             },
 
@@ -427,6 +433,10 @@
             display: flex;
             justify-content: space-between;
             cursor: pointer;
+
+            &.disabled {
+                background: #e9ecef
+            }
 
             .placeholder {
                 font-weight: 400;
