@@ -36,7 +36,6 @@
 <script>
 import OrganizationChart from 'vue-organization-chart'
 import DailyReportVue from './components/daily-report/DailyReport.vue';
-import { mapActions } from 'vuex';
 import {v4 as uuid} from 'uuid'
 
 export default {
@@ -46,7 +45,6 @@ export default {
     data: () => ({
         innerWidth: 0,
         innerHeight: 0,
-        ds: null,
         notifications: []
     }),
 
@@ -64,6 +62,10 @@ export default {
 
             return (this.$route.meta.layout || "blank") + `-${device}-layout`;
         },
+
+        ds() {
+            return this.$store.state.org_chart_data
+        }
     },
     mounted() {
         const that = this;
@@ -76,23 +78,9 @@ export default {
         });     
         
         this.initFirebase()
-        this.fetchOrgChartData()
-        this.fetchBasicData()
     },    
     
     methods: {
-        ...mapActions(['fetchBasicData']),
-        async fetchOrgChartData() {
-            try {
-                const { data } = await this.$http.get('department/org-chart-data')
-
-                if(!data.error) {
-                    this.ds = data.data
-                }
-            } catch (err) {
-                console.log(err)
-            }
-        },
         initFirebase() {
             const messaging = this.$firebase.messaging();
             messaging.onMessage((payload) => {

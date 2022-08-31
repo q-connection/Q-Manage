@@ -16,6 +16,7 @@ export default new Vuex.Store({
         employees: [],
         labels: [],
         teams: [],
+        org_chart_data: [],
         selected_project: null
     },
     getters: {
@@ -48,6 +49,10 @@ export default new Vuex.Store({
         SET_PROJECT(state, data) {
             state.selected_project = data
         },
+
+        SET_ORG_CHART_DATA(state, data) {
+            state.org_chart_data = data
+        }
     },
     actions: {
         async login({commit}, {username, password, remember}) {

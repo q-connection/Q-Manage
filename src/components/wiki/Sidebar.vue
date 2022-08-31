@@ -24,6 +24,14 @@
                 <div>Localization string</div>
             </div>
         </b-list-group-item>
+        <b-list-group-item  :to="{name: 'project-wiki-documents'}" :active="$route.name.indexOf('documents') !== -1">
+            <div class="d-flex align-items-center">
+                <div class="h3 mb-0" style="line-height: 1; width: 36px">
+                    <q-icon icon="carbon:document"/>
+                </div>
+                <div>Documents</div>
+            </div>
+        </b-list-group-item>
     </b-list-group>
 </template>
 

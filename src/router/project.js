@@ -71,4 +71,22 @@ export default [
         meta: { layout: 'default', requiresAuth: true },
         component: () => import('@/views/project/Localization.vue')
     },     
+    {
+        path: '/projects/:id/wiki/documents',
+        name: 'project-wiki-documents',
+        meta: { layout: 'default', requiresAuth: true },
+        component: () => import('@/views/project/Documents.vue')
+    },     
+    {
+        path: '/projects/:id/wiki/documents/create',
+        name: 'project-wiki-documents-create',
+        meta: { layout: 'default', requiresAuth: true },
+        component: () => import('@/views/project/DocumentsCreate.vue')
+    },     
+    {
+        path: '/projects/:id/wiki/documents/:doc_id',
+        name: 'project-wiki-documents-edit',
+        meta: { layout: 'default', requiresAuth: true },
+        component: () => import('@/views/project/DocumentsEdit.vue')
+    },     
 ]
