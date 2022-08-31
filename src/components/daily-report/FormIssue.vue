@@ -117,17 +117,13 @@ export default {
 
             const val = e.target.value
 
-            if(parseInt(val) > 0 && parseInt(val) <= 100) {
+            if(val && parseInt(val) > 0 && parseInt(val) <= 100) {
                 this.$emit('changeIssue', { 'id': this.issue.id, 'type': 'process', 'value': parseInt(val) })
 
                 return
             }
 
-            if(!val) {
-                this.process = 1
-            }
-
-            if(parseInt(val) > 100) {
+            if(val && parseInt(val) > 100) {
                 this.process = 100
             }
         }
