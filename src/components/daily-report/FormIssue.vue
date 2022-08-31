@@ -87,7 +87,7 @@ export default {
     watch: {
         issue_status(val) {
             if (val == 'done') this.process = 100
-            this.$emit('changeIssue', { 'id': this.issue.id, 'type': 'status', 'value': this.process })
+            this.$emit('changeIssue', { 'id': this.issue.id, 'type': 'process', 'value': this.process })
         }
     },
     methods: {
