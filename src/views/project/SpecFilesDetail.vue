@@ -32,7 +32,16 @@
                             </span>                            
                         </div>
                     </div>
-                    <div class="w-100 spec-content border-bottom p-3">{{ spec.description }}</div>
+                    <div class="w-100 spec-content border-bottom px-3 pb-3 pt-1">
+                        <div class="ql-snow">
+                            <div 
+                                class="ql-editor p-0" 
+                                style="min-height: auto" 
+                                v-html="spec.description"
+                            >
+                            </div>
+                        </div>                         
+                    </div>
                     <transition-group class="position-relative overflow-hidden" name="list" tag="div" appear>
                         <div class="mb-1 p-3 border-bottom bg-white" key="design">
                             <h5>Design</h5>

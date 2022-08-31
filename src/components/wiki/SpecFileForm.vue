@@ -166,14 +166,13 @@
                             ref="description"
                             rules="required"
                         >
-                            <form-group
-                                mode="textarea"
-                                label="Content"
-                                placeholder="Enter content..."
+                            <form-content-editor
+                                label="Description"
+                                placeholder="Enter description..."
                                 v-model="formData.description"
                                 :error="errors[0]"
                                 :state="$isValid(errors, valid)"
-                                rows="5"
+                                reviewable
                                 required
                             />
                         </validation-provider>                        
