@@ -87,7 +87,7 @@ export default {
     watch: {
         issue_status(val) {
             if (val == 'done') this.process = 100
-            this.$emit('changeIssue', { 'id': this.issue.id, 'type': 'status', 'value': val })
+            this.$emit('changeIssue', { 'id': this.issue.id, 'type': 'status', 'value': this.process })
         }
     },
     methods: {
@@ -111,6 +111,7 @@ export default {
 
                 if(![8, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57].includes(key)) {
                     this.process = 1
+                    this.$emit('changeIssue', { 'id': this.issue.id, 'type': 'process', 'value': 1 })
 
                     return
                 }
@@ -126,6 +127,7 @@ export default {
 
             if(val && parseInt(val) > 100) {
                 this.process = 100
+                this.$emit('changeIssue', { 'id': this.issue.id, 'type': 'process', 'value': 100 })
             }
         }
     }
