@@ -78,8 +78,9 @@ export default {
         issue_statuses() {
             return [
                 { label: 'To Do', value: 'to_do' },
-                { label: 'In Progress', value: 'inprogress' },
-                { label: 'Pending', value: 'pending' }
+                { label: 'In Progress', value: 'inprogess' },
+                { label: 'Pending', value: 'pending' },
+                { label: 'Done', value: 'done' },
             ]
         }
     },
