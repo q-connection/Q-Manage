@@ -539,6 +539,8 @@ $content: issues-content;
                 border: 1px solid #F5F5F5;
                 border-top: 0;
                 min-height: 110px;
+                max-height: 460px;
+                overflow-y: auto;
 
                 .issue-item {
                     display: flex;
