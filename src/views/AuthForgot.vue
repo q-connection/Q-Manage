@@ -46,6 +46,7 @@ import StickyFooter from '@/components/StickyFooter.vue'
 
                 if(!resp.error) {
                     this.$showAlert({type: 'success', message: 'We have sent an mail with Reset Password link to your Email.'})
+                    this.$router.push({name: 'login'})
                 } else {
                     this.$showAlert({type: 'danger', message: "Your email is not valid, please try again."})
                 }

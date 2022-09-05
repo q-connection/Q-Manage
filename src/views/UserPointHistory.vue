@@ -44,7 +44,7 @@
                                 <div class="history-item">
                                     <div class="pr-2">
                                         <div class="font-weight-bold" v-html="item.note || 'No Title'"></div>
-                                        <div class="text-muted">{{ $mm(item.created_at).format('LLLL') }}</div>
+                                        <div class="text-muted">{{ $mm(item.created_at).format('DD/MM/YYYY HH:mm:ss') }}</div>
                                     </div>
                                     <div class="text-right">
                                         <div class="h4 font-weight-bold mb-0" :class="{'text-success': item.amount > 0, 'text-danger': item.amount <= 0}">{{ item.amount > 0 ? `+${item.amount}` : item.amount }}</div>

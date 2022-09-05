@@ -21,7 +21,7 @@
                                     <q-icon icon="akar-icons:edit"/>    
                                 </router-link>                                
                             </div>
-                            <div class="text-muted">{{ $mm(spec.created_at).format('LLLL') }} by {{ spec.created_by.fullname }}</div>
+                            <div class="text-muted">{{ $mm(spec.created_at).format('DD/MM/YYYY HH:mm:ss') }} by {{ spec.created_by.fullname }}</div>
                         </div>
                         <div>
                             <span 
@@ -75,7 +75,7 @@
                                 <div class="ml-2">
                                     <h6 class="mb-0">{{ comment.created_by.fullname }}</h6>
                                     <small class="text-muted">
-                                        {{ $mm(comment.created_at).format('LLLL') }}
+                                        {{ $mm(comment.created_at).format('DD/MM/YYYY HH:mm:ss') }}
                                     </small>                            
                                 </div>
                             </div>    

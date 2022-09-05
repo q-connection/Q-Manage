@@ -39,7 +39,7 @@
                                             <span class="text-primary">[{{ item.title }}]</span> {{ item.action_value }}
                                         </div>
                                     </div>
-                                    <div class="text-muted">{{ $mm(item.created_at).format('LLLL') }}</div>
+                                    <div class="text-muted">{{ $mm(item.created_at).format('DD/MM/YYYY HH:mm:ss') }}</div>
                                 </div>
                             </b-col>
                             <b-col cols=12 v-if="history.length <= 0">

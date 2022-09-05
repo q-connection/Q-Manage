@@ -95,7 +95,7 @@ export default {
             this.notifications.push({
                 id,
                 title: noti.title,
-                datetime: this.$mm().format('LLLL'),
+                datetime: this.$mm().format('DD/MM/YYYY HH:mm:ss'),
                 data: {
                     type: data.type || 'none',
                     id: data.id || null

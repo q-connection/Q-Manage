@@ -252,9 +252,9 @@ export default {
     },
 
     async mounted() {
-        this.currentTime = this.$mm().format('LLL')
+        this.currentTime = this.$mm().format('DD/MM/YYYY HH:mm:ss')
         this.clock = setInterval(() => {
-            this.currentTime = this.$mm().format('LLL')            
+            this.currentTime = this.$mm().format('DD/MM/YYYY HH:mm:ss')            
         }, 1000)
 
         await this.fetchProjects()

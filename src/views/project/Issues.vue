@@ -102,7 +102,7 @@
                                             </span>
                                         </div>
                                         <div class="issue-date">
-                                            Due date: {{ $mm(issue.end_date).format('LL') }}
+                                            Due date: {{ $mm(issue.end_date).format('DD/MM/YYYY') }}
                                         </div>
                                     </div>
                                     <div class="issue-content-right">

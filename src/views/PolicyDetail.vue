@@ -8,7 +8,7 @@
             <b-col cols=12>
                 <b-card class="my-3" v-if="!isLoading">
                     <h5>{{ anno.name }}</h5>
-                    <b-card-sub-title>{{ $mm(anno.created_at).format('LLL') }}</b-card-sub-title>
+                    <b-card-sub-title>{{ $mm(anno.created_at).format('DD/MM/YYYY HH:mm:ss') }}</b-card-sub-title>
                     <div class="mt-3" v-if="anno.file">
                         <a :href="anno.file_url" target="_blank" class="text-primary h6">
                             <q-icon icon="et:attachments"/>

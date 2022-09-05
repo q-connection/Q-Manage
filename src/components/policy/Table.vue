@@ -43,7 +43,7 @@
                 <div>
                     <div class="font-weight-bold">{{ row.name }}</div>
                     <div>{{ row.description.substring(0, 100) }}...</div>
-                    <div class="small mt-2">{{ $mm(row.created_at).format('LLL') }}</div>
+                    <div class="small mt-2">{{ $mm(row.created_at).format('DD/MM/YYYY HH:mm:ss') }}</div>
                 </div>
             </div>
         </template>

@@ -78,7 +78,7 @@
 
         computed: {
             getTime() {
-                return this.$mm().format('LLL')
+                return this.$mm().format('DD/MM/YYYY HH:mm:ss')
             },            
         },
 

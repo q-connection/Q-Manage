@@ -18,7 +18,7 @@
                                 <Q-Icon icon="bx:edit" color="#f0b01d" width="18" height="18" />
                             </span>
                         </div>
-                        <div class="small">{{ $mm(row.created_at).format('LL') }} by {{ row.created_by || 'N/A' }}
+                        <div class="small">{{ $mm(row.created_at).format('DD/MM/YYYY') }} by {{ row.created_by || 'N/A' }}
                         </div>
                         <div class="small d-flex">
                             <div class="mr-3">

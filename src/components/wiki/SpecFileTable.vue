@@ -55,7 +55,7 @@
                         <span class="ml-1 h5 mb-0" style="font-weight: 600">{{ item.screen ? item.screen.name : 'Unknown' }}</span>
                     </div>
                     <div class="design-item--author">
-                        <div class="text-muted">{{ $mm(item.created_at).format('LLLL') }}</div>
+                        <div class="text-muted">{{ $mm(item.created_at).format('DD/MM/YYYY HH:mm:ss') }}</div>
                         <div class="text-muted">Created by <b>{{ item.created_by.fullname }}</b></div>
                     </div>
                     <div class="design-item--tag">

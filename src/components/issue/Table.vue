@@ -40,7 +40,7 @@
                                 {{ lbl.name }}
                             </span>
                         </div>
-                        <div class="small">{{ $mm(row.created_at).format('LL') }} by {{ row.created_by.fullname || 'N/A' }}</div>
+                        <div class="small">{{ $mm(row.created_at).format('DD/MM/YYYY') }} by {{ row.created_by.fullname || 'N/A' }}</div>
                     </div>
                 </div>
             </template>
