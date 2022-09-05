@@ -178,8 +178,6 @@
                 try {
                     const params = Object.assign({}, this.queryParams)
                     params.tags = params.tags.join(',')
-                    params.versions = params.versions.join(',')
-                    params.screens = params.screens.join(',')
                     params.project_id = this.$route.params.id
 
                     const { data } = await this.$http.get('project_specs', {params})
