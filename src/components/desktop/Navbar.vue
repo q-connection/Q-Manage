@@ -105,7 +105,7 @@
                     no-caret
                 >
                     <template #button-content>
-                        <span class="h3">
+                        <span class="h3 position-relative" :class="{unread: hasUnread}">
                             <q-icon icon="clarity:bell-solid"/>
                         </span>   
                     </template>
@@ -234,6 +234,10 @@ export default {
             }
 
             return issues.filter(x => x.name.indexOf(this.issueRecentlyParams.search) !== -1)
+        },
+
+        hasUnread() {
+            return this.notification.items.filter(x => x.seen === false).length > 0
         }
     },
 
@@ -397,5 +401,18 @@ export default {
 
 .router-link-exact-active {
     font-weight: bold;
+}
+
+.unread {
+    &:after {
+        content: '';
+        background-color: var(--danger);
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        position: absolute;
+        top: 0;
+        right: -2px
+    }
 }
 </style>

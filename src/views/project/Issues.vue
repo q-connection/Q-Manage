@@ -102,7 +102,8 @@
                                             </span>
                                         </div>
                                         <div class="issue-date">
-                                            Due date: {{ $mm(issue.end_date).format('DD/MM/YYYY') }}
+                                            <div>Due date: {{ $mm(issue.end_date).format('DD/MM/YYYY') }}</div>
+                                            <div v-if="issue.done_at">Done at: {{ $mm(issue.done_at).format('DD/MM/YYYY') }}</div>
                                         </div>
                                     </div>
                                     <div class="issue-content-right">
