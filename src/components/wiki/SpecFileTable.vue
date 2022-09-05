@@ -23,7 +23,6 @@
                     v-model="queryParams.screens"
                     :reduce="screen => screen.id"
                     :options="screens"
-                    multiple
                 />            
             </b-col>
             <b-col cols=12 xl=3 lg=3>
@@ -33,7 +32,6 @@
                     v-model="queryParams.versions"
                     :reduce="version => version.id"
                     :options="versions"
-                    multiple
                 />
             </b-col>
             <b-col cols=12 xl=3 lg=3>
@@ -109,8 +107,8 @@
                 search: '',
                 tags: [],
                 project_id: '',
-                versions: [],
-                screens: []
+                versions: null,
+                screens: null
             }
         }),
 
