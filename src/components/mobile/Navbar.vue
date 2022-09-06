@@ -28,12 +28,22 @@
 </template>
 
 <script>
+    import { mapActions } from 'vuex'
+
     export default {
         name: 'MobileNavbar',
         computed: {
             inHrmRoutes() {
                 return this.$route.name.indexOf('hrm') !== -1
             }
+        },
+        methods: {
+            ...mapActions({
+                fetchProjects: 'project/fetchAllProjects'
+            }),            
+        },
+        async mounted() {
+            await this.fetchProjects()
         }
     }
 </script>

@@ -53,14 +53,11 @@
                         </template>
                     </b-select2>
                 </div>
-                <div class="row" v-if="!$device.mobile">
+                <div class="row">
                     <div class="col-12">
                         <issues-table/>
                     </div>
                 </div>
-            </div>
-            <div class="col-12" v-if="$device.mobile">
-                <user-notworking />
             </div>
         </div>
     </div>

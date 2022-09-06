@@ -36,17 +36,19 @@
                         <q-icon icon="mdi:progress-check" v-if="row.status == 'done'"/>
                     </div>
                     <div class="issue-name">
-                        <div class="font-weight-bold d-flex align-items-center">
-                            <span class="badge bg-danger text-white">{{row.point}}</span>
-                            <span class="ml-1 mr-2">[{{ row.cod || 'N/A' }}]{{ row.name }}</span>
-                            <span 
-                                class="badge mr-1" 
-                                :style="{backgroundColor: lbl.color, color: '#fff'}"
-                                v-for="(lbl, index) in row.labels"
-                                :key="index"
-                            >
-                                {{ lbl.name }}
-                            </span>
+                        <div class="font-weight-bold d-flex">
+                            <div><span class="badge bg-danger text-white">{{row.point}}</span></div>
+                            <div class="title ml-1 mr-2"><span>[{{ row.cod || 'N/A' }}]{{ row.name }}</span></div>
+                            <div v-if="!$device.mobile">
+                                <span 
+                                    class="badge mr-1" 
+                                    :style="{backgroundColor: lbl.color, color: '#fff'}"
+                                    v-for="(lbl, index) in row.labels"
+                                    :key="index"
+                                >
+                                    {{ lbl.name }}
+                                </span>
+                            </div>
                         </div>
                         <div class="small">{{ $mm(row.created_at).format('DD/MM/YYYY') }} by {{ row.created_by.fullname || 'N/A' }}</div>
                     </div>
@@ -63,7 +65,7 @@
                     </div>
                 </div>
                 <div class="d-block d-xl-none d-lg-none">
-                    <div class="h5 m-0 p-0 text-primary">
+                    <div class="h5 m-0 p-0 text-primary text-center">
                         <q-icon icon="fa-solid:user-friends"/>
                         {{ row.assignes.length > 5 ? '5+' : row.assignes.length }}
                     </div>
@@ -165,6 +167,17 @@
 
     &:last-child {
         padding-right: 0;
+    }
+}
+
+.issue-name {
+    .title {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;         
+        font-weight: bold   
     }
 }
 </style>
