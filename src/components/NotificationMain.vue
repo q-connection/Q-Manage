@@ -52,7 +52,7 @@
 
     &.fixed {
         position: fixed;
-        top: 65px;
+        top: 62px;
         left: 0;
         width: 100%;
         z-index: 1;
