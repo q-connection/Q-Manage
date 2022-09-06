@@ -37,7 +37,6 @@
                                     name="file"
                                     ref="file"
                                     :rules="{
-                                        required: editing ? false : true, 
                                         ext: ['bmp', 'jpg','jpeg','png','gif','doc','docx','xlsx','xls','pdf','zip','rar','tar', 'tar.gz'], 
                                         size: 26000
                                     }"
@@ -50,7 +49,6 @@
                                         :error="errors[0]"
                                         :state="$isValid(errors, valid)"
                                         icon=""
-                                        :required="editing ? false : true"
                                     />
                                 </validation-provider>   
                             </b-col>

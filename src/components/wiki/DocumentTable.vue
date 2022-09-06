@@ -31,7 +31,7 @@
             <b-col cols=12 v-for="(item, index) in documents" :key="index">
                 <div class="design-item">
                     <div class="design-item--title mb-1">
-                        <a class="text-success h5 mb-0" :href="item.file_url">
+                        <a class="text-success h5 mb-0" :href="item.file_url || '#'">
                             <q-icon icon="entypo:download"/>
                         </a>
                         <span class="mx-1 font-weight-bold">{{ item.title }} </span>
