@@ -176,7 +176,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 
 export default {
     name: "DesktopNavbar",
@@ -187,7 +187,6 @@ export default {
         selectedProject: '',
         selectedRecentlyProject: '',
         issues: [],
-        projects: [],
         currentTime: '',
         issueParams: {
             search: ''
@@ -207,7 +206,8 @@ export default {
 
     computed: {
         ...mapState({
-            user: state => state.user || {}
+            user: state => state.user || {},
+            projects: state => state.project.all || []
         }),
 
         inHrmRoutes() {
@@ -252,6 +252,16 @@ export default {
         async 'notification.selected'() {
             this.notification.items = []
             await this.fetchNotifications()
+        },
+
+        projects: {
+            deep: true,
+            handler(newval) {
+                if(newval.length > 0) {
+                    this.selectedProject = this.projects[0].id
+                    this.selectedRecentlyProject = this.projects[0].id              
+                }
+            }
         }
     },
 
@@ -266,6 +276,10 @@ export default {
     },
 
     methods: {
+        ...mapActions({
+            fetchProjects: 'project/fetchAllProjects'
+        }),
+
         async onLogout() {
             this.$store.commit('SET_IDLE_LOADING', true)
             await this.$store.dispatch('logout')
@@ -292,24 +306,6 @@ export default {
 
         async onCheckout() {
             this.$bvModal.show('modal-daily-report'); 
-        },
-
-        async fetchProjects()
-        {
-            try {
-                const { data } = await this.$http.get('projects/all-for-select')
-
-                if(!data.error) {
-                    this.projects = data.data
-
-                    if(this.projects.length > 0) {
-                        this.selectedProject = this.projects[0].id
-                        this.selectedRecentlyProject = this.projects[0].id
-                    }
-                }
-            } catch (err) {
-                console.log(err)
-            }
         },
 
         async fetchNotifications()
@@ -354,6 +350,9 @@ export default {
 
                     this.$set(this.notification.items, idx, obj)
                     await this.$http.put('notifications/seen/' + id)
+                    if(obj.url) {
+                        window.location.href = `/${obj.url}`
+                    }
                 }
             } catch (err) {
                 console.log(err)

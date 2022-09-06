@@ -356,7 +356,6 @@
         methods: {
             onSubmit() {
                 const formData = Object.assign({}, this.formData)
-                
                 if(!this.editing) {
                     formData.project_id = this.$route.params.id
                 }
@@ -366,7 +365,10 @@
                     formData.files = files.concat(this.file_urls)
                 }
 
-                this.$emit('submit', {formData: this.$objToFormData(formData), refs: this.$refs})
+                const converted = this.$objToFormData(formData)
+                console.log(converted.values())
+
+                this.$emit('submit', {formData: converted, refs: this.$refs})
             },
 
             initIssue() {

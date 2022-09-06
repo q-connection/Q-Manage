@@ -156,7 +156,14 @@
                                 :state="$isValid(errors, valid)"
                                 icon=""
                                 customClass="icon-document"
-                            />                            
+                            >
+                                <template #label>
+                                    <span style="font-weight: 500">
+                                        Localization String 
+                                        <a href='https://manage.qconnection.vn/localization-string-example.xlsx' target='_blank'>Download example</a>
+                                    </span>
+                                </template>
+                            </form-group>                            
                         </validation-provider>                        
                     </b-col>
                     <b-col cols=12>

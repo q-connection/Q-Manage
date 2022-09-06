@@ -16,7 +16,15 @@
                     :options="issue_statuses"
                     :reduce="pj => pj.value"
                     style="min-width: 150px"
-                    placeholder="Issue status"
+                    placeholder="Status"
+                />
+                <b-select2
+                    class="select-sm ml-2"
+                    v-model="labels"
+                    :options="filteredLabels"
+                    :reduce="lbl => lbl.value"
+                    style="min-width: 150px"
+                    placeholder="Label"
                 />
             </template>
             <template slot="row-name" slot-scope="{row}">
@@ -70,7 +78,9 @@
         name: 'TableIssues',
         data: () => ({
             issue_types: [],   
-            status: ''
+            status: '',
+            project_id: '',
+            labels: ''
         }),
 
         computed: {
@@ -88,6 +98,13 @@
                     {label: 'Done', value: 'done'},
                 ]
             },
+            filteredLabels() {
+                return this.$lodash
+                .chain(this.$store.state.labels)
+                .groupBy('name')
+                .map((lbls, name) => ({label: name, value: lbls.map(x => x.id).join(',')}))
+                .value()
+            },
             tableConfig() {
                 const status = this.status || 'done'
                 let operator = ''
@@ -100,7 +117,9 @@
                     url: 'issues',
                     params: {
                         status,
-                        status_operator: operator
+                        labels: this.labels || '',
+                        status_operator: operator,
+                        project_id: this.project_id
                     }
                 }  
             }               
@@ -115,6 +134,12 @@
                     params: {id: row.project_id, issue_id: row.id}
                 })
             }
+        },
+
+        created() {
+            this.$parent.$on('projectChanged', pid => {
+                this.project_id = pid || ''
+            })
         }
     }
 </script>

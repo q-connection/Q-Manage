@@ -85,7 +85,9 @@ export default {
                 if(obj[keys[i]]) {
                     if(Array.isArray(obj[keys[i]])) {
                         obj[keys[i]].forEach((item, index) => {
-                            if(typeof item == 'object') {
+                            if(item instanceof File) {
+                                formData.append(`${keys[i]}[${index}]`, item)
+                            } else if(this.$lodash.isObject(item)) {
                                 Object.keys(item).forEach(objKey => {
                                     formData.append(`${keys[i]}[${index}][${objKey}]`, item[objKey])
                                 })

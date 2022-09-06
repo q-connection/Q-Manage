@@ -4,6 +4,7 @@ export default {
     namespaced: true,
     
     state: () => ({
+        all: null,
         detail: null,
         issue: null,
         document: null,
@@ -26,9 +27,31 @@ export default {
         SET_SPEC(state, data) {
             state.spec = data
         },
+
+        SET_ALL(state, data) {
+            state.all = data
+        }
     },
 
     actions: {
+        async fetchAllProjects({commit}) {
+            try {
+                const { data } = await $http.get(`projects/all-for-select`)
+
+                if(!data.error) {
+                    commit('SET_ALL', data.data)
+
+                    return true
+                } else {
+                    return false
+                }
+            } catch (err) {
+                console.log(err)
+
+                return false
+            }
+        },
+
         async fetchProject({commit, state}, id, force = false) {
             if(!force && state.detail && state.detail.id == id) {
                 return true

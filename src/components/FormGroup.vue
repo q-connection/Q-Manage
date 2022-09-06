@@ -8,6 +8,12 @@
             'font-weight-medium label-required': required === true
         }"
     >
+        <template #description>
+            <slot name="description"></slot>
+        </template>
+        <template #label>
+            <slot name="label"></slot>
+        </template>
         <b-form-input
             :name="name"
             :type="type"

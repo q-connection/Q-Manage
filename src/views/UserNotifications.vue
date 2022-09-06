@@ -131,6 +131,9 @@
 
                         this.$set(this.history, idx, obj)
                         await this.$http.put('notifications/seen/' + id)
+                        if(obj.url) {
+                            window.location.href = `/${obj.url}`
+                        }                        
                     }
                 } catch (err) {
                     console.log(err)
