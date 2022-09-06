@@ -65,6 +65,16 @@
                                 </ul>
                             </div>                                              
                         </div>
+                        <div class="mb-1 p-3 border-bottom bg-white d-flex align-items-end" key="localization">
+                            <div class="h5 mb-0">
+                                Localization Strings
+                            </div>                  
+                            <div class="h4 mb-0 ml-2">
+                                <router-link :to="{name: 'project-wiki-localization', query: {version: spec.version?.name || 'N/A', screen: spec.screen ? spec.screen.name : 'N/A'}}">
+                                    <q-icon icon="akar-icons:edit"/> 
+                                </router-link>                                
+                            </div>                           
+                        </div>
                         <div class="mb-1 p-3 bg-white border-bottom" v-for="(comment, index) in allowedComments" :key="index">
                             <div class="d-flex align-items-center mb-3">
                                 <img-lazy-load
