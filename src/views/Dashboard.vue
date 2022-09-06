@@ -16,6 +16,7 @@
                         label="name"
                         placeholder="Select project"
                         @input="onProjectChange"
+                        :clearable="false"
                     >
                         <template #option="project">
                             <div class="project-item">
