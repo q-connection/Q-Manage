@@ -10,9 +10,9 @@
             <div class="col-12 col-xl-9 col-lg-10">
                 <div class="project-wrapper">
                     <b-select2
-                        :options="projects"
+                        :options="all_projects"
                         :reduce="pj => pj.id"
-                        value=""
+                        v-model="project_id"
                         label="name"
                         placeholder="Select project"
                         @input="onProjectChange"
@@ -74,23 +74,41 @@ import IssuesTable from '@/components/issue/Table.vue'
 export default {
     name: "DashboardPage",
     components: {IssuesTable},
+    data: () => ({
+        project_id: null,
+        all_projects: [{
+            id: '',
+            name: 'All Project',
+            thumbnail: '/images/default-avatar.png',
+            total_tasks: 0,
+            total_bugs: 0,            
+        }]
+    }),
+
+    watch: {
+        projects: {
+            deep: true,
+            handler(newval) {
+                if(newval.length > 0) {
+                    this.all_projects[0].total_tasks = newval.map(x => x.total_tasks || 0).reduce((prev, cur) => prev + cur, 0)
+                    this.all_projects[0].total_bugs = newval.map(x => x.total_bugs || 0).reduce((prev, cur) => prev + cur, 0)
+                    this.all_projects = this.all_projects.concat(newval)
+                }
+            }
+        }
+    },
+
     computed: {
         ...mapState({
             user: state => state.user || {},
-            projects: state => {
-                const projects = state.project.all || []
-                const addition = [{
-                    id: '',
-                    name: 'All Project',
-                    thumbnail: '/images/default-avatar.png',
-                    total_tasks: projects.map(x => x.total_tasks || 0).reduce((prev, cur) => prev + cur, 0),
-                    total_bugs: projects.map(x => x.total_bugs || 0).reduce((prev, cur) => prev + cur, 0),
-                }]
-
-                return addition.concat(projects)
-            }
+            projects: state => state.project.all || []
         })
     },
+
+    mounted() {
+        this.project_id = ''
+    },
+
     methods: {
         onProjectChange(val) {
             this.$emit('projectChanged', val)

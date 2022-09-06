@@ -18,15 +18,6 @@
         <b-row class="mb-3">
             <b-col cols=12 xl=3 lg=3>
                 <b-select2
-                    placeholder="Select screens"
-                    label="name"
-                    v-model="queryParams.screens"
-                    :reduce="screen => screen.id"
-                    :options="screens"
-                />            
-            </b-col>
-            <b-col cols=12 xl=3 lg=3>
-                <b-select2
                     placeholder="Select versions"
                     label="name"
                     v-model="queryParams.versions"
@@ -34,6 +25,15 @@
                     :options="versions"
                 />
             </b-col>
+            <b-col cols=12 xl=3 lg=3>
+                <b-select2
+                    placeholder="Select screens"
+                    label="name"
+                    v-model="queryParams.screens"
+                    :reduce="screen => screen.id"
+                    :options="screens"
+                />            
+            </b-col>            
             <b-col cols=12 xl=3 lg=3>
                 <b-select2
                     placeholder="Select labels"

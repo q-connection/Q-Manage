@@ -10,7 +10,7 @@
         <validation-observer v-slot="{handleSubmit}">
             <form @submit.prevent="handleSubmit(onSubmit)">
                 <b-row>
-                    <b-col cols=12 xl=3 lg=3>
+                    <b-col cols=12 xl=4 lg=4>
                         <validation-provider
                             v-slot="{errors, valid}"
                             name="version_id"
@@ -33,7 +33,7 @@
                             </custom-select>
                         </validation-provider>
                     </b-col>
-                    <b-col cols=12 xl=3 lg=3>
+                    <b-col cols=12 xl=4 lg=4>
                         <validation-provider
                             v-slot="{errors, valid}"
                             name="screen_id"
@@ -56,7 +56,7 @@
                             </custom-select>
                         </validation-provider>
                     </b-col>
-                    <b-col cols=12 xl=3 lg=3>
+                    <b-col cols=12 xl=4 lg=4>
                         <validation-provider
                             v-slot="{errors, valid}"
                             name="tag_id"
@@ -141,7 +141,7 @@
                             </b-button>
                         </div>                    
                     </b-col>
-                    <b-col cols=12 xl=3 lg=3>
+                    <b-col cols=12 xl=4 lg=4>
                         <validation-provider
                             v-slot="{errors, valid}"
                             name="file"

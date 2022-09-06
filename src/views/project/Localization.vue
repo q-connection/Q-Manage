@@ -254,7 +254,7 @@
             async saveString(item) {
                 try {
                     this.saving.push(item.id)
-                    await this.$http.put('feature_values/' + item.id, {value: item.value_record.value})
+                    await this.$http.put('feature_values/' + item.id, {value: item.value_record})
                     this.$toast.success(`Updated string <b>${item.value_record.key}</b>`, {
                         position: 'bottom-right'
                     })                    
