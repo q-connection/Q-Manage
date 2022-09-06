@@ -14,12 +14,12 @@ firebase.initializeApp({
 const messaging = firebase.messaging();
 
 messaging.onBackgroundMessage((payload) => {
-    console.log('[firebase-messaging-sw.js] Received background message ', payload);
     // Customize notification here
     const notificationTitle = payload.notification.title;
     const notificationOptions = {
       body:  payload.notification.body,
       icon: 'https://qmanage.ohrey.vn/images/favicon.png',
+      data: payload.data,
       actions: [
         {
             action: 'view',
@@ -33,10 +33,12 @@ messaging.onBackgroundMessage((payload) => {
 
 self.addEventListener('notificationclick', (event) => {
     event.notification.close();
-    console.log(event)
-    if (event.action === 'view') {
-        archiveEmail();
+    const { data = {} } = event.notification
+
+    if(data.url) {
+        clients.openWindow(`/${data.url}`)
     } else {
         clients.openWindow('/');
     }
+    
 }, false);
