@@ -119,10 +119,9 @@
             <b-card class="position-relative">
                 <div class="overlay-disabled" v-show="formData.status == 'done'">
                     <div class="text-center">
-                        <h2 class="text-danger">
+                        <div class="text-danger" style="font-size: 48px">
                             <q-icon icon="fe:disabled"/>
-                        </h2>
-                        <div class="font-weight-bold">Unable to update because issue is done.</div>
+                        </div>
                     </div>
                 </div>
                 <validation-observer>
