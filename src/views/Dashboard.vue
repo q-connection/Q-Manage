@@ -105,6 +105,12 @@ export default {
 
     mounted() {
         this.project_id = ''
+
+        if(this.projects.length > 0) {
+            this.all_projects[0].total_tasks = this.projects.map(x => x.total_tasks || 0).reduce((prev, cur) => prev + cur, 0)
+            this.all_projects[0].total_bugs = this.projects.map(x => x.total_bugs || 0).reduce((prev, cur) => prev + cur, 0)
+            this.all_projects = this.all_projects.concat(this.projects)            
+        }
     },
 
     methods: {
