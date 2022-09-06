@@ -265,6 +265,12 @@ export default {
         }
     },
 
+    created() {
+        this.$root.$on('onNewNotification', async () => {
+            await this.fetchNotifications()
+        })
+    },
+
     async mounted() {
         this.currentTime = this.$mm().format('DD/MM/YYYY HH:mm:ss')
         this.clock = setInterval(() => {

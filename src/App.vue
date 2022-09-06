@@ -17,7 +17,7 @@
         <DailyReportVue/>
         <div class="notification-wrapper">
             <transition-group name="fade" tag="div" class="notification-content">
-                <div class="notification-item" v-for="(noti, index) in notifications" :key="index">
+                <div class="notification-item" v-for="(noti, index) in notifications" :key="index" @click="onNotiClicked(index)">
                     <div class="d-flex w-100">
                         <div class="notification-logo">
                             <img src="/images/favicon.png">
@@ -85,6 +85,7 @@ export default {
             const messaging = this.$firebase.messaging();
             messaging.onMessage((payload) => {
                 this.pushNotification(payload)
+                this.$root.$emit('onNewNotification', true) 
             });            
         },
         pushNotification(payload) {
@@ -98,7 +99,8 @@ export default {
                 datetime: this.$mm().format('DD/MM/YYYY HH:mm:ss'),
                 data: {
                     type: data.type || 'none',
-                    id: data.id || null
+                    id: data.id || null,
+                    url: data.url || '#'
                 }
             })
 
@@ -109,6 +111,22 @@ export default {
                     this.$delete(this.notifications, idx)
                 }
             }, 10000)
+        },
+
+        async onNotiClicked(idx) {
+            const noti = Object.assign({}, this.notifications[idx])
+            this.$delete(this.notifications, idx)
+
+            try {
+                await this.$http.put('notifications/seen/' + noti.data.id)
+            } catch (err) {
+                console.log(err)
+            }
+
+            if(noti.url) {
+                window.location.href = noti.url
+                return
+            }
         }
     }
 };
