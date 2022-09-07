@@ -9,6 +9,7 @@
                     :reduce="emp => emp.id"
                     v-model="queryParams.employee_id"
                     :clearable="false"
+                    :loading="is_loading"
                 >
                     <template #option="{username, fullname}">
                         <div>
@@ -126,7 +127,12 @@
         watch: {
             queryParams: {
                 deep: true,
-                async handler() {
+                async handler(newval, oldval) {
+                    if(newval.employee_id != oldval.employee_id || newval.type != oldval.type) {
+                        this.queryParams.page = 1
+                        return
+                    }
+
                     await this.fetchHistory()
                 }
             },
@@ -148,6 +154,10 @@
         methods: {
             async fetchHistory() {
                 try {
+                    if(this.is_loading) {
+                        return
+                    }
+
                     this.is_loading = true
                     const { data } = await this.$http.get('employee/point-history', {params: this.queryParams})
 
