@@ -1,6 +1,6 @@
 <template>
     <div class="project-table">
-        <table-default :columns="columns" :config="tableConfig" :show-columns="false" searchable hover>
+        <table-default ref="table" :columns="columns" :config="tableConfig" :show-columns="false" searchable hover>
             <template slot="tableHeadActions" v-if="showCreateButton">
                 <b-button variant="outline-primary" size="sm" class="px-3 py-2" @click="$emit('create', $event)">
                     Create
@@ -16,6 +16,9 @@
                         <div class="font-weight-bold">{{ row.name }}
                             <span v-if="$hasPermission('project.edit') && row.created_by == $user.username" @click="$emit('edit-project', row)" v-on:click.stop style="margin-left:8px">
                                 <Q-Icon icon="bx:edit" color="#f0b01d" width="18" height="18" />
+                            </span>
+                            <span v-if="$hasPermission('project.destroy') && row.created_by == $user.username" @click="$emit('delete-project', row)" v-on:click.stop style="margin-left:8px">
+                                <Q-Icon icon="bx:trash" color="var(--danger)" width="18" height="18" />
                             </span>
                         </div>
                         <div class="small">{{ $mm(row.created_at).format('DD/MM/YYYY') }} by {{ row.created_by || 'N/A' }}
@@ -77,6 +80,12 @@ export default {
                 url: 'projects'
             }
         },
+    },
+    created() {
+        this.$parent.$on('project-deleted', async () => {
+            await this.$refs.table.refresh()
+            await this.$store.dispatch('project/fetchAllProjects')
+        })
     },
     methods: {
         redirect(row) {

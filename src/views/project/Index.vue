@@ -14,6 +14,7 @@
                     :show-create-button="$hasPermission('project.create') && !$device.mobile"
                     @create="onCreate" 
                     @edit-project="showEditProject"
+                    @delete-project="onDeleteProject"
                     v-if="!isSubmitting" />
             </b-col>
         </b-row>
@@ -348,6 +349,25 @@ export default {
         },
         onCreate() {
             this.$bvModal.show('bv-modal-create-project')
+        },
+        onDeleteProject(project) {
+            this.$showAlert({
+                type: 'confirm',
+                title: 'Warning!',
+                message: `Are you sure you want to delete project <b>${project.name}</b>`,
+                callback: async ({dismiss}) => {
+                    try {
+                        await this.$http.delete(`projects/${project.id}`)
+                        this.$emit('project-deleted')
+                        this.$toast.success(`The project <b>${project.name}</b> has been deleted.`)
+                    } catch (err) {
+                        console.log(err)
+                        this.$toast.error("Something went wrong!")
+                    } finally {
+                        dismiss()
+                    }
+                }
+            })
         }
     },
 }
