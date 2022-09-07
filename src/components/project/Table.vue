@@ -17,7 +17,7 @@
                             <span v-if="$hasPermission('project.edit') && row.created_by == $user.username" @click="$emit('edit-project', row)" v-on:click.stop style="margin-left:8px">
                                 <Q-Icon icon="bx:edit" color="#f0b01d" width="18" height="18" />
                             </span>
-                            <span v-if="$hasPermission('project.destroy') && row.created_by == $user.username" @click="$emit('delete-project', row)" v-on:click.stop style="margin-left:8px">
+                            <span v-if="$hasPermission('project.destroy')" @click="$emit('delete-project', row)" v-on:click.stop style="margin-left:8px">
                                 <Q-Icon icon="bx:trash" color="var(--danger)" width="18" height="18" />
                             </span>
                         </div>
@@ -83,7 +83,7 @@ export default {
     },
     created() {
         this.$parent.$on('project-deleted', async () => {
-            await this.$refs.table.refresh()
+            await this.$refs.table.refresh(true)
             await this.$store.dispatch('project/fetchAllProjects')
         })
     },
