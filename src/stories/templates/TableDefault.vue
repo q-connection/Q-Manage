@@ -3,7 +3,7 @@
         <b-table-simple class="table-qconnection" :hover="hover" :class="{'table-responsive-md': responsive === true}">
             <b-thead>
                 <b-tr>
-                    <b-td width="5%" v-if="selectable">
+                    <b-td style="width: 60px" v-if="selectable">
                         <b-form-checkbox :checked="selected.length == items.length && items.length > 0" @change="toggleSelectAll">
                             All
                         </b-form-checkbox>
@@ -34,7 +34,7 @@
             <b-tbody>
                 <template v-if="showColumns">
                     <b-tr>
-                        <b-th v-for="(col, index) in tableColumns" :key="index" :width="col.width" :class="col.class">
+                        <b-th v-for="(col, index) in tableColumns" :key="index" :style="{width: col.width}" :class="col.class">
                             <slot :name="`col-${col.name}`" v-bind="{col}">
                                 {{ col.label || 'N/A' }}
                             </slot>
@@ -42,10 +42,10 @@
                     </b-tr>
                 </template>             
                 <b-tr v-for="(row, rowIdx) in items" :key="rowIdx">
-                    <b-td width="5%" v-if="selectable">
+                    <b-td style="width: 60px" v-if="selectable">
                         <b-checkbox :checked="selected.includes(row.id)" @change="toggleSelect(row.id)"/>
                     </b-td>                       
-                    <b-td v-for="(col, colIdx) in tableColumns" :key="colIdx" :width="col.width" :class="col.rowClass" @click="onRowClick(col, row)">
+                    <b-td v-for="(col, colIdx) in tableColumns" :key="colIdx" :style="{width: col.width}" :class="col.rowClass" @click="onRowClick(col, row)">
                         <slot :name="`row-${col.name}`" v-bind="{row}">
                             {{ row[col.name] || '' }}
                         </slot>

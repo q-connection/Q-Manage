@@ -1,39 +1,38 @@
 <template>
-    <div class="table-default-wrapper">
+    <div class="table-responsive">
+        <div class="d-flex justify-content-between mb-3" v-if="!boxed">
+            <div style="width: 48px; padding-left: .75rem"  v-if="selectable">
+                <div class="d-flex align-items-center w-10 h-100">
+                    <b-form-checkbox :checked="selected.length == items.length && items.length > 0" @change="toggleSelectAll">
+                        All
+                    </b-form-checkbox>
+                </div>
+            </div>            
+            <div 
+                class="d-flex align-items-center justify-content-between w-100"
+                v-bind="{class: headActionsClass}"
+                :class="{'pl-3': selectable === true}"
+            >
+                <div class="d-flex">
+                    <slot name="tableHeadActions" v-bind="{selected}"/>
+                </div>
+                <div v-if="searchable">
+                    <form-input-group class="d-none d-xl-block d-lg-block search-form">
+                        <b-form-input style="min-width: 285px; min-height: 40px" :placeholder="searchPlaceholder" v-model.lazy="queryParams.search"></b-form-input>
+                        <template #append>
+                            <span class="h3">
+                                <q-icon icon="bx:search-alt"/>
+                            </span>
+                        </template>
+                    </form-input-group>
+                </div>
+            </div>
+        </div>
         <b-table-simple class="table-qconnection" :hover="hover" :class="{'table-responsive-md': responsive === true}" v-if="!boxed">
-            <b-thead>
-                <b-tr>
-                    <b-td width="5%" v-if="selectable">
-                        <b-form-checkbox :checked="selected.length == items.length && items.length > 0" @change="toggleSelectAll">
-                            All
-                        </b-form-checkbox>
-                    </b-td>
-                    <b-td :colspan="getHeadColSpan" class="px-0">
-                        <div 
-                            class="d-flex align-items-center" 
-                            :class="headActionsClass"
-                        >
-                            <div class="d-flex">
-                                <slot name="tableHeadActions" v-bind="{selected}"/>
-                            </div>
-                            <div v-if="searchable">
-                                <form-input-group class="d-none d-xl-block d-lg-block search-form">
-                                    <b-form-input style="min-width: 285px; min-height: 40px" :placeholder="searchPlaceholder" v-model.lazy="queryParams.search"></b-form-input>
-                                    <template #append>
-                                        <span class="h3">
-                                            <q-icon icon="bx:search-alt"/>
-                                        </span>
-                                    </template>
-                                </form-input-group>
-                            </div>
-                        </div>
-                    </b-td>
-                </b-tr>
-            </b-thead>
             <b-tbody>
                 <template v-if="showColumns">
                     <b-tr>
-                        <b-th v-for="(col, index) in tableColumns" :key="index" :width="col.width" :class="col.class">
+                        <b-th v-for="(col, index) in tableColumns" :key="index" :style="{width: col.width}" :class="col.class">
                             <slot :name="`col-${col.name}`" v-bind="{col}">
                                 {{ col.label || 'N/A' }}
                             </slot>
@@ -41,31 +40,39 @@
                     </b-tr>
                 </template>             
                 <b-tr v-for="(row, rowIdx) in items" :key="rowIdx" @click="$emit('redirect', row.id)">
-                    <b-td width="5%" v-if="selectable">
-                        <b-checkbox :checked="selected.includes(row.id)" @change="toggleSelect(row.id)"/>
+                    <b-td style="width: 48px" v-if="selectable">
+                        <div class="d-flex align-items-center w-100 h-100">
+                            <b-checkbox :checked="selected.includes(row.id)" @change="toggleSelect(row.id)"/>
+                        </div>
                     </b-td>                       
-                    <b-td v-for="(col, colIdx) in tableColumns" :key="colIdx" :width="col.width" :class="col.rowClass" @click="onRowClick(col, row)">
+                    <b-td 
+                        v-for="(col, colIdx) in tableColumns" 
+                        :key="colIdx" 
+                        :style="{width: col.width}" 
+                        v-bind="{class: col.rowClass}" 
+                        @click="onRowClick(col, row)"
+                    >
                         <slot :name="`row-${col.name}`" v-bind="{row}">
                             {{ row[col.name] || '' }}
                         </slot>
                     </b-td>
                 </b-tr>
                 <b-tr v-if="items.length <= 0 && !tableLoading">
-                    <b-td :colspan="tableColumns.length || 1">
+                    <b-td class="w-100">
                         <div class="text-center">
                             No records to show.
                         </div>
                     </b-td>
                 </b-tr>
                 <b-tr v-if="tableLoading && items.length <= 0">
-                    <b-td :colspan="tableColumns.length || 1">
+                    <b-td class="w-100">
                         <div class="text-center text-primary">
                             <div><b-spinner type="grow" variant="primary"/></div>
                             <div>Loading data...</div>
                         </div>
                     </b-td>
                 </b-tr>
-                <b-tr class="table-loading" v-if="tableLoading && items.length > 0">
+                <b-tr class="table-loading w-100" v-if="tableLoading && items.length > 0">
                     <div class="text-center text-primary">
                         <div><b-spinner type="grow" variant="primary"/></div>
                         <div>Loading data...</div>
@@ -380,6 +387,24 @@
 </script>
 
 <style lang="scss" scoped>
+.table-qconnection {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+
+    tr{
+        display: flex;
+        align-items: center;
+        width: 100%;
+
+        td {
+            &:last-child {
+                margin-left: auto;
+            }
+        }
+    }
+}
+
 .search-form {
     .form-control {
         border: 1px solid #ced4da

@@ -6,7 +6,7 @@
                 <b-form @submit.prevent="handleSubmit(onSubmitIssue)">
                     <!-- <validation-provider tag="div" class="col-12" rules="required" name="report list"
                         ref="report_list" v-slot="{ errors, valid }"> -->
-                    <b-select2 class="mb-3" v-model="issue_id" placeholder="Choose Options" :options="select_issues"
+                    <b-select2 class="list-projects mb-3" v-model="issue_id" placeholder="Choose Options" :options="select_issues"
                         :filter-by="issueFilter" :closeOnSelect="false" :loading="isLoading" label="name">
                         <template v-slot:option="option">
                             <slot name="option-data" v-bind="option">
@@ -219,12 +219,14 @@ export default {
 </script>
 <style lang="scss">
 .daily-report {
-    .vs__dropdown-option {
-        --vs-dropdown-min-width: 100%;
-        --vs-dropdown-option-padding: 0 0;
-        --vs-search-input-placeholder-color: red;
-        --vs-dropdown-option--active-bg: red;
-        --vs-dropdown-option--active-color: red;
+    .list-projects {
+        .vs__dropdown-option {
+            --vs-dropdown-min-width: 100%;
+            --vs-dropdown-option-padding: 0 0;
+            --vs-search-input-placeholder-color: red;
+            --vs-dropdown-option--active-bg: red;
+            --vs-dropdown-option--active-color: red;
+        }
     }
 }
 </style>

@@ -31,10 +31,14 @@
     .dropdown-menu {
         min-width: 300px;
         max-width: 300px;
+        min-height: 262px;
+        max-height: 285px;
+        overflow-y: auto;
         padding: 0;
+        border: 1px solid var(--primary);
 
         li {
-            border-bottom: 1px solid var(--light);
+            border-bottom: 1px solid var(--primary);
         
             .dropdown-item {
                 padding: 0.25rem 0.5rem;
@@ -94,7 +98,11 @@
                         }
                     }
                 }
-            }                  
+            }       
+            
+            &:last-child {
+                border-bottom: 0;
+            }
         }
     }
 }

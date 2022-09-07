@@ -5,10 +5,12 @@
                 {{ issue?.name }}
             </div>
             <div class="issue-item--project-name">
-                {{ issue?.projects?.name }}
+                {{ issue?.project?.name }}
             </div>
             <div class="issue-item--status">
-                <b-select2 v-model="issue_status" :options="issue_statuses" :reduce="pj => pj.value" :clearable="false"
+                <b-select2 
+                    v-model="issue_status" :options="issue_statuses" :reduce="pj => pj.value" 
+                    :clearable="false"
                     style="min-width: 160px;min-height: 45px;" placeholder="Issue status" />
             </div>
 

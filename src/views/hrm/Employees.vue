@@ -38,16 +38,29 @@
                         </div>
                     </template>
                     <template slot="row-fullname" slot-scope="{row}">
-                        <div>
-                            <div class="font-weight-bold">{{ row.fullname }} ({{ row.role_name }})</div>
-                            <div class="text-dark small">
-                                <b-icon icon="telephone-fill"/>
-                                {{ row.phone }}
+                        <div class="d-flex">
+                            <div>
+                                <div class="font-weight-bold">{{ row.fullname }} ({{ row.role_name }})</div>
+                                <div class="text-dark small">
+                                    <b-icon icon="telephone-fill"/>
+                                    {{ row.phone }}
+                                </div>
+                                <div class="text-dark small">
+                                    <b-icon icon="envelope-fill"/>
+                                    {{ row.email }}
+                                </div>
                             </div>
-                            <div class="text-dark small">
-                                <b-icon icon="envelope-fill"/>
-                                {{ row.email }}
-                            </div>
+                        </div>
+                    </template>
+                    <template slot="row-point" slot-scope="{row}">
+                        <div class="d-none d-xl-block d-lg-block">
+                            Total point: {{ row.point || 0 }}
+                            <router-link
+                                class="h5 mb-0"
+                                :to="{name: 'hrm-employees-point-history', params: {id: row.id}}"
+                            >
+                                <q-icon icon="clarity:list-line"/>
+                            </router-link>
                         </div>
                     </template>
                     <template slot="row-actions" slot-scope="{row}">
@@ -179,22 +192,27 @@
                     {
                         label: "ID",
                         name: "id",
-                        width: '5%',
+                        width: '90px',
                         rowClass: 'text-cursor',
                         rowClicked: row => this.onRowClick(row)
                     },
                     {
                         label: "Name",
                         name: "fullname",
-                        sort: true,
-                        width: '90%',
+                        width: '350px',
                         rowClass: 'text-cursor',
                         rowClicked: row => this.onRowClick(row)
+                    },
+                    { 
+                        label: "Point",
+                        name: "point",
+                        width: '200px',
+                        rowClass: 'text-cursor',
                     },
                     {
                         label: 'Actions',
                         name: "actions",
-                        width: '5%'
+                        width: '90px'
                     }
                 ]  
             },

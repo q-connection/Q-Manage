@@ -17,6 +17,12 @@ export default [
         component: () => import('@/views/hrm/EmployeesInactive.vue')
     },
     {
+        path: '/hrm/employees/point-history/:id',
+        name: 'hrm-employees-point-history',
+        meta: { layout: 'default', requiresAuth: true, requiresPermission: 'employee.index' },
+        component: () => import('@/views/hrm/EmployeePointHistory.vue')
+    },    
+    {
         path: '/hrm/employees/edit/:id',
         name: 'hrm-employees-detail',
         meta: { layout: 'default', requiresAuth: true, requiresPermission: 'employee.edit' },

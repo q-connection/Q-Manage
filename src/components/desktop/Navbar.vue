@@ -20,27 +20,24 @@
                             </router-link>
                         </div>
                     </template>
-                    <b-dropdown-form class="project-names" href="javascript:;" active>
-                        <div 
-                            class="project-title" 
-                            :class="{active: selectedProject == project.id}" 
-                            v-for="(project, index) in projects" 
-                            :key="index"
-                            @click="selectedProject = project.id"
-                        >
-                            {{ project.name }}
+                    <b-dropdown-item
+                        class="d-flex align-items-center" 
+                        v-for="(project, index) in projects" 
+                        :key="index"
+                        :to="{name: 'project-issues', params: {id: project.id}}"                            
+                    >
+                        <img-lazy-load
+                            class="project-thumbnail"
+                            :src="project.thumbnail"
+                            error="/images/default-avatar.png"
+                        />
+                        <div>
+                            <div class="font-weight-bold">{{ project.name }}</div>
+                            <div>
+                                <span>Tasks: <strong class="text-success">{{ project.total_tasks || 0 }}</strong></span>
+                                <span class="ml-2">Bugs: <strong class="text-danger">{{ project.total_bugs || 0 }}</strong></span>
+                            </div>
                         </div>
-                    </b-dropdown-form>
-                    <b-dropdown-form>
-                        <b-icon class="mr-1" icon="search" variant="dark"/>
-                        <b-input placeholder="Search issue name..." v-model="issueParams.search"/>
-                    </b-dropdown-form>
-                    <b-dropdown-item :to="{name: 'project-issues', params: {id: issue.project_id}, query: {issue_id: issue.id}}" v-for="(issue, index) in projectIssues" :key="index">
-                        <b-icon class="mr-1" icon="record-circle" variant="primary"/>
-                        <span class="task-title">[{{ issue.labels[0] ? issue.labels[0].name : 'N/A' }}] {{ issue.name }}</span>
-                    </b-dropdown-item>
-                    <b-dropdown-item href="#" v-if="issues.length <= 0">
-                        <span class="task-title">No issue found.</span>
                     </b-dropdown-item>
                 </b-nav-item-dropdown>
                 <!-- <b-nav-item-dropdown 
@@ -419,5 +416,16 @@ export default {
         top: 0;
         right: -2px
     }
+}
+
+.project-thumbnail {
+    width: 43px;
+    height: 43px;
+    border-radius: 50%;
+    overflow: hidden;
+    position: relative;
+    border: 1px solid var(--light);
+    background-color: var(--light);
+    margin-right: 1rem;
 }
 </style>

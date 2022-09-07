@@ -9,14 +9,14 @@
                     Project Name:
                 </span>
                 <span class="text-dark-yellow font-weight-bold">
-                    {{ issue?.projects?.name }}
+                    {{ issue?.project?.name }}
                 </span>
             </div>
             <div class="issue-item--description">
                 <span class="text-muted font-weight-500">
                     Status:
                 </span>
-                <span class="text-dark-yellow font-weight-bold" :style={color:this.getStatus(issue?.status)?.color}>
+                <span class="text-dark-yellow font-weight-bold" :style="{color:this.getStatus(issue?.status)?.color}">
                     {{ this.getStatus(issue?.status)?.label }}
                 </span>
             </div>
@@ -31,7 +31,7 @@ export default {
         issue_types: [],
         list_status: [
             { label: 'To Do', value: 'to_do', color: '#FC0000' },
-            { label: 'In Progress', value: 'inprogress', color: '#3A74D4' },
+            { label: 'In Progress', value: 'inprogess', color: '#3A74D4' },
             { label: 'Pending', value: 'pending', color: '#F0B01D' },
             { label: 'Done', value: 'done', color: '#197130' },
         ],
