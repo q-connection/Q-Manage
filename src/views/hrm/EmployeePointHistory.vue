@@ -7,7 +7,7 @@
 </template>
 
 <script>
-    import PointHistoryTable from '@/components/employee/PoinHistoryTable.vue'
+    import PointHistoryTable from '@/components/employee/PointHistoryTable.vue'
 
     export default {
         components: {PointHistoryTable},
