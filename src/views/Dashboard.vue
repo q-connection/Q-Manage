@@ -17,6 +17,7 @@
                         placeholder="Select project"
                         @input="onProjectChange"
                         :clearable="false"
+                        class="mb-3"
                     >
                         <template #option="project">
                             <div class="project-item">

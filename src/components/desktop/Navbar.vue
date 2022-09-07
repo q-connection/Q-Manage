@@ -24,7 +24,7 @@
                         class="d-flex align-items-center" 
                         v-for="(project, index) in projects" 
                         :key="index"
-                        :to="{name: 'project-issues', params: {id: project.id}}"                            
+                        :href="`/projects/${project.id}`"                          
                     >
                         <img-lazy-load
                             class="project-thumbnail"
