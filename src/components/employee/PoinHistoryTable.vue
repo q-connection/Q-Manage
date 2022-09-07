@@ -1,5 +1,30 @@
 <template>
     <div>
+        <b-row v-if="hrm">
+            <b-col cols=12 xl=3 lg=3>
+                <b-select2
+                    class="mb-3"
+                    label="fullname"
+                    :options="employees"
+                    :reduce="emp => emp.id"
+                    v-model="queryParams.employee_id"
+                    :clearable="false"
+                >
+                    <template #option="{username, fullname}">
+                        <div>
+                            <span class="font-weight-bold">{{ fullname }}</span>
+                            <span> - {{ username }}</span>
+                        </div>
+                    </template>
+                    <template #selected-option="{username, fullname}">
+                        <div>
+                            <span class="font-weight-bold">{{ fullname }}</span>
+                            <span> - {{ username }}</span>
+                        </div>
+                    </template>
+                </b-select2>
+            </b-col>
+        </b-row>
         <h5 class="mb-4">{{ page_title }}</h5>
         <b-row>
             <b-col cols=12 xl=3 lg=3>
@@ -69,8 +94,10 @@
 </template>
 
 <script>
+    import { mapState } from 'vuex'
+
     export default {
-        props: ['employeeId'],
+        props: ['employeeId', 'hrm'],
         data: () => ({
             page_title: 'Point History',
             history: [],
@@ -86,6 +113,10 @@
         }),
 
         computed: {
+            ...mapState({
+                employees: state => state.employees || [],
+            }),
+
             title() {
                 const title = this.queryParams.type || 'All'
                 return this.$lodash.upperFirst(title.replace('_', ' '))

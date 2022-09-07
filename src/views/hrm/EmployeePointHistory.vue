@@ -1,7 +1,7 @@
 <template>
     <div class="page-content hrm">
         <b-container fluid>
-            <PointHistoryTable :employee-id="employeeId"/>
+            <PointHistoryTable :employee-id="employeeId" :hrm="true"/>
         </b-container>
     </div>
 </template>
