@@ -154,15 +154,11 @@
                     if(!data.error) {
                         this.total = data.data.total
                         this.last_page = data.data.last_page
-                        
+
                         if(this.queryParams.page == 1) {
                             this.history = data.data.data
                         } else {
                             this.history = this.history.concat(data.data.data)
-                        }
-
-                        if(this.employeeId) {
-                            this.page_title = `Point history of ${data.data.name || 'N/A'}`
                         }
                     }
                 } catch (err) {
