@@ -59,4 +59,10 @@ export default [
         component: () => import('@/views/hrm/LeaveDays.vue')
     },
     /** End:Leave Days */
+    {
+        path: '/hrm/timekeeping',
+        name: 'hrm-timekeeping',
+        meta: { layout: 'default', requiresAuth: true, requiresPermission: 'log-time.index' },
+        component: () => import('@/views/hrm/Timekeeping.vue')        
+    }
 ]

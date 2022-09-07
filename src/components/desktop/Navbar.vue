@@ -26,11 +26,14 @@
                         :key="index"
                         :href="`/projects/${project.id}`"                          
                     >
-                        <img-lazy-load
+                        <div
                             class="project-thumbnail"
-                            :src="project.thumbnail"
-                            error="/images/default-avatar.png"
-                        />
+                        >
+                            <img 
+                                :src="project.thumbnail || '/images/default-avatar.png'"
+                                style="width: 100%; height: 100%; object-fit: cover"
+                            >
+                        </div>
                         <div>
                             <div class="font-weight-bold">{{ project.name }}</div>
                             <div>
@@ -162,6 +165,9 @@
                     </b-dropdown-item>
                     <b-dropdown-item :to="{name: 'leave-days'}">
                         <span><q-icon icon="ic:baseline-work-history"/>Leave Days</span>
+                    </b-dropdown-item>
+                    <b-dropdown-item :to="{name: 'timekeeping'}">
+                        <span><q-icon icon="tabler:calendar-time"/>Timekeeping</span>
                     </b-dropdown-item>
                     <b-dropdown-item @click="onLogout">
                         <span><q-icon icon="ri:logout-circle-r-fill"/>Sign Out</span>

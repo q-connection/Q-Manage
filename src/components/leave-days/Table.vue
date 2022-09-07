@@ -47,7 +47,7 @@
                     :text="row.reason" 
                     link="#" 
                     less-str="show less" 
-                    :max-chars="100"
+                    :max-chars="30"
                 />                
             </template>
             <template slot="row-status" slot-scope="{row}">

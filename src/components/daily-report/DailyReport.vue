@@ -128,7 +128,7 @@ export default {
             try {
                 this.isSubmitting = true
                 let projects = this.report_list.map(function (obj) {
-                    return obj.projects.id;
+                    return obj.project.id;
                 });
                 let issues = this.report_list.map(function (obj) {
                     return obj.id;
@@ -145,6 +145,7 @@ export default {
                     'processes': process,
                     'status': status
                 }
+                console.log(payload)
                 this.isSubmitting = true
                 const { data } = await this.$http.post('daily_reports', payload)
 

@@ -60,6 +60,7 @@
                                 variant="outline-success"
                                 size="sm"
                                 @click="$refs.importFile.click()"
+                                v-if="$hasPermission('feature-value.create')"
                             >
                                 Import
                             </form-button>
@@ -120,16 +121,16 @@
                                         <td>{{ item.value_record['vi'] }}</td>
                                         <td>{{ item.value_record['en'] }}</td>
                                         <td>
-                                            <b-dropdown class="localization-dropdown" variant="link" toggle-class="text-decoration-none" no-caret>
+                                            <b-dropdown class="localization-dropdown" variant="link" toggle-class="text-decoration-none" no-caret v-if="$hasPermission('feature-value.edit') || $hasPermission('feature-value.destroy')">
                                                 <template #button-content>
                                                     <span class="h3 mb-0 text-dark">
                                                         <q-icon icon="fluent:more-circle-20-regular"/>
                                                     </span>
                                                 </template>   
-                                                <b-dropdown-item href="javascript:;" @click="editString(item.id)">
+                                                <b-dropdown-item href="javascript:;" @click="editString(item.id)" v-if="$hasPermission('feature-value.edit')">
                                                     Edit
                                                 </b-dropdown-item>                                         
-                                                <b-dropdown-item href="javascript:;" @click="deleteString(item)">
+                                                <b-dropdown-item href="javascript:;" @click="deleteString(item)" v-if="$hasPermission('feature-value.destroy')">
                                                     <span class="text-danger">
                                                         Delete
                                                     </span>
