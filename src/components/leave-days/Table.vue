@@ -40,6 +40,16 @@
             <template slot="row-type" slot-scope="{row}">
                 {{ getTypeLabel(row.type) }}
             </template>
+            <template #row-reason="{row}">
+                <read-more 
+                    class="read-more" 
+                    more-str="show more" 
+                    :text="row.reason" 
+                    link="#" 
+                    less-str="show less" 
+                    :max-chars="100"
+                />                
+            </template>
             <template slot="row-status" slot-scope="{row}">
                 <div class="w-100 d-flex justify-content-between">
                     <div class="text-info" v-if="row.status == 'pending' || row.status == 'draft'">

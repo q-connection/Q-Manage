@@ -11,7 +11,7 @@
             <b-col>
                 <project-table 
                     show-thumbnail 
-                    :show-create-button="$hasPermission('project.create')"
+                    :show-create-button="$hasPermission('project.create') && !$device.mobile"
                     @create="onCreate" 
                     @edit-project="showEditProject"
                     v-if="!isSubmitting" />

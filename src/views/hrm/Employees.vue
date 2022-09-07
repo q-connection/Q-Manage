@@ -24,7 +24,7 @@
                             variant="outline-primary" 
                             size="sm" 
                             class="p-2"
-                            v-if="$hasPermission('employee.create')"
+                            v-if="$hasPermission('employee.create') && !$device.mobile"
                         >
                             Add
                         </b-button>
