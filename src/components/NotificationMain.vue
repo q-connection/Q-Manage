@@ -36,6 +36,12 @@
 
                     if(!data.error) {
                         this.anno = data.data
+
+                        if(this.anno) {
+                            this.$root.$emit('disableAnnouncement', false)
+                        } else {
+                            this.$root.$emit('disableAnnouncement', true)
+                        }
                     }
                 } catch (err) {
                     console.log(err)

@@ -67,6 +67,25 @@ export default {
             return this.$store.state.org_chart_data
         }
     },
+
+    created() {
+        this.$root.$on('disableAnnouncement', (resp) => {
+            this.$nextTick(() => {
+                const el = document.querySelector('.hrm-tabs')
+                
+                if(resp && el) {
+                    el.style.marginTop = 0;
+                    el.style.padding = 0;
+                }          
+                
+                if(!resp && el) {
+                    el.style.marginTop = '2rem';
+                    el.style.padding = '0.5 0 0 0';
+                }
+            })
+        })
+    },
+
     mounted() {
         const that = this;
         this.innerWidth = window.innerWidth;
