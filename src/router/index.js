@@ -68,12 +68,6 @@ const base_routes = [
         component: () => import('@/views/UserNotifications.vue')
     },
     {
-        path: '/user/notifications',
-        name: 'notifications',
-        meta: { layout: 'default', requiresAuth: true },
-        component: () => import('@/views/UserNotifications.vue')
-    },
-    {
         path: '/user/timekeeping',
         name: 'timekeeping',
         meta: { layout: 'default', requiresAuth: true },

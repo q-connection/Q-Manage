@@ -241,7 +241,7 @@
                             v-model.number="formData.point"
                             required
                             @input="onChange(valid,'point', $event)"
-                            :disabled="formData.status == 'done'"
+                            :disabled="formData.status == 'done' || formData.create_by != $user.id"
                         />
                     </validation-provider>
                     <b-select2
@@ -573,6 +573,10 @@
             },
 
             onChange(valid, key, val) {
+                if(key == 'point' && this.$user.id != this.formData.create_by) {
+                    return
+                }
+
                 if(val) {
                     this.updateData(key, val)
                 }
