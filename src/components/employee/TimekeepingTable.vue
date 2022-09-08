@@ -124,6 +124,7 @@
         },
 
         data: () => ({
+            searchTimer: null,
             is_loading: false,
             selected: {},
             items: [],
