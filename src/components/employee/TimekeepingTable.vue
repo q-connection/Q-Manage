@@ -283,6 +283,7 @@
 
     .daily-report-item__data {
         display: flex;
+        overflow-x: auto;
 
         .data-label {
             height: 30px;

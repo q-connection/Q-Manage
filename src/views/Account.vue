@@ -43,7 +43,7 @@
                         </div>
                     </b-button>
                 </div>
-                <div class="mb-5">
+                <div class="mb-2">
                     <b-button :to="{name: 'leave-days'}" variant="outline-primary" block>
                         <div class="d-flex align-items-center">
                             <div class="h2 mb-0" style="line-height: 0; width: 40px">
@@ -53,6 +53,16 @@
                         </div>
                     </b-button>
                 </div>
+                <div class="mb-5">
+                    <b-button :to="{name: 'timekeeping'}" variant="outline-primary" block>
+                        <div class="d-flex align-items-center">
+                            <div class="h2 mb-0" style="line-height: 0; width: 40px">
+                                <q-icon icon="tabler:calendar-time"/>
+                            </div>
+                            <div class="ml-2">Timekeeping</div>
+                        </div>
+                    </b-button>
+                </div>                
                 <div>
                     <b-button @click="onLogout" variant="danger" block>
                         <div class="d-flex align-items-center justify-content-center">
