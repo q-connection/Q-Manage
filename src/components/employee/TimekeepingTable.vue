@@ -19,6 +19,30 @@
                 :min="queryParams.from"
                 @input="fetchReports(1)"
             />
+            <b-form-group label="Employee">
+                <b-select2
+                    class="mb-3"
+                    label="fullname"
+                    :options="employees"
+                    :reduce="emp => emp.id.toString()"
+                    v-model="queryParams.employee_id"
+                    :loading="is_loading"
+                    @input="fetchReports(1)"
+                >
+                    <template #option="{username, fullname}">
+                        <div>
+                            <span class="font-weight-bold">{{ fullname }}</span>
+                            <span> - {{ username }}</span>
+                        </div>
+                    </template>
+                    <template #selected-option="{username, fullname}">
+                        <div>
+                            <span class="font-weight-bold">{{ fullname }}</span>
+                            <span> - {{ username }}</span>
+                        </div>
+                    </template>
+                </b-select2>
+            </b-form-group>
             <div class="d-flex justify-content-end">
                 <a :href="exportUrl" class="btn btn-success" v-if="forHrm">
                     Export
@@ -125,14 +149,19 @@
                 page: 1,
                 per_page: 5,
                 from: '',
-                to: ''
+                to: '',
+                employee_id: ''
             }
         }),
 
         computed: {
             exportUrl() {
-                const {from, to} = this.queryParams
-                return `https://manage.qconnection.vn/api/v1/log-time/export?from=${from}&to=${to}`
+                const {from, to, employee_id} = this.queryParams
+                return `https://manage.qconnection.vn/api/v1/log-time/export?from=${from}&to=${to}&employee_id${employee_id}`
+            },
+
+            employees() {
+                return this.$store.state.employees || []
             }
         },
 

@@ -1,12 +1,12 @@
 <template>
     <div>
-        <b-row v-if="hrm">
+        <b-row v-if="hrm && employees.length > 0">
             <b-col cols=12 xl=3 lg=3>
                 <b-select2
                     class="mb-3"
                     label="fullname"
                     :options="employees"
-                    :reduce="emp => emp.id"
+                    :reduce="emp => emp.id.toString()"
                     v-model="queryParams.employee_id"
                     :clearable="false"
                     :loading="is_loading"
