@@ -305,7 +305,7 @@
                 try {
                     this.isSubmitting = true
                     this.formData.project_id = this.$route.params.id
-                    const url_path = `project_specs/${this.editing ? this.$route.params.spec_id : '' }`
+                    const url_path = `project_specs${this.editing ? '/' + this.$route.params.spec_id : '' }`
                     const { data } = await this.$http.post(url_path, this.$objToFormData(this.formData))
 
                     if(!data.error) {

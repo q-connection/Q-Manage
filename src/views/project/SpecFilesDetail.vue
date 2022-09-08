@@ -76,19 +76,38 @@
                             </div>                           
                         </div>
                         <div class="mb-1 p-3 bg-white border-bottom" v-for="(comment, index) in allowedComments" :key="index">
-                            <div class="d-flex align-items-center mb-3">
-                                <img-lazy-load
-                                    class="avatar"
-                                    :src="comment.created_by.avatar_thumb_url"
-                                    error="/images/default-avatar.png"
-                                />
-                                <div class="ml-2">
-                                    <h6 class="mb-0">{{ comment.created_by.fullname }}</h6>
-                                    <small class="text-muted">
-                                        {{ $mm(comment.created_at).format('DD/MM/YYYY HH:mm:ss') }}
-                                    </small>                            
-                                </div>
-                            </div>    
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="d-flex align-items-center mb-3">
+                                    <form-button-icon
+                                        class="mr-1"
+                                        icon="bi:trash-fill"
+                                        variant="danger"
+                                        @click="onDeleteComment($event, comment.id)"
+                                        v-if="$hasPermission('project.spec.comment.destroy')"
+                                    />
+                                    <img-lazy-load
+                                        class="avatar"
+                                        :src="comment.created_by.avatar_thumb_url"
+                                        error="/images/default-avatar.png"
+                                    />
+                                    <div class="ml-2">
+                                        <h6 class="mb-0">{{ comment.created_by.fullname }}</h6>
+                                        <small class="text-muted">
+                                            {{ $mm(comment.created_at).format('DD/MM/YYYY HH:mm:ss') }}
+                                        </small>                            
+                                    </div>
+                                </div>  
+                                <div>
+                                    <span 
+                                        class="h3 text-cursor mb-0" 
+                                        @click="toggleSolveComment(comment.id)"
+                                        :class="{'text-secondary': comment.solved === false, 'text-success': comment.solved === true}"
+                                    >
+                                        <q-icon icon="akar-icons:circle-check"/>
+                                    </span>
+                                </div> 
+                            </div>
+  
                             <div class="ql-snow">
                                 <div 
                                     class="ql-editor p-0" 
@@ -105,7 +124,7 @@
                                     style="border-radius: 15px"
                                     @click="show_all = !show_all"
                                 >
-                                    <span v-if="!show_all">Show comments ({{ comments.length }})</span>
+                                    <span v-if="!show_all">Show comments ({{ listCommentsSolved.length }})</span>
                                     <span v-else>Hide comments</span>
                                 </div>
                             </div>
@@ -169,10 +188,16 @@
             },
 
             allowedComments() {
-                if(!this.show_all) return []
+                if(this.show_all) {
+                    return this.comments
+                }
 
-                return this.comments
-            }
+                return this.comments.filter(x => x.solved === false)
+            },
+
+            listCommentsSolved() {
+                return this.comments.filter(x => x.solved === true)
+            }            
         },
         async mounted() {
             await this.fetchSpec(true)
@@ -208,11 +233,42 @@
 
                     if(!data.error) {
                         await this.fetchSpec(true)
+                        this.comment = ''
                     }
                 } catch (err) { 
                     console.log(err)
                 } finally {
                     this.isComment = false
+                }
+            },
+
+            async toggleSolveComment(id) {
+                try {
+                    const cmt = this.comments.find(x => x.id == id && x.solved === false)
+
+                    if(cmt) {
+                        const idx = this.comments.findIndex(x => x.id == id)
+                        cmt.solved = true
+                        this.$set(this.comments, idx, cmt)
+                        await this.$http.put('spec_comments/solve/' + id)
+                    }
+                } catch (err) {
+                    console.log(err)
+                }
+            },        
+            
+            async onDeleteComment(e, id) {
+                try {
+                    e.toggleLoading(true)
+                    await this.$http.delete('spec_comments/' + id)
+                    await this.fetchSpec(true)
+
+                    this.$toast.success("Deleted an comment successfully!")
+                } catch (err) {
+                    console.log(err)
+                    this.$toast.error("Something went wrong!")
+                } finally {
+                    e.toggleLoading(false)
                 }
             }
         }
