@@ -141,7 +141,7 @@
                 immediate: true,
                 handler(newval) {
                     if(newval) {
-                        this.queryParams.employee_id = newval
+                        this.queryParams.employee_id = `${newval}`
                     }
                 }
             }
