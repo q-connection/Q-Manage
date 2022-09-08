@@ -53,10 +53,13 @@
             border-left: 1px solid #dee2e6; 
             border-right: 1px solid #dee2e6; 
             border-bottom: 0;
+            padding: 1rem;
 
             td, th {
                 vertical-align: middle;
                 border: 0;
+                padding: 0; 
+                height: 100%
             }
 
             &:first-child {

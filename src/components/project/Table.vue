@@ -71,8 +71,8 @@ export default {
     computed: {
         columns() {
             return [
-                { label: 'Name', name: 'name', rowClass: 'text-cursor p-3', rowClicked: this.redirect },
-                { label: 'Customers', name: 'customers', rowClass: 'text-cursor p-3', rowClicked: this.redirect},
+                { label: 'Name', name: 'name', width: '300px', rowClass: 'text-cursor', rowClicked: this.redirect },
+                { label: 'Customers', name: 'customers', width: '100%', rowClass: 'text-cursor', rowClicked: this.redirect},
             ]
         },
         tableConfig() {
