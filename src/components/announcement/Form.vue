@@ -118,7 +118,10 @@
         },
 
         mounted() {
-            this.formData.expired_at = this.$mm().format('YYYY-MM-DD')
+            if(!this.formData.expired_at) {
+                this.formData.expired_at = this.$mm().format('YYYY-MM-DD')
+            }
+
             if(this.data) {
                 this.initFormData()
             }
