@@ -127,29 +127,38 @@ router.beforeEach(async (to, from, next) => {
     if (to.matched.some((record) => record.meta.requiresAuth)) {        
         if(lodash.isEmpty(userInfo) && !token) {
             next({name: 'login'});
+            return
         } else  {
             if(token) {
                 const isLoggedIn = await store.dispatch('fetchUser')
 
                 if(!isLoggedIn) {
                     next({name: 'login'});
+                    return
                 } else {
-                    if(to.name.indexOf('hrm-') !== -1 && !store.dispatch('checkPermission', 'hrm.index')) {
+                    const hrmPermission = await store.dispatch('checkPermission', 'hrm.index')
+
+                    if(to.name.indexOf('hrm-') !== -1 && !hrmPermission) {
                         next({name: 'unauthorized'})
+                        return
                     } else if(to.matched.some((record) => record.meta.requiresPermission)) {
-                        const hasPermission = store.dispatch('checkPermission', to.meta.requiresPermission)
+                        const hasPermission = await store.dispatch('checkPermission', to.meta.requiresPermission)
 
                         if(!hasPermission) {
                             next({name: 'unauthorized'})
+                            return
                         } else {
                             next()
+                            return
                         }
                     } else {
                         next()
+                        return
                     }
                 }
             } else {
                 next({name: 'login'});
+                return
             }
         }
     } else if (to.matched.some((record) => record.meta.requiresGuest)) {
