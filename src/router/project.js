@@ -14,7 +14,7 @@ export default [
     {
         path: '/projects/:id/issues',
         name: 'project-issues',
-        meta: { layout: 'default', requiresAuth: true, requiresPermission: 'issues.index' },
+        meta: { layout: 'default', requiresAuth: true },
         component: () => import('@/views/project/Issues.vue')
     },
     {
@@ -32,7 +32,7 @@ export default [
     {
         path: '/projects/:id/issues/detail/:issue_id',
         name: 'project-issues-detail',
-        meta: { layout: 'default', requiresAuth: true, requiresPermission: 'issues.index' },
+        meta: { layout: 'default', requiresAuth: true },
         component: () => import('@/views/project/IssuesDetail.vue')
     },
     {
@@ -56,7 +56,7 @@ export default [
     {
         path: '/projects/:id/wiki/spec-files',
         name: 'project-wiki-spec-files',
-        meta: { layout: 'default', requiresAuth: true, requiresPermission: 'project.spec.index' },
+        meta: { layout: 'default', requiresAuth: true },
         component: () => import('@/views/project/SpecFiles.vue')
     },    
     {
@@ -68,7 +68,7 @@ export default [
     {
         path: '/projects/:id/wiki/spec-files/detail/:spec_id',
         name: 'project-wiki-spec-files-detail',
-        meta: { layout: 'default', requiresAuth: true, requiresPermission: 'project.spec.index' },
+        meta: { layout: 'default', requiresAuth: true },
         component: () => import('@/views/project/SpecFilesDetail.vue')
     },    
     {

@@ -36,7 +36,8 @@
                                 <div class="notification-item" :class="{seen: item.seen}" @click="updateNotiSeen(item.id)">
                                     <div class="pr-2">
                                         <div class="font-weight-bold text-break">
-                                            <span class="text-primary">[{{ item.title }}]</span> {{ item.action_value }}
+                                            <span class="text-primary">[{{ item.title }}]</span> 
+                                            <span v-html="item.action_value"></span>
                                         </div>
                                     </div>
                                     <div class="text-muted">{{ $mm(item.created_at).format('DD/MM/YYYY HH:mm:ss') }}</div>

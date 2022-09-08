@@ -123,7 +123,7 @@
                     <b-dropdown-item href="#" v-for="(noti, index) in notification.items" :key="index" @click="updateNotiSeen(noti.id)">
                         <div class="noti-content-title" :class="{seen: noti.seen}">
                             <span class="text-primary">[{{ noti.title }}]</span> 
-                            {{ noti.action_value }}
+                            <span v-html="noti.action_value"></span>
                         </div>
                     </b-dropdown-item>
                     <b-dropdown-item href="#" v-if="notification.items.length <= 0">
