@@ -2,13 +2,13 @@ export default [
     {
         path: '/projects',
         name: 'projects',
-        meta: { layout: 'default', requiresAuth: true, requiresPermission: 'projects.index' },
+        meta: { layout: 'default', requiresAuth: true, requiresPermission: 'project.index' },
         component: () => import('@/views/project/Index.vue')
     },
     {
         path: '/projects/:id',
         name: 'project-detail',
-        meta: { layout: 'default', requiresAuth: true, requiresPermission: 'projects.index' },
+        meta: { layout: 'default', requiresAuth: true, requiresPermission: 'project.index' },
         redirect: {name: 'project-issues'}
     },
     {
