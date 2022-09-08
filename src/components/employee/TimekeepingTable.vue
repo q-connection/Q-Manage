@@ -135,7 +135,8 @@
                 per_page: 5,
                 from: '',
                 to: '',
-                q: ''
+                q: '',
+                hrm: 0
             }
         }),
 
@@ -153,6 +154,8 @@
         async mounted() {
             this.queryParams.from = this.$mm().add(-5, 'days').format('YYYY-MM-DD')
             this.queryParams.to = this.$mm().format('YYYY-MM-DD')
+            this.queryParams.hrm = this.forHrm ? 1 : 0
+
             await this.fetchReports(1)
         },
 

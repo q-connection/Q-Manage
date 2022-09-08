@@ -134,7 +134,9 @@ router.beforeEach(async (to, from, next) => {
                 if(!isLoggedIn) {
                     next({name: 'login'});
                 } else {
-                    if(to.matched.some((record) => record.meta.requiresPermission)) {
+                    if(to.name.indexOf('hrm-') !== -1 && !store.dispatch('checkPermission', 'hrm.index')) {
+                        next({name: 'unauthorized'})
+                    } else if(to.matched.some((record) => record.meta.requiresPermission)) {
                         const hasPermission = store.dispatch('checkPermission', to.meta.requiresPermission)
 
                         if(!hasPermission) {
