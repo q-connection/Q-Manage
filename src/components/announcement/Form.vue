@@ -17,11 +17,23 @@
                 </b-col>
                 <b-col cols=12 xl=9 lg=9 :class="{'pt-3': $device.mobile === true}">
                     <b-row>
-                        <b-col cols=12 xl=6 lg=6>
+                        <b-col cols=12>
                             <validation-provider rules="required|max:255" name="title" ref="title" v-slot="{errors, valid}">
                                 <b-form-group label="Title" :invalid-feedback="errors[0]" label-class="label-required">
                                     <b-form-input placeholder="Enter title..." v-model="formData.title" :state="$isValid(errors, valid)"/>
                                 </b-form-group>
+                            </validation-provider>
+                        </b-col>
+                        <b-col cols=12 xl=6 lg=6>
+                            <validation-provider rules="required" name="expired_at" ref="expired_at" v-slot="{errors, valid}">
+                                <form-group
+                                    mode="datepicker"
+                                    label="Expired at"
+                                    v-model="formData.expired_at"
+                                    :error="errors[0]"
+                                    :state="$isValid(errors, valid)"
+                                    required
+                                />
                             </validation-provider>
                         </b-col>
                         <b-col cols=12 xl=6 lg=6>
@@ -30,7 +42,7 @@
                                     <b-form-file class="pdf" placeholder="Choose a file..." v-model="formData.files" :state="$isValid(errors, valid)"/>
                                 </b-form-group>
                             </validation-provider>
-                        </b-col>
+                        </b-col>                        
                         <b-col cols=12>
                             <validation-provider rules="required" name="description" ref="description" v-slot="{errors, valid}">
                                 <b-form-group label="Description" :invalid-feedback="errors[0]" label-class="label-required">
@@ -92,7 +104,8 @@
                 title: '',
                 description: '',
                 files: null,
-                high_priority: false
+                high_priority: false,
+                expired_at: ''
             }
         }),
 
@@ -105,6 +118,7 @@
         },
 
         mounted() {
+            this.formData.expired_at = this.$mm().format('YYYY-MM-DD')
             if(this.data) {
                 this.initFormData()
             }
