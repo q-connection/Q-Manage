@@ -1,5 +1,5 @@
 <template>
-    <div class="hrm-tabs" style="margin-top: 0; padding: 0 0 0 0">
+    <div class="hrm-tabs">
         <b-tabs>
             <template #tabs-end>
                 <b-nav-item :to="{name: 'hrm-employees'}" role="presentation" :active="isRouteActivated('employee')">Employees</b-nav-item>
