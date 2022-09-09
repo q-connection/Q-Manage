@@ -54,6 +54,7 @@
                                     mode="datepicker"
                                     label="From"
                                     v-model="formData.summary_point_from"
+                                    :max="formData.summary_point_to"
                                     :state="$isValid(errors, valid)"
                                     :error="errors[0]"
                                     required
@@ -66,6 +67,7 @@
                                     mode="datepicker"
                                     label="To"
                                     v-model="formData.summary_point_to"
+                                    :min="formData.summary_point_from"
                                     :state="$isValid(errors, valid)"
                                     :error="errors[0]"
                                     required
