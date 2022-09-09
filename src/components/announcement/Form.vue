@@ -42,7 +42,36 @@
                                     <b-form-file class="pdf" placeholder="Choose a file..." v-model="formData.files" :state="$isValid(errors, valid)"/>
                                 </b-form-group>
                             </validation-provider>
-                        </b-col>                        
+                        </b-col>            
+                        <b-col cols=12>
+                            <b-form-checkbox class="mb-2" v-model="formData.send_summary_point" :value="true" :unchecked-value="false">
+                                Summary point
+                            </b-form-checkbox>                               
+                        </b-col>      
+                        <b-col cols=12 xl=6 lg=6>              
+                            <validation-provider rules="required" name="summary_point_from" ref="summary_point_from" v-slot="{errors, valid}" v-if="formData.send_summary_point">
+                                <form-group
+                                    mode="datepicker"
+                                    label="From"
+                                    v-model="formData.summary_point_from"
+                                    :state="$isValid(errors, valid)"
+                                    :error="errors[0]"
+                                    required
+                                />
+                            </validation-provider>
+                        </b-col>
+                        <b-col cols=12 xl=6 lg=6 v-if="formData.send_summary_point">
+                            <validation-provider rules="required" name="summary_point_to" ref="summary_point_to" v-slot="{errors, valid}">
+                                <form-group
+                                    mode="datepicker"
+                                    label="To"
+                                    v-model="formData.summary_point_to"
+                                    :state="$isValid(errors, valid)"
+                                    :error="errors[0]"
+                                    required
+                                />
+                            </validation-provider>
+                        </b-col>                              
                         <b-col cols=12>
                             <validation-provider rules="required" name="description" ref="description" v-slot="{errors, valid}">
                                 <b-form-group label="Description" :invalid-feedback="errors[0]" label-class="label-required">
@@ -105,7 +134,10 @@
                 description: '',
                 files: null,
                 high_priority: false,
-                expired_at: ''
+                expired_at: '',
+                send_summary_point: false,
+                summary_point_from: '',
+                summary_point_to: '',
             }
         }),
 
@@ -120,6 +152,12 @@
         mounted() {
             if(!this.formData.expired_at) {
                 this.formData.expired_at = this.$mm().format('YYYY-MM-DD')
+            }
+            if(!this.formData.summary_point_from) {
+                this.formData.summary_point_from = this.$mm().format('YYYY-MM-DD')
+            }
+            if(!this.formData.summary_point_to) {
+                this.formData.summary_point_to = this.$mm().format('YYYY-MM-DD')
             }
 
             if(this.data) {
