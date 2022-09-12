@@ -238,7 +238,7 @@
                 try {
                     this.fetchingPreview = true
                     const {from , to} = this.formData
-                    const { data } = await this.$http.get('employee/point-summary', {from, to})
+                    const { data } = await this.$http.get('employee/point-summary', {params: {from, to}})
 
                     if(!data.error) {
                         this.preview_data = data.data
