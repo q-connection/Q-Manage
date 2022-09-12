@@ -73,14 +73,51 @@
                                     required
                                 />
                             </validation-provider>
-                        </b-col>                              
+                        </b-col>                             
                         <b-col cols=12>
                             <validation-provider rules="required" name="description" ref="description" v-slot="{errors, valid}">
                                 <b-form-group label="Description" :invalid-feedback="errors[0]" label-class="label-required">
                                     <b-form-textarea rows="5" placeholder="Enter description..." v-model="formData.description" :state="$isValid(errors, valid)"/>
                                 </b-form-group>
                             </validation-provider>
-                        </b-col>       
+                        </b-col>     
+                        <b-col cols=12 v-if="formData.send_summary_point">
+                            <div class="mb-1" style="font-weight: 500">Preview</div>
+                            <div class="table-responsive" style="max-height: 500px; overflow-y: auto">
+                                <table class="table table-bordered table-center">
+                                    <thead>
+                                        <tr>
+                                            <th style="width:5%;" rowspan="2">STT</th>
+                                            <th rowspan="2">Họ tên nhân viên</th>
+                                            <th>Phần cộng</th>
+                                            <th colspan="5">Phần trừ</th>
+                                            <th rowspan="2">Còn lại</th>
+                                        </tr>
+                                        <tr>
+                                            <th>Hoàn thành đúng/sớm hơn tiến độ <br/>(+30%)</th>
+                                            <th>Đi làm trễ quá 10p <br/>(-2đ)</th>
+                                            <th>Nghỉ không phép <br/>(-3đ)</th>
+                                            <th>Nghỉ có phép, xin về sớm sau 15h <br/>(-1đ)</th>
+                                            <th>Nghỉ trễ liên tục quá 3 ngày <br/>(-5đ)</th>
+                                            <th>Trễ deadline <br/>(-100% số điểm)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="(emp, idx) in preview_data" :key="idx">
+                                            <td>{{ idx + 1 }}</td>
+                                            <td>{{ emp.fullname }}</td>
+                                            <td>{{ emp.issue_completed }}</td>
+                                            <td>{{ emp.late_10_minutes }}</td>
+                                            <td>{{ emp.unpaid_leave }}</td>
+                                            <td>{{ emp.paid_leave + emp.leave_soon + emp.forgot_checkout }}</td>
+                                            <td>{{ emp.late_10_minutes_2 }}</td>
+                                            <td>{{ emp.issue_delayed }}</td>
+                                            <td>{{ emp.total }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </b-col>                           
                         <b-col cols=12>
                             <b-row class="align-items-center">
                                 <b-col cols=12 xl=4 lg=4>
@@ -112,6 +149,8 @@
 </template>
 
 <script>
+    import moment from 'moment'
+
     export default {
         name: 'FormAnnouncement',
 
@@ -128,6 +167,8 @@
         },
 
         data: () => ({
+            fetchingPreview: false,
+            preview_data: [],
             formData: {
                 thumbnail: null,
                 thumbnail_url: null,
@@ -138,8 +179,8 @@
                 high_priority: false,
                 expired_at: '',
                 send_summary_point: false,
-                summary_point_from: '',
-                summary_point_to: '',
+                summary_point_from: moment().format('YYYY-MM-DD'),
+                summary_point_to: moment().format('YYYY-MM-DD'),
             }
         }),
 
@@ -148,23 +189,31 @@
                 if(newval) {
                     this.initFormData()
                 }
-            }
+            },
+
+            async 'formData.summary_point_from'(newval) {
+                if(newval) {
+                    await this.fetchPreviewData()
+                }
+            },
+
+            async 'formData.summary_point_to'(newval) {
+                if(newval) {
+                    await this.fetchPreviewData()
+                }
+            },
         },
 
-        mounted() {
+        async mounted() {
             if(!this.formData.expired_at) {
                 this.formData.expired_at = this.$mm().format('YYYY-MM-DD')
-            }
-            if(!this.formData.summary_point_from) {
-                this.formData.summary_point_from = this.$mm().format('YYYY-MM-DD')
-            }
-            if(!this.formData.summary_point_to) {
-                this.formData.summary_point_to = this.$mm().format('YYYY-MM-DD')
             }
 
             if(this.data) {
                 this.initFormData()
             }
+
+            await this.fetchPreviewData()
         },
 
         methods: {
@@ -181,6 +230,24 @@
                 const formData = Object.assign({}, this.formData)
                 this.$delete(formData, 'thumbnail_url')
                 this.$emit('submit', {formData: this.$objToFormData(formData), refs: this.$refs})
+            },
+
+            async fetchPreviewData() {
+                if(this.fetchingPreview) return
+
+                try {
+                    this.fetchingPreview = true
+                    const {from , to} = this.formData
+                    const { data } = await this.$http.get('employee/point-summary', {from, to})
+
+                    if(!data.error) {
+                        this.preview_data = data.data
+                    }
+                } catch (err) {
+                    console.log(err)
+                } finally {
+                    this.fetchingPreview = false
+                }
             }
         }
     }
@@ -192,5 +259,14 @@
     height: 238px;
     border-radius: 10px;
     overflow: hidden;
+}
+
+.table-center {
+    font-size: 12px;
+
+    tr td, tr th {
+        text-align: center;
+        vertical-align: middle;
+    }
 }
 </style>
