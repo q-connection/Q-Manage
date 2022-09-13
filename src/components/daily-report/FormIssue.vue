@@ -20,13 +20,9 @@
                         <b-input-group-text>%</b-input-group-text>
                     </template>
                     <input
-                        min="1" 
-                        max="100" 
-                        type="tel" 
+                        type="text" 
                         class="form-control"
-                        v-model.number="process" 
-                        @input="checkProcess"
-                        @keyup="checkProcess"
+                        v-model="process" 
                     >
                 </b-input-group>
             </div>
@@ -90,6 +86,20 @@ export default {
         issue_status(val) {
             if (val == 'done') this.process = 100
             this.$emit('changeIssue', { 'id': this.issue.id, 'type': 'process', 'value': this.process })
+        },
+        process(val) {
+            console.log(val, isNaN(val))
+            if(isNaN(val)) {
+                this.process = 1
+                this.$emit('changeIssue', { 'id': this.issue.id, 'type': 'process', 'value': 1 })
+            } else {
+                if(parseInt(val) > 100) {
+                    this.process = 100
+                    this.$emit('changeIssue', { 'id': this.issue.id, 'type': 'process', 'value': 100 })
+                } else {
+                    this.$emit('changeIssue', { 'id': this.issue.id, 'type': 'process', 'value': parseInt(val) })
+                }
+            }
         }
     },
     methods: {
@@ -105,33 +115,6 @@ export default {
             this.$emit('refreshIssue',this.issue.id, this.stopSpin)
             this.clicked = true
         },
-        
-
-        checkProcess(e) {    
-            if(e.keyCode) {
-                const key = e.keyCode
-
-                if(![8, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57].includes(key)) {
-                    this.process = 1
-                    this.$emit('changeIssue', { 'id': this.issue.id, 'type': 'process', 'value': 1 })
-
-                    return
-                }
-            }
-
-            const val = e.target.value
-
-            if(val && parseInt(val) > 0 && parseInt(val) <= 100) {
-                this.$emit('changeIssue', { 'id': this.issue.id, 'type': 'process', 'value': parseInt(val) })
-
-                return
-            }
-
-            if(val && parseInt(val) > 100) {
-                this.process = 100
-                this.$emit('changeIssue', { 'id': this.issue.id, 'type': 'process', 'value': 100 })
-            }
-        }
     }
 
 }
