@@ -3,6 +3,91 @@
     <b-container fluid>
         <b-row>
             <b-col cols=12>
+                <h5>Statistics</h5>
+                <table class="table-leave-days table table-bordered table-hover mb-4">
+                    <thead>
+                        <tr>
+                            <th rowspan="2">STT</th>
+                            <th rowspan="2">Tên nhân viên</th>
+                            <th colspan="12">Tháng làm việc</th>
+                            <th rowspan="2">Số ngày nghỉ trong năm</th>
+                            <th rowspan="2">Phép năm cũ</th>
+                            <th rowspan="2">Phép còn lại</th>
+                            <th rowspan="2">HDLD</th>
+                            <th rowspan="2">Năm ký</th>
+                        </tr>
+                        <tr>
+                            <th>1</th>
+                            <th>2</th>
+                            <th>3</th>
+                            <th>4</th>
+                            <th>5</th>
+                            <th>6</th>
+                            <th>7</th>
+                            <th>8</th>
+                            <th>9</th>
+                            <th>10</th>
+                            <th>11</th>
+                            <th>12</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(emp, index) in statistics" :key="index">
+                            <td>{{ index + 1 }}</td>
+                            <td>{{ emp.fullname }}</td>
+                            <td>{{ emp.jan }}</td>
+                            <td>{{ emp.feb }}</td>
+                            <td>{{ emp.mar }}</td>
+                            <td>{{ emp.apr }}</td>
+                            <td>{{ emp.may }}</td>
+                            <td>{{ emp.jun }}</td>
+                            <td>{{ emp.jul }}</td>
+                            <td>{{ emp.aug }}</td>
+                            <td>{{ emp.sep }}</td>
+                            <td>{{ emp.oct }}</td>
+                            <td>{{ emp.nov }}</td>
+                            <td>{{ emp.dec }}</td>
+                            <td>{{ emp.total }}</td>
+                            <td>{{ emp.old_leave_days }}</td>
+                            <td>{{ parseFloat(emp.available_leave_days) + parseFloat(emp.old_leave_days) }}</td>
+                            <td>
+                                <div class="font-weight-bold" v-if="emp.contract_type == 'official'">Official</div>
+                                <div class="font-weight-bold" v-if="emp.contract_type == 'freelancer'">Freelancer</div>
+                                <div class="font-weight-bold" v-if="emp.contract_type == 'probation'">Probation</div>                                
+                            </td>
+                            <td>
+                                <div class="font-weight-bold" v-if="emp.contract_type == 'official'">{{ emp.official_contract_date || 'N/A' }}</div>
+                                <div class="font-weight-bold" v-if="emp.contract_type == 'freelancer'">{{ emp.freelance_contract_date || 'N/A' }}</div>
+                                <div class="font-weight-bold" v-if="emp.contract_type == 'probation'">{{ emp.probationary_contract_date || 'N/A' }}</div>                                  
+                            </td>
+                        </tr>
+                        <tr v-if="statistics.length <= 0">
+                            <td colspan="18">Không có dữ liệu.</td>
+                        </tr>
+                        <tr v-else>
+                            <th colspan="2">Tổng cộng</th>
+                            <td>{{ $lodash.sumBy(statistics, item => parseFloat(item.jan)) }}</td>                         
+                            <td>{{ $lodash.sumBy(statistics, item => parseFloat(item.feb)) }}</td>                         
+                            <td>{{ $lodash.sumBy(statistics, item => parseFloat(item.mar)) }}</td>                         
+                            <td>{{ $lodash.sumBy(statistics, item => parseFloat(item.apr)) }}</td>                         
+                            <td>{{ $lodash.sumBy(statistics, item => parseFloat(item.may)) }}</td>                         
+                            <td>{{ $lodash.sumBy(statistics, item => parseFloat(item.jun)) }}</td>                         
+                            <td>{{ $lodash.sumBy(statistics, item => parseFloat(item.jul)) }}</td>                         
+                            <td>{{ $lodash.sumBy(statistics, item => parseFloat(item.aug)) }}</td>                         
+                            <td>{{ $lodash.sumBy(statistics, item => parseFloat(item.sep)) }}</td>                         
+                            <td>{{ $lodash.sumBy(statistics, item => parseFloat(item.oct)) }}</td>                         
+                            <td>{{ $lodash.sumBy(statistics, item => parseFloat(item.nov)) }}</td>                         
+                            <td>{{ $lodash.sumBy(statistics, item => parseFloat(item.dec)) }}</td>                         
+                            <td>{{ $lodash.sumBy(statistics, item => parseFloat(item.total)) }}</td>                         
+                            <td>{{ $lodash.sumBy(statistics, item => parseFloat(item.old_leave_days)) }}</td>                         
+                            <td>{{ $lodash.sumBy(statistics, item => parseFloat(item.available_leave_days) + parseFloat(item.old_leave_days)) }}</td>      
+                            <td></td>                   
+                            <td></td>                   
+                        </tr>
+                    </tbody>
+                </table>
+            </b-col>
+            <b-col cols=12>
                 <TableLeaveDays for-hrm/>
             </b-col>
         </b-row>
@@ -15,10 +100,41 @@
 
     export default {
         name: 'HrmLeaveDays',
-        components: {TableLeaveDays}
+        components: {TableLeaveDays},
+        data: () => ({
+            statistics: []
+        }),
+        async mounted() {
+            await this.fetchStatistics()
+        },
+        methods: {
+            async fetchStatistics() {
+                try {
+                    const { data } = await this.$http.get('annual-leave/statistics')
+
+                    if(!data.error) {
+                        this.statistics = data.data
+                    }
+                } catch (err) {
+                    console.log(err)
+                }
+            }
+        }
     }
 </script>
 
 <style lang="scss" scoped>
+.table-leave-days {
+    th, td {
+        vertical-align: middle;
+        text-align: center;
+    }
 
+    thead {
+        th {
+            background-color: var(--primary);
+            color: #fff
+        }
+    }
+}
 </style>

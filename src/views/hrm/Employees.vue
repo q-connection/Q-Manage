@@ -214,7 +214,7 @@
                     { 
                         label: "Point",
                         name: "point",
-                        width: '200px',
+                        width: '220px',
                         rowClass: 'text-cursor',
                     },
                     {
