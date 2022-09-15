@@ -1,5 +1,5 @@
 <template>
-    <div class="table-responsive">
+    <div>
         <div class="d-flex justify-content-between mb-3" v-if="!boxed">
             <div style="width: 48px; padding-left: .75rem"  v-if="selectable">
                 <div class="d-flex align-items-center w-10 h-100">
@@ -28,121 +28,123 @@
                 </div>
             </div>
         </div>
-        <b-table-simple class="table-qconnection" :hover="hover" :class="{'table-responsive-md': responsive === true}" v-if="!boxed">
-            <b-tbody>
-                <template v-if="showColumns">
-                    <b-tr>
-                        <b-th v-for="(col, index) in tableColumns" :key="index" :style="{width: col.width}" :class="col.class">
-                            <slot :name="`col-${col.name}`" v-bind="{col}">
-                                {{ col.label || 'N/A' }}
+        <div>
+            <b-table-simple class="table-qconnection" :hover="hover" :class="{'table-responsive-md': responsive === true}" v-if="!boxed">
+                <b-tbody>
+                    <template v-if="showColumns">
+                        <b-tr>
+                            <b-th v-for="(col, index) in tableColumns" :key="index" :style="{width: col.width}" :class="col.class">
+                                <slot :name="`col-${col.name}`" v-bind="{col}">
+                                    {{ col.label || 'N/A' }}
+                                </slot>
+                            </b-th>
+                        </b-tr>
+                    </template>             
+                    <b-tr v-for="(row, rowIdx) in items" :key="rowIdx" @click="$emit('redirect', row.id)">
+                        <b-td style="width: 48px" v-if="selectable">
+                            <div class="d-flex align-items-center w-100 h-100">
+                                <b-checkbox :checked="selected.includes(row.id)" @change="toggleSelect(row.id)"/>
+                            </div>
+                        </b-td>                       
+                        <b-td 
+                            v-for="(col, colIdx) in tableColumns" 
+                            :key="colIdx" 
+                            :style="{width: col.width}" 
+                            v-bind="{class: col.rowClass}" 
+                            @click="onRowClick(col, row)"
+                        >
+                            <slot :name="`row-${col.name}`" v-bind="{row}">
+                                {{ row[col.name] || '' }}
                             </slot>
-                        </b-th>
+                        </b-td>
                     </b-tr>
-                </template>             
-                <b-tr v-for="(row, rowIdx) in items" :key="rowIdx" @click="$emit('redirect', row.id)">
-                    <b-td style="width: 48px" v-if="selectable">
-                        <div class="d-flex align-items-center w-100 h-100">
-                            <b-checkbox :checked="selected.includes(row.id)" @change="toggleSelect(row.id)"/>
-                        </div>
-                    </b-td>                       
-                    <b-td 
-                        v-for="(col, colIdx) in tableColumns" 
-                        :key="colIdx" 
-                        :style="{width: col.width}" 
-                        v-bind="{class: col.rowClass}" 
-                        @click="onRowClick(col, row)"
-                    >
-                        <slot :name="`row-${col.name}`" v-bind="{row}">
-                            {{ row[col.name] || '' }}
-                        </slot>
-                    </b-td>
-                </b-tr>
-                <b-tr v-if="items.length <= 0 && !tableLoading">
-                    <b-td class="w-100">
-                        <div class="text-center">
-                            No records to show.
-                        </div>
-                    </b-td>
-                </b-tr>
-                <b-tr v-if="tableLoading && items.length <= 0">
-                    <b-td class="w-100">
+                    <b-tr v-if="items.length <= 0 && !tableLoading">
+                        <b-td class="w-100">
+                            <div class="text-center">
+                                No records to show.
+                            </div>
+                        </b-td>
+                    </b-tr>
+                    <b-tr v-if="tableLoading && items.length <= 0">
+                        <b-td class="w-100">
+                            <div class="text-center text-primary">
+                                <div><b-spinner type="grow" variant="primary"/></div>
+                                <div>Loading data...</div>
+                            </div>
+                        </b-td>
+                    </b-tr>
+                    <b-tr class="table-loading w-100" v-if="tableLoading && items.length > 0">
                         <div class="text-center text-primary">
                             <div><b-spinner type="grow" variant="primary"/></div>
                             <div>Loading data...</div>
                         </div>
-                    </b-td>
-                </b-tr>
-                <b-tr class="table-loading w-100" v-if="tableLoading && items.length > 0">
-                    <div class="text-center text-primary">
-                        <div><b-spinner type="grow" variant="primary"/></div>
-                        <div>Loading data...</div>
-                    </div>
-                </b-tr>
-            </b-tbody>
-        </b-table-simple>
-        <div class="table-boxed" v-else>
-            <div 
-                class="d-flex flex-wrap align-items-center" 
-                :class="headActionsClass"
-            >
-                <div class="d-flex mb-2">
-                    <slot name="tableHeadActions" v-bind="{selected}"/>
-                </div>
-                <div class="mb-2 d-flex" v-if="searchable">
-                    <slot name="tableHeadForms"/>
-                    <form-input-group class="d-none d-xl-block d-lg-block search-form" v-if="searchType == 'input'">
-                        <b-form-input style="min-width: 285px; min-height: 40px" placeholder="Search..." v-model.lazy="queryParams.search"></b-form-input>
-                        <template #append>
-                            <span class="h3">
-                                <q-icon icon="bx:search-alt"/>
-                            </span>
-                        </template>
-                    </form-input-group>
-                    <form-input-group class="search-form" v-if="searchType == 'date'">
-                        <b-form-datepicker 
-                            style="min-width: 285px; min-height: 40px" 
-                            placeholder="Search by date" 
-                            v-model.lazy="queryParams.search"
-                            :date-format-options="{year: 'numeric', month: '2-digit', day: '2-digit'}"
-                            locale="vi"
-                            
-                        />
-                        <template #append>
-                            <span class="h6 text-cursor" v-show="queryParams.search" @click="queryParams.search = ''">
-                                <q-icon icon="el:remove"/>
-                            </span>
-                        </template>                        
-                    </form-input-group>
-                </div>
-            </div>            
-            <div class="d-flex flex-wrap mb-2">
+                    </b-tr>
+                </b-tbody>
+            </b-table-simple>
+            <div class="table-boxed" v-else>
                 <div 
-                    class="boxed-item" 
-                    :class="{mobile: $device.mobile}"
-                    :style="{width: tableConfig.boxedRowWidth || '25%'}"
-                    v-for="(row, rowIdx) in items" 
-                    :key="rowIdx"
+                    class="d-flex flex-wrap align-items-center" 
+                    :class="headActionsClass"
                 >
-                    <div class="boxed-item--content">
-                        <div class="boxed-row" v-for="(col, colIdx) in tableColumns" :key="colIdx" :class="col.rowClass" @click="onRowClick(col, row)">
-                            <div class="font-weight-bold" :style="{width: col.width || '30%', display: col.display || 'block'}">
-                                <slot :name="`col-${col.name}`" v-bind="{col}">
-                                    {{ col.label || 'N/A' }}
-                                </slot>
-                            </div>
-                            <div class="text-break" :style="{width: col.rowWidth || '70%'}">
-                                <slot :name="`row-${col.name}`" v-bind="{row}">
-                                    {{ row[col.name] || '' }}
-                                </slot>
+                    <div class="d-flex mb-2">
+                        <slot name="tableHeadActions" v-bind="{selected}"/>
+                    </div>
+                    <div class="mb-2 d-flex" v-if="searchable">
+                        <slot name="tableHeadForms"/>
+                        <form-input-group class="d-none d-xl-block d-lg-block search-form" v-if="searchType == 'input'">
+                            <b-form-input style="min-width: 285px; min-height: 40px" placeholder="Search..." v-model.lazy="queryParams.search"></b-form-input>
+                            <template #append>
+                                <span class="h3">
+                                    <q-icon icon="bx:search-alt"/>
+                                </span>
+                            </template>
+                        </form-input-group>
+                        <form-input-group class="search-form" v-if="searchType == 'date'">
+                            <b-form-datepicker 
+                                style="min-width: 285px; min-height: 40px" 
+                                placeholder="Search by date" 
+                                v-model.lazy="queryParams.search"
+                                :date-format-options="{year: 'numeric', month: '2-digit', day: '2-digit'}"
+                                locale="vi"
+                                
+                            />
+                            <template #append>
+                                <span class="h6 text-cursor" v-show="queryParams.search" @click="queryParams.search = ''">
+                                    <q-icon icon="el:remove"/>
+                                </span>
+                            </template>                        
+                        </form-input-group>
+                    </div>
+                </div>            
+                <div class="d-flex flex-wrap mb-2">
+                    <div 
+                        class="boxed-item" 
+                        :class="{mobile: $device.mobile}"
+                        :style="{width: tableConfig.boxedRowWidth || '25%'}"
+                        v-for="(row, rowIdx) in items" 
+                        :key="rowIdx"
+                    >
+                        <div class="boxed-item--content">
+                            <div class="boxed-row" v-for="(col, colIdx) in tableColumns" :key="colIdx" :class="col.rowClass" @click="onRowClick(col, row)">
+                                <div class="font-weight-bold" :style="{width: col.width || '30%', display: col.display || 'block'}">
+                                    <slot :name="`col-${col.name}`" v-bind="{col}">
+                                        {{ col.label || 'N/A' }}
+                                    </slot>
+                                </div>
+                                <div class="text-break" :style="{width: col.rowWidth || '70%'}">
+                                    <slot :name="`row-${col.name}`" v-bind="{row}">
+                                        {{ row[col.name] || '' }}
+                                    </slot>
+                                </div>
                             </div>
                         </div>
                     </div>
+                    <div class="w-100" v-if="items.length <= 0 && !tableLoading">
+                        <div class="text-center p-2 border rounded-lg mb-2">
+                            No records to show.
+                        </div>
+                    </div>                
                 </div>
-                <div class="w-100" v-if="items.length <= 0 && !tableLoading">
-                    <div class="text-center p-2 border rounded-lg mb-2">
-                        No records to show.
-                    </div>
-                </div>                
             </div>
         </div>
         <div class="d-flex justify-content-end" v-if="hasPagination">

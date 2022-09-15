@@ -54,13 +54,21 @@
                     </template>
                     <template slot="row-point" slot-scope="{row}">
                         <div class="d-none d-xl-block d-lg-block">
-                            Total point: {{ row.point || 0 }}
-                            <router-link
-                                class="h5 mb-0"
-                                :to="{name: 'hrm-employees-point-history', params: {id: row.id}}"
-                            >
-                                <q-icon icon="clarity:list-line"/>
-                            </router-link>
+                            <div class="mb-1">
+                                Total point: <b>{{ row.point || 0 }}</b>
+                                <router-link
+                                    class="h5 mb-0"
+                                    :to="{name: 'hrm-employees-point-history', params: {id: row.id}}"
+                                >
+                                    <q-icon icon="clarity:list-line"/>
+                                </router-link>
+                            </div>
+                            <div class="mb-1">
+                                Available annual Leave: <b>{{ row.available_leave_days || 0 }}</b>
+                            </div>
+                            <div class="mb-1">
+                                Last year annual leave: <b>{{ row.old_leave_days || 0 }}</b>
+                            </div>
                         </div>
                     </template>
                     <template slot="row-actions" slot-scope="{row}">
