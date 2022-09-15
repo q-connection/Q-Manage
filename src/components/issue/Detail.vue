@@ -424,17 +424,19 @@
                     if(elem.getAttribute('data-issue-initialized') != true) {
                         elem.addEventListener('click', async (e) => {
                             if (e.target.matches('ul.task-list > li')) {
-                                e.target.classList.toggle('checked');
+                                if(e.offsetX > 1 && e.offsetX <= 16) {
+                                    e.target.classList.toggle('checked');
 
-                                const comment_id = elem.getAttribute('data-comment-id')
-                                const issue_id = elem.getAttribute('data-issue-id')
+                                    const comment_id = elem.getAttribute('data-comment-id')
+                                    const issue_id = elem.getAttribute('data-issue-id')
 
-                                if(comment_id) {
-                                    await this.updateComment(comment_id, elem.innerHTML)
-                                }
+                                    if(comment_id) {
+                                        await this.updateComment(comment_id, elem.innerHTML)
+                                    }
 
-                                if(issue_id) {
-                                    await this.updateIssueContent(issue_id, elem.innerHTML)
+                                    if(issue_id) {
+                                        await this.updateIssueContent(issue_id, elem.innerHTML)
+                                    }
                                 }
                             }
                         });   
