@@ -57,19 +57,27 @@
             v-bind="config"
             v-if="mode == 'select'"        
         />
-        <b-form-datepicker 
+        <b-form-datepicker2 
             v-if="mode == 'datepicker'"
             :value="value" 
             :state="state"
             :readonly="readonly"
-            :date-format-options="{year: 'numeric', month: '2-digit', day: '2-digit'}"
-            locale="vi"         
+            format="YYYY-MM-DD"
             :required="required"   
             :class="customClass"
-            :min="min"
-            :max="max"
             @input="$emit('input', $event)"
-        />
+            :placeholder="placeholder || 'Select date'"
+            value-type="format"
+            title-format="DD/MM/YYYY"
+            :disabled-date="disableDates"
+            :editable="false"
+            :clearable="false"
+            :renderInputText="val => $mm(val).isValid() ? $mm(val).format('DD/MM/YYYY') : ''"
+        >
+            <template #icon-calendar>
+                <q-icon icon="ant-design:calendar-filled"/>
+            </template>
+        </b-form-datepicker2>
         <b-form-file 
             v-if="mode == 'file'"
             :class="customClass"
@@ -130,12 +138,12 @@
             placeholder: String,
             error: String,
             rows: String,
-            min: [String, Number],
-            max: [String, Number],
+            min: [String, Number, Date],
+            max: [String, Number, Date],
             readonly: Boolean,
             loading: Boolean,
             required: Boolean,
-            value: [String, Number, File, Array],
+            value: [String, Number, File, Array, Date],
             options: [Array, Object],
             customClass: String,
             state: {
@@ -190,7 +198,24 @@
                     '#C3D3EF',
                     '#D1C5F5'
                 ]
-            }
+            }          
+        },
+        methods: {
+            disableDates(date) {
+                if(this.min) {
+                    const min = this.$mm(this.min).toDate()
+
+                    return date <= min
+                }          
+
+                if(this.max) {
+                    const max = this.$mm(this.max).toDate()
+
+                    return date >= max                 
+                }
+
+                return false
+            }              
         }
     }
 </script>

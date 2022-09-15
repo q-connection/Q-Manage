@@ -21,6 +21,7 @@ import vSelect from 'vue-select'
 import VueViewer from 'v-viewer'
 import VueLazyload from 'vue-lazyload'
 import ReadMore from 'vue-read-more';
+import DatePicker from 'vue2-datepicker'
 
 Object.keys(rules).forEach(rule => {
     extend(rule, rules[rule]);
@@ -79,6 +80,7 @@ Vue.component('ValidationObserver', ValidationObserver);
 Vue.component('QIcon', Icon);
 Vue.component('b-select2', vSelect)
 Vue.component('QTable', VueBootstrap4Table)
+Vue.component('b-form-datepicker2', DatePicker)
 
 const componentContext = require.context('./components/', true, /\.vue$/i, 'lazy');
 componentContext.keys().forEach((componentFilePath) => {

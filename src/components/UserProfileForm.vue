@@ -80,21 +80,15 @@
                                         </b-form-group>
                                     </validation-provider>
                                     <validation-provider tag="div" class="col-12 col-xl-6 col-lg-6" rules="required" name="dob" ref="dob" v-slot="{errors, valid}">
-                                        <b-form-group 
-                                            label="Date of birth" 
-                                            :invalid-feedback="errors[0]" 
+                                        <form-group
+                                            mode="datepicker"
+                                            label="Date of birth"
+                                            v-model="formData.dob"
+                                            :error="errors[0]"
                                             :state="$isValid(errors, valid)"
-                                            label-class="font-weight-medium label-required"
-                                        >
-                                            <b-form-datepicker 
-                                                v-model="formData.dob" 
-                                                :readonly="!$hasPermission('employee.edit') || readonly" 
-                                                :state="$isValid(errors, valid)"
-                                                :date-format-options="{year: 'numeric', month: '2-digit', day: '2-digit'}"
-                                                locale="vi"
-                                            >
-                                            </b-form-datepicker>
-                                        </b-form-group>     
+                                            :disabled="!$hasPermission('employee.edit') || readonly" 
+                                            required
+                                        />   
                                     </validation-provider>                           
                                     <validation-provider tag="div" class="col-12" rules="required|oneOf:male,female" name="gender" ref="gender" v-slot="{errors, valid}">
                                         <b-form-group 

@@ -266,3 +266,25 @@ $text-color: #000 !default;
 .ql-editor ul.task-list > li.checked::before {
   content: "✔"
 }
+
+.mx-datepicker {
+    width: 100%;
+
+    .mx-input {
+        height: calc(1.5em + 0.75rem + 2px);
+        min-height: 45px;
+        padding: 0.375rem 0.75rem;
+        font-size: .875rem;
+        font-weight: 400;
+        line-height: 1.5;
+        color: #495057;
+        background-color: #fff;
+        border: 1px solid var(--primary);
+        border-radius: 10px;
+    }
+
+    .mx-icon-calendar {
+        font-size: 24px;
+        color: var(--primary)
+    }
+}
