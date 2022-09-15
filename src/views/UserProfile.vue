@@ -66,24 +66,36 @@
                                                 <span v-if="$user.contract_type == 'freelancer'">Freelancer staff</span>
                                                 <span v-if="$user.contract_type == 'official'">Official staff</span>
                                                 <span v-if="$user.contract_type == 'probation'">Probation staff</span>
-                                                <div class="position-absolute" style="width: 200px">
-                                                    ({{ $user.contract_start_date || 'N/A' }} - {{ $user.contract_end_date || 'N/A' }})
-                                                </div>
                                             </div>
+                                            <div class="ml-2">
+                                                ({{ $user.contract_start_date || 'N/A' }} - {{ $user.contract_end_date || 'N/A' }})
+                                            </div>                                            
                                         </div>
                                     </b-col>
-                                    <b-col cols=12 xl=6 lg=6>
+                                    <b-col cols=12 xl=7 lg=7>
                                         <div class="d-flex mb-2 text-break flex-wrap">
                                             <div class="font-weight-bold text-title">ID Number:</div>
                                             <div class="text-value">{{ $user.id_number || 'N/A' }}</div>
                                         </div>
                                     </b-col>
-                                    <b-col cols=12>
+                                    <b-col cols=12 xl=5 lg=5>
+                                        <div class="d-flex mb-2 text-break flex-wrap">
+                                            <div class="font-weight-bold text-title">Available Leave Days:</div>
+                                            <div class="text-value">{{ $user.available_leave_days || 0 }}</div>
+                                        </div>
+                                    </b-col>
+                                    <b-col cols=12 xl=7 lg=7>
                                         <div class="d-flex mb-2 text-break flex-wrap">
                                             <div class="font-weight-bold text-title">Permanent Address:</div>
                                             <div class="text-value">{{ $user.permanent_full_address || 'N/A' }}</div>
                                         </div>
                                     </b-col>
+                                    <b-col cols=12 xl=5 lg=5>
+                                        <div class="d-flex mb-2 text-break flex-wrap">
+                                            <div class="font-weight-bold text-title">Last Year Leave Days:</div>
+                                            <div class="text-value">{{ $user.old_leave_days || 0 }}</div>
+                                        </div>
+                                    </b-col>                                    
                                     <b-col cols=12>
                                         <div class="d-flex mb-2 text-break flex-wrap">
                                             <div class="font-weight-bold text-title">Residence Address:</div>
