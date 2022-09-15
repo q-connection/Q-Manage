@@ -49,16 +49,16 @@
                                             <b-form-input v-model="formData.first_name" :readonly="!$hasPermission('employee.edit') || readonly" :state="$isValid(errors, valid)"></b-form-input>
                                         </b-form-group>
                                     </validation-provider>
-                                        <validation-provider tag="div" class="col-12 col-xl-6 col-lg-6" rules="required|alpha_num" name="username" ref="username" v-slot="{errors, valid}">
-                                        <b-form-group 
-                                            label="Username" 
-                                            :invalid-feedback="errors[0]" 
-                                            :state="$isValid(errors, valid)"
-                                            label-class="font-weight-medium label-required"
-                                        >
-                                            <b-form-input v-model="formData.username" :readonly="!$hasPermission('employee.edit') || readonly" :state="$isValid(errors, valid)"></b-form-input>
-                                        </b-form-group>
-                                        </validation-provider>
+                                    <validation-provider tag="div" class="col-12 col-xl-6 col-lg-6" rules="required|alpha_num" name="username" ref="username" v-slot="{errors, valid}" v-if="!creating">
+                                    <b-form-group 
+                                        label="Username" 
+                                        :invalid-feedback="errors[0]" 
+                                        :state="$isValid(errors, valid)"
+                                        label-class="font-weight-medium label-required"
+                                    >
+                                        <b-form-input v-model="formData.username" :readonly="!$hasPermission('employee.edit') || readonly" :state="$isValid(errors, valid)"></b-form-input>
+                                    </b-form-group>
+                                    </validation-provider>
                                     <validation-provider tag="div" class="col-12 col-xl-6 col-lg-6" rules="required|email" name="email" ref="email" v-slot="{errors, valid}">
                                         <b-form-group 
                                             label="Email" 
