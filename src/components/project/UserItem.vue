@@ -4,7 +4,7 @@
         <div class="delete-user" @click="removePeople">
             <QIcon icon="ant-design:delete-outlined" color="white" width="21" height="21" />
         </div>
-        <b-img :src="user.avatar_url ? user.avatar_url : null" class="avatar" rounded="circle" alt="Circle image"></b-img>
+        <b-img :src="user.avatar_thumb_url ? user.avatar_thumb_url : null" class="avatar" rounded="circle" alt="Circle image"></b-img>
         <div class="ml-2">
             <div class="full-name">
                 {{ user.full_name }}

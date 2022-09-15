@@ -109,7 +109,7 @@
                                             <template v-slot:option="option">
                                                 <div class="p-1">
                                                     <div class="user-item">
-                                                        <b-img :src="option.avatar_url" class="avatar" rounded="circle"
+                                                        <b-img :src="option.avatar_thumb_url" class="avatar" rounded="circle"
                                                             alt="Circle image"></b-img>
                                                         <b-col class="info">
                                                             <div class="full-name">

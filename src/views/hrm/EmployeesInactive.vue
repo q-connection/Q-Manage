@@ -31,7 +31,7 @@
                     </template>
                     <template slot="row-id" slot-scope="{row}">
                         <div class="employee-avatar">
-                            <img :src="row.avatar_id ? row.avatar_url : null"/>
+                            <img :src="row.avatar_thumb_url ? row.avatar_thumb_url : null"/>
                             <div class="overlay">
                                 {{ row.username }}
                             </div>
@@ -64,7 +64,7 @@
                 <b-row>
                     <b-col cols=12 xl=3 lg=3>
                         <div class="avatar-modal">
-                            <form-image-upload :preview-url="selectedEmp.avatar ? selectedEmp.avatar_url : null" readonly/>
+                            <form-image-upload :preview-url="selectedEmp.avatar_thumb_url ? selectedEmp.avatar_thumb_url : null" readonly/>
                         </div>
                     </b-col>
                     <b-col cols=12 xl=9 lg=9>

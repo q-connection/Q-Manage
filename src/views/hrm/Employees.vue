@@ -31,7 +31,7 @@
                     </template>
                     <template slot="row-id" slot-scope="{row}">
                         <div class="employee-avatar">
-                            <img :src="row.avatar_id ? row.avatar_url : null"/>
+                            <img :src="row.avatar_thumb_url ? row.avatar_thumb_url : null"/>
                             <div class="overlay">
                                 {{ row.username }}
                             </div>
