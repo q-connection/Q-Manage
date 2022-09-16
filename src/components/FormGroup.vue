@@ -71,7 +71,7 @@
             :disabled-date="disableDates"
             :editable="false"
             :clearable="false"
-            :renderInputText="val => $mm(val).isValid() ? $mm(val).format(options.dateTextFormat || 'DD/MM/YYYY') : ''"
+            :renderInputText="val => $mm(val).isValid() ? $mm(val).format(options?.dateTextFormat || 'DD/MM/YYYY') : ''"
             v-bind="options"
         >
             <template #icon-calendar>
