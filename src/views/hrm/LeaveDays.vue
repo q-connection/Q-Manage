@@ -143,11 +143,15 @@
                 if(!emp.contract_date) return 0
                 const contract_date = this.$mm(emp.contract_date)
 
-                if(parseInt(contract_date.format('YYYY')) != parseInt(this.year)) {
-                    return 12;
-                } 
+                if(parseInt(contract_date.format('YYYY')) == parseInt(this.year)) {
+                    return 12 - parseInt(contract_date.format('M')) + 1
+                }  
 
-                return 12 - parseInt(contract_date.format('MM'))
+                if(parseInt(contract_date.format('YYYY')) > parseInt(this.year)) {
+                    return 0
+                }                
+
+                return 12
             },
 
             isMonthValid(emp, month) {
