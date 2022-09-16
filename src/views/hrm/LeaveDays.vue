@@ -10,6 +10,7 @@
                         placeholder="Select Year"
                         v-model="year"
                         date-format="YYYY"
+                        :max="$mm().format('YYYY')"
                         :options="{type: 'year', dateTextFormat: 'YYYY'}"
                     />
                 </div>
