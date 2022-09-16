@@ -11,6 +11,7 @@
                             <th rowspan="2">Tên nhân viên</th>
                             <th colspan="12">Tháng làm việc</th>
                             <th rowspan="2">Số ngày nghỉ trong năm</th>
+                            <th rowspan="2">Tiêu chuẩn phép</th>
                             <th rowspan="2">Phép năm cũ</th>
                             <th rowspan="2">Phép còn lại</th>
                             <th rowspan="2">HDLD</th>
@@ -35,19 +36,20 @@
                         <tr v-for="(emp, index) in statistics" :key="index">
                             <td>{{ index + 1 }}</td>
                             <td>{{ emp.fullname }}</td>
-                            <td>{{ emp.jan }}</td>
-                            <td>{{ emp.feb }}</td>
-                            <td>{{ emp.mar }}</td>
-                            <td>{{ emp.apr }}</td>
-                            <td>{{ emp.may }}</td>
-                            <td>{{ emp.jun }}</td>
-                            <td>{{ emp.jul }}</td>
-                            <td>{{ emp.aug }}</td>
-                            <td>{{ emp.sep }}</td>
-                            <td>{{ emp.oct }}</td>
-                            <td>{{ emp.nov }}</td>
-                            <td>{{ emp.dec }}</td>
+                            <td :class="{'bg-danger': !isMonthValid(emp, 1)}">{{ emp.jan }}</td>
+                            <td :class="{'bg-danger': !isMonthValid(emp, 2)}">{{ emp.feb }}</td>
+                            <td :class="{'bg-danger': !isMonthValid(emp, 3)}">{{ emp.mar }}</td>
+                            <td :class="{'bg-danger': !isMonthValid(emp, 4)}">{{ emp.apr }}</td>
+                            <td :class="{'bg-danger': !isMonthValid(emp, 5)}">{{ emp.may }}</td>
+                            <td :class="{'bg-danger': !isMonthValid(emp, 6)}">{{ emp.jun }}</td>
+                            <td :class="{'bg-danger': !isMonthValid(emp, 7)}">{{ emp.jul }}</td>
+                            <td :class="{'bg-danger': !isMonthValid(emp, 8)}">{{ emp.aug }}</td>
+                            <td :class="{'bg-danger': !isMonthValid(emp, 9)}">{{ emp.sep }}</td>
+                            <td :class="{'bg-danger': !isMonthValid(emp, 10)}">{{ emp.oct }}</td>
+                            <td :class="{'bg-danger': !isMonthValid(emp, 11)}">{{ emp.nov }}</td>
+                            <td :class="{'bg-danger': !isMonthValid(emp, 12)}">{{ emp.dec }}</td>
                             <td>{{ emp.total }}</td>
+                            <td>{{ calcValidDays(emp) }}</td>
                             <td>{{ emp.old_leave_days }}</td>
                             <td>{{ parseFloat(emp.available_leave_days) + parseFloat(emp.old_leave_days) }}</td>
                             <td>
@@ -56,9 +58,7 @@
                                 <div class="font-weight-bold" v-if="emp.contract_type == 'probation'">Probation</div>                                
                             </td>
                             <td>
-                                <div class="font-weight-bold" v-if="emp.contract_type == 'official'">{{ emp.official_contract_date || 'N/A' }}</div>
-                                <div class="font-weight-bold" v-if="emp.contract_type == 'freelancer'">{{ emp.freelance_contract_date || 'N/A' }}</div>
-                                <div class="font-weight-bold" v-if="emp.contract_type == 'probation'">{{ emp.probationary_contract_date || 'N/A' }}</div>                                  
+                                <div class="font-weight-bold">{{ emp.contract_date }}</div>                             
                             </td>
                         </tr>
                         <tr v-if="statistics.length <= 0">
@@ -79,6 +79,7 @@
                             <td>{{ $lodash.sumBy(statistics, item => parseFloat(item.nov)) }}</td>                         
                             <td>{{ $lodash.sumBy(statistics, item => parseFloat(item.dec)) }}</td>                         
                             <td>{{ $lodash.sumBy(statistics, item => parseFloat(item.total)) }}</td>                         
+                            <td>{{ $lodash.sumBy(statistics, item => calcValidDays(item)) }}</td>                         
                             <td>{{ $lodash.sumBy(statistics, item => parseFloat(item.old_leave_days)) }}</td>                         
                             <td>{{ $lodash.sumBy(statistics, item => parseFloat(item.available_leave_days) + parseFloat(item.old_leave_days)) }}</td>      
                             <td></td>                   
@@ -118,6 +119,27 @@
                 } catch (err) {
                     console.log(err)
                 }
+            },
+
+            calcValidDays(emp) {
+                if(!emp.contract_date) return 0
+                const contract_date = this.$mm(emp.contract_date)
+
+                if(contract_date.year() != this.$mm().year()) {
+                    return 12;
+                } 
+
+                return 12 - contract_date.month()
+            },
+
+            isMonthValid(emp, month) {
+                if(!emp.contract_date) return false
+
+                const current_year = this.$mm().year()
+                // const current_month = this.$mm().month()
+                const contract_date = this.$mm(emp.contract_date)
+
+                return current_year >= contract_date.year() && contract_date.month() >= month
             }
         }
     }

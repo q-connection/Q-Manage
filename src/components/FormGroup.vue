@@ -205,13 +205,13 @@
                 if(this.min) {
                     const min = this.$mm(this.min).toDate()
 
-                    return date <= min
+                    return date < min
                 }          
 
                 if(this.max) {
                     const max = this.$mm(this.max).toDate()
 
-                    return date >= max                 
+                    return date > max                 
                 }
 
                 return false
