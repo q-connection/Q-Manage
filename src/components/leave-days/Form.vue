@@ -264,6 +264,14 @@
                     if(err.response.status == 422) {
                         this.$parseResponseErrors(this.$refs, err.response.data.data)
                     }
+
+                    if(err.response.status == 400) {
+                        this.$showAlert({
+                            type: 'danger',
+                            title: 'Oops!',
+                            message: err.response.data.message
+                        })                        
+                    }
                 } finally {
                     this.isSubmitting = false
                 }
