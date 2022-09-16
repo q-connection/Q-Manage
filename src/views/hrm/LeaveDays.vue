@@ -114,7 +114,7 @@
         components: {TableLeaveDays},
         data: () => ({
             statistics: [],
-            year: moment().year()
+            year: moment().format('YYYY')
         }),
         watch: {
             async year() {
