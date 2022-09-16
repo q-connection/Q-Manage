@@ -73,7 +73,9 @@
                         <tr v-if="statistics.length <= 0">
                             <td colspan="18">Không có dữ liệu.</td>
                         </tr>
-                        <tr v-else>
+                    </tbody>
+                    <tfoot v-if="statistics.length > 0">
+                        <tr>
                             <th colspan="2">Tổng cộng</th>
                             <td>{{ $lodash.sumBy(statistics, item => parseFloat(item.jan)) }}</td>                         
                             <td>{{ $lodash.sumBy(statistics, item => parseFloat(item.feb)) }}</td>                         
@@ -93,8 +95,8 @@
                             <td>{{ $lodash.sumBy(statistics, item => parseFloat(item.available_leave_days) + parseFloat(item.old_leave_days)) }}</td>      
                             <td></td>                   
                             <td></td>                   
-                        </tr>
-                    </tbody>
+                        </tr>                        
+                    </tfoot>
                 </table>
             </b-col>
             <b-col cols=12>
@@ -178,6 +180,11 @@
             background-color: var(--primary);
             color: #fff
         }
+    }
+
+    tbody {
+        max-height: 500px;
+        overflow-y: auto;
     }
 }
 </style>
