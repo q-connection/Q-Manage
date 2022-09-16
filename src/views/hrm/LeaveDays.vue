@@ -153,7 +153,7 @@
                 const contract_date = this.$mm(emp.contract_date)
 
                 if(parseInt(contract_date.format('YYYY')) == parseInt(this.year)) {
-                    return parseInt(contract_date.format('M')) >= month
+                    return parseInt(contract_date.format('M')) <= month
                 }                
 
                 if(parseInt(contract_date.format('YYYY')) > parseInt(this.year)) {
