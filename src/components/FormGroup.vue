@@ -62,7 +62,6 @@
             :value="value" 
             :state="state"
             :readonly="readonly"
-            format="YYYY-MM-DD"
             :required="required"   
             :class="customClass"
             @input="$emit('input', $event)"
@@ -72,7 +71,8 @@
             :disabled-date="disableDates"
             :editable="false"
             :clearable="false"
-            :renderInputText="val => $mm(val).isValid() ? $mm(val).format('DD/MM/YYYY') : ''"
+            :renderInputText="val => $mm(val).isValid() ? $mm(val).format(options.dateTextFormat || 'DD/MM/YYYY') : ''"
+            v-bind="options"
         >
             <template #icon-calendar>
                 <q-icon icon="ant-design:calendar-filled"/>
@@ -167,7 +167,7 @@
             mode: {
                 type: String,
                 default: 'input'
-            },
+            }
         },
 
         data: () => ({

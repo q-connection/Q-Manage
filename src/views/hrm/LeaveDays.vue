@@ -3,7 +3,16 @@
     <b-container fluid>
         <b-row>
             <b-col cols=12>
-                <h5>Statistics</h5>
+                <div class="d-flex align-items-center justify-content-between">
+                    <h5 class="mb-0">Statistics</h5>
+                    <form-group
+                        mode="datepicker"
+                        placeholder="Select Year"
+                        v-model="year"
+                        date-format="YYYY"
+                        :options="{type: 'year', dateTextFormat: 'YYYY'}"
+                    />
+                </div>
                 <table class="table-leave-days table table-bordered table-hover mb-4">
                     <thead>
                         <tr>
@@ -98,20 +107,27 @@
 
 <script>
     import TableLeaveDays from '@/components/leave-days/Table.vue'
+    import moment from 'moment'
 
     export default {
         name: 'HrmLeaveDays',
         components: {TableLeaveDays},
         data: () => ({
-            statistics: []
+            statistics: [],
+            year: moment().year()
         }),
+        watch: {
+            async year() {
+                await this.fetchStatistics()
+            }
+        },
         async mounted() {
             await this.fetchStatistics()
         },
         methods: {
             async fetchStatistics() {
                 try {
-                    const { data } = await this.$http.get('annual-leave/statistics')
+                    const { data } = await this.$http.get('annual-leave/statistics', {params: {year: this.year}})
 
                     if(!data.error) {
                         this.statistics = data.data
@@ -125,21 +141,26 @@
                 if(!emp.contract_date) return 0
                 const contract_date = this.$mm(emp.contract_date)
 
-                if(contract_date.year() != this.$mm().year()) {
+                if(parseInt(contract_date.format('YYYY')) != parseInt(this.year)) {
                     return 12;
                 } 
 
-                return 12 - contract_date.month()
+                return 12 - parseInt(contract_date.format('MM'))
             },
 
             isMonthValid(emp, month) {
                 if(!emp.contract_date) return false
-
-                const current_year = this.$mm().year()
-                // const current_month = this.$mm().month()
                 const contract_date = this.$mm(emp.contract_date)
 
-                return current_year >= contract_date.year() && contract_date.month() >= month
+                if(parseInt(contract_date.format('YYYY')) == parseInt(this.year)) {
+                    return parseInt(contract_date.format('M')) >= month
+                }                
+
+                if(parseInt(contract_date.format('YYYY')) > parseInt(this.year)) {
+                    return false
+                }
+
+                return true
             }
         }
     }
