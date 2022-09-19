@@ -54,7 +54,7 @@ export default {
         async fetchIssues() {
             try {
                 this.isLoading = true
-                const { data } = await this.$http.get("issues?process=true&order=assigne");
+                const { data } = await this.$http.get(`issues?process=true&order=assigne&assigned_id=${this.$user.id}`);
                 if (!data.error) {
                     this.issues = this.$lodash.cloneDeep(data.data.data.filter((el) => {
                         return el !== null && typeof el !== 'undefined';

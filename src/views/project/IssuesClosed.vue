@@ -2,6 +2,9 @@
 <project-layout>
     <b-row>
         <b-col cols=12>
+            <h5>Closed Issues</h5>
+        </b-col>
+        <b-col cols=12>
             <issues-table use-router only-closed/>
         </b-col>
     </b-row>
