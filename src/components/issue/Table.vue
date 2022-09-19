@@ -11,15 +11,16 @@
         >
             <template slot="tableHeadActions">
                 <b-select2
-                    class="select-sm"
+                    class="select-sm mr-2"
                     v-model="status"
                     :options="issue_statuses"
                     :reduce="pj => pj.value"
                     style="min-width: 150px"
                     placeholder="Status"
+                    v-if="!onlyClosed"
                 />
                 <b-select2
-                    class="select-sm ml-2"
+                    class="select-sm"
                     v-model="labels"
                     :options="filteredLabels"
                     :reduce="lbl => lbl.value"
@@ -78,6 +79,16 @@
 <script>
     export default {
         name: 'TableIssues',
+        props: {
+            useRouter: {
+                type: Boolean,
+                default: false
+            },
+            onlyClosed: {
+                type: Boolean,
+                default: false
+            },
+        },        
         data: () => ({
             issue_types: [],   
             status: '',
@@ -108,22 +119,31 @@
                 .value()
             },
             tableConfig() {
-                const status = this.status || 'done'
                 let operator = ''
+                let status   = 'done'
 
-                if(!this.status) {
-                    operator = '<>'
-                }
-
-                return {
+                const configs = {
                     url: 'issues',
                     params: {
-                        status,
                         labels: this.labels || '',
-                        status_operator: operator,
-                        project_id: this.project_id
+                        project_id: this.useRouter ? this.$route.params.id : this.project_id
                     }
-                }  
+                }                  
+
+                if(!this.onlyClosed) {
+                    status = this.status || 'done'
+
+                    if(!this.status) {
+                        operator = '<>'
+                    }
+
+                    configs.params.status = status
+                    configs.params.status_operator = operator
+                } else {
+                    configs.params.closed = 1
+                }
+
+                return configs
             }               
         },
 

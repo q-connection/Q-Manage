@@ -52,7 +52,7 @@ export default {
             }
         },
 
-        async fetchProject({commit, state}, id, force = false) {
+        async fetchProject({commit, state}, {id, force = false}) {
             if(!force && state.detail && state.detail.id == id) {
                 return true
             }

@@ -32,7 +32,7 @@
             })
         },
         async mounted() {
-            await this.fetchProject(this.$route.params.id)
+            await this.fetchProject({id: this.$route.params.id})
         }
     }
 </script>

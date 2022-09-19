@@ -13,6 +13,11 @@
         .orgchart {
             width: 100%;
             background: transparent;
+
+            .node {
+                width: 180px;
+                max-width: 220px;
+            }
         }    
     }
 }

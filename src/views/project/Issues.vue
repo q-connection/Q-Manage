@@ -68,9 +68,12 @@
                             <div class="head">
                                 <div class="head-title">{{ status.label }} ({{ getIssuesByStatus(status.name).length }})</div>
                                 <div class="head-toolbar">
-                                    <span class="icon">
+                                    <span class="icon" v-if="status.name != 'done'">
                                         <q-icon icon="fluent:more-circle-20-regular"/>
                                     </span>
+                                    <router-link :to="{name: 'project-issues-closed'}" class="text-muted" v-else>
+                                        <u><b>{{total_issues_closed}}</b> Closed</u>
+                                    </router-link>
                                 </div>
                             </div>
                             <draggable 
@@ -129,6 +132,11 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="issue-action mt-2" v-if="issue.status == 'done' && !issue.closed && issue.create_by == $user.id">
+                                            <button class="btn btn-danger btn-sm" @click="closeIssue(issue)">
+                                                <span class="small">Close</span>
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </draggable>
@@ -164,6 +172,7 @@
 <script>
     import draggable from 'vuedraggable'
     import ProjectLayout from '@/components/project/Layout.vue'  
+    import { mapState } from 'vuex'
 
     export default {
         name: 'ProjectIssues',
@@ -173,6 +182,7 @@
             isLoading: false,
             issues: [],
             assignees: [],
+            total_issues_closed: 0,
             filtering: {
                 label: null,
                 team: null,
@@ -211,10 +221,23 @@
                 this.timer = setTimeout(async () => {
                     await this.fetchIssues()
                 }, 750)
+            },
+            project: {
+                immediate: true,
+                deep: true,
+                handler(newval) {
+                    if(newval) {
+                        this.total_issues_closed = newval.total_issues_closed || 0
+                    }
+                }
             }
         },
 
         computed: {
+            ...mapState({
+                project: state => state.project.detail
+            }),
+
             toDoIssues() {
                 const issues = this.issues.length > 0 ? this.issues.filter(x => x.status == 'to_do') : []
 
@@ -478,6 +501,32 @@
 
             addToStore() {
                 this.$store.commit('project/SET_ISSUE', this.selectedIssue)
+            },
+
+            closeIssue(issue) {
+                this.$showAlert({
+                    type: 'confirm',
+                    title: 'Warning!',
+                    message: 'Are you sure you want to close this issue?',
+                    callback: async ({dismiss}) => {
+                        try {
+                            await this.$http.post(`issues/update_data/${issue.id}`, {closed: true})
+                            this.$toast.success(`Closed issue <b>${issue.name}</b>.`)
+
+                            const idx = this.issues.findIndex(x => x.id == issue.id)
+
+                            if(idx !== -1) {
+                                this.$delete(this.issues, idx)
+                                await this.$store.dispatch('project/fetchProject', {id: this.$route.params.id, force: true})
+                            }
+                        } catch (err) {
+                            console.log(err)
+                            this.$toast.error("Something went wrong!")
+                        } finally {
+                            dismiss()
+                        }
+                    }
+                })
             }
         }
     }

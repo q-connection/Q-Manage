@@ -18,6 +18,12 @@ export default [
         component: () => import('@/views/project/Issues.vue')
     },
     {
+        path: '/projects/:id/issues/closed',
+        name: 'project-issues-closed',
+        meta: { layout: 'default', requiresAuth: true },
+        component: () => import('@/views/project/IssuesClosed.vue')
+    },
+    {
         path: '/projects/:id/issues/create',
         name: 'project-issues-create',
         meta: { layout: 'default', requiresAuth: true, requiresPermission: 'issues.create' },
