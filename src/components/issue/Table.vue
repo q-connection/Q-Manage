@@ -140,7 +140,7 @@
                     configs.params.status = status
                     configs.params.status_operator = operator
                 } else {
-                    configs.params.closed = 1
+                    configs.params.closed = true
                 }
 
                 return configs
