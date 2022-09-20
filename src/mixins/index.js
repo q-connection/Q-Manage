@@ -64,9 +64,10 @@ export default {
 
             return permissions[name] || false
         },
-
+        
+        // eslint-disable-next-line
         $isValid(errors, valid) {
-            return errors[0] ? false : (valid ? true : null)
+            return errors[0] ? false : null
         },
 
         $parseResponseErrors(refs, errors) {
