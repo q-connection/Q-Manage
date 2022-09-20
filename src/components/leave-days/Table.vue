@@ -21,6 +21,11 @@
                     Create
                 </b-button>
             </template>
+            <template slot="tableHeadActions" v-else>
+                <h5 class="mb-0">
+                    My Team
+                </h5>
+            </template>
             <template slot="tableHeadForms" v-if="forHrm">
                 <form-input-group class="d-none d-xl-block d-lg-block search-form mr-2">
                     <b-form-input style="min-width: 285px;" placeholder="Search by ID or Name..." v-model.lazy="q"></b-form-input>
@@ -32,7 +37,7 @@
                 </form-input-group>
             </template>
             <template slot="row-user_id" slot-scope="{row}">
-                <div v-if="forHrm">
+                <div v-if="forHrm || myTeam">
                     <div>{{ row.user ? row.user.username : 'N/A' }}</div>
                     <div>{{ row.user ? row.user.fullname : 'N/A' }}</div>
                 </div>
@@ -164,7 +169,7 @@
                     {label: "Status", name: "status", display: 'none', rowWidth: '100%'},         
                 ]
 
-                if(this.forHrm) {
+                if(this.forHrm || this.myTeam) {
                     addition.push({label: "User", name: "user_id"})                    
                 }
 

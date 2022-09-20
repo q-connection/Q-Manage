@@ -8,7 +8,6 @@
                 />
             </b-col>
             <b-col cols=12>
-                <h5>My Team</h5>
                 <TableLeaveDays my-team/>
             </b-col>
         </b-row>
