@@ -155,6 +155,12 @@ export default new Vuex.Store({
 
         checkPermission({state}, permission) {
             let has_permission = false
+            const user = state.user || {}
+            
+            if(user.super_user === 1 || user.super_user === true) {
+                return true
+            }
+
             const permissions = state.user ? state.user.permissions : {}
 
             if(permissions[permission] === true) {
