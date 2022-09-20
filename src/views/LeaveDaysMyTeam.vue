@@ -8,13 +8,8 @@
                 />
             </b-col>
             <b-col cols=12>
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h5 class="mb-0">My Leave Days</h5>
-                    <router-link :to="{name: 'leave-days-my-team'}">
-                        <u>My team leave days</u>
-                    </router-link>
-                </div>
-                <TableLeaveDays/>
+                <h5>My Team</h5>
+                <TableLeaveDays my-team/>
             </b-col>
         </b-row>
     </b-container>
@@ -25,13 +20,14 @@
     import TableLeaveDays from '@/components/leave-days/Table.vue'
 
     export default {
-        name: 'PageLeaveDays',
+        name: 'PageLeaveDaysMyTeam',
         components: {TableLeaveDays},
         computed: {
             breadcrumb() {
                 return [
                     {title: "Dashboard", to: "dashboard"},
                     {title: "Leave Days", to: "leave-days"},
+                    {title: "My Team", to: "leave-days-my-team"},
                 ]
             }            
         }

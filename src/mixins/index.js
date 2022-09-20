@@ -56,7 +56,7 @@ export default {
         },
 
         $hasPermission(name) {
-            if(this.$user.super_user == 1) {
+            if(this.$user.super_user === 1 || this.$user.super_user === true) {
                 return true
             }
 

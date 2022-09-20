@@ -51,7 +51,7 @@
                 />                
             </template>
             <template slot="row-status" slot-scope="{row}">
-                <div class="w-100 d-flex justify-content-between">
+                <div class="w-100 d-flex justify-content-between" v-if="!myTeam">
                     <div class="text-info" v-if="row.status == 'pending' || row.status == 'draft'">
                         Waiting for approval
                     </div>
@@ -73,6 +73,32 @@
                         <u>Cancel</u>
                     </div>
                 </div>
+                <div class="w-100 d-flex justify-content-between" v-else>
+                    <div class="text-info" v-if="row.status == 'pending' || row.status == 'draft'">
+                        Waiting for approval
+                    </div>
+                    <div class="text-success" v-if="row.status == 'approved'">
+                        Approved 
+                    </div>                    
+                    <div class="d-flex">
+                        <div 
+                            class="text-cursor text-success font-weight-bold mr-3" 
+                            v-if="row.status == 'pending' || row.status == 'draft'" 
+                            @click="approveLeaveDay(row.id)"
+                            v-show="!forHrm"
+                        >
+                            <u>Approve</u>
+                        </div>                    
+                        <div 
+                            class="text-cursor text-danger" 
+                            v-if="row.status == 'pending' || row.status == 'draft'" 
+                            @click="cancelLeaveDay(row.id)"
+                            v-show="!forHrm"
+                        >
+                            <u>Cancel</u>
+                        </div>                    
+                    </div>                    
+                </div>
             </template>
         </table-default>
         <b-modal id="modal-leave-days" size="xl" hide-header hide-footer @hide="modalData = null">
@@ -93,7 +119,12 @@
             forHrm: {
                 type: Boolean,
                 default: false
-            }
+            },
+
+            myTeam: {
+                type: Boolean,
+                default: false
+            },
         },
 
         components: {FormLeaveDay},
@@ -113,7 +144,7 @@
         computed: {
             tableConfig() {
                 return {
-                    url: `annual-leave${this.forHrm ? '/list' : ''}`,
+                    url: this.myTeam ? 'annual-leave/my-team' : `annual-leave${this.forHrm ? '/list' : ''}`,
                     per_page: 12,
                     params: {
                         status: this.forHrm ? 'approved' : '',
@@ -160,6 +191,35 @@
                     callback: async ({dismiss}) => {
                         try {
                             const { data } = await this.$http.patch('annual-leave/cancel/' + id)
+
+                            if(!data.error) {
+                                dismiss(true)
+                                this.$refs.table.refresh(true)
+
+                                this.$showAlert({
+                                    type: 'success',
+                                    message: 'Canceled leave day successfully'
+                                })
+                            }
+                        } catch (err) {
+                            console.log(err)
+                            this.$showAlert({
+                                type: 'danger',
+                                message: 'Something went wrong, please try again later'
+                            })                    
+                        }
+                    }
+                })
+            },
+
+            approveLeaveDay(id) {
+                this.$showAlert({
+                    type: 'confirm',
+                    title: "Warning!",
+                    message: 'Do you really want to approve this request?<br/>This process cannot be undone.',
+                    callback: async ({dismiss}) => {
+                        try {
+                            const { data } = await this.$http.patch('annual-leave/approved/' + id)
 
                             if(!data.error) {
                                 dismiss(true)
