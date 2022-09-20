@@ -282,3 +282,11 @@ $text-color: #000 !default;
         color: var(--primary)
     }
 }
+
+.mx-datepicker {
+    &[state=false] {
+        .mx-input{
+            border: 1px solid var(--danger)
+        }
+    }        
+}
