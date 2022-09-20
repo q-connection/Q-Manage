@@ -10,7 +10,7 @@
             hover            
             boxed
         >
-            <template slot="tableHeadActions">
+            <template slot="tableHeadActions" v-if="!myTeam">
                 <b-button 
                     @click="$bvModal.show('modal-leave-days')"
                     variant="outline-primary" 

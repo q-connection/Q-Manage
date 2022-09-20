@@ -105,7 +105,7 @@
                     no-caret
                 >
                     <template #button-content>
-                        <span class="h3 position-relative" :class="{unread: hasUnread}">
+                        <span class="h3 position-relative" :class="{unread: notification.unread > 0}">
                             <q-icon icon="clarity:bell-solid"/>
                         </span>   
                     </template>
@@ -203,7 +203,8 @@ export default {
                 {name: 'Projects', value: 'project'},
                 {name: 'Others', value: 'others'},
             ],
-            selected: 'project'
+            selected: 'project',
+            unread: 0
         }
     }),
 
@@ -324,6 +325,7 @@ export default {
 
                 if(!data.error) {
                     this.notification.items = data.data.data
+                    this.notification.unread = data.data.unread
                 }
             } catch (err) {
                 console.log(err)
@@ -355,13 +357,13 @@ export default {
                 const idx = this.notification.items.findIndex(x => x.id == id)
                 if(idx !== -1) {
                     const obj = this.notification.items[idx]
-                    obj.seen = true
-
-                    this.$set(this.notification.items, idx, obj)
                     await this.$http.put('notifications/seen/' + id)
+
                     if(obj.url) {
                         window.location.href = `/${obj.url}`
                     }
+
+                    this.notification.unread -= 1
                 }
             } catch (err) {
                 console.log(err)
