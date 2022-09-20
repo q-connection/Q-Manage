@@ -38,7 +38,7 @@
                                     ref="file"
                                     :rules="{
                                         ext: ['bmp', 'jpg','jpeg','png','gif','doc','docx','xlsx','xls','pdf','zip','rar','tar', 'tar.gz'], 
-                                        size: 26000
+                                        size: 100000
                                     }"
                                 >
                                     <form-group
