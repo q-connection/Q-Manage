@@ -68,6 +68,7 @@
             total: 0,
             last_page: 1,
             is_loading: false,
+            unread: 0,
             queryParams: {
                 page: 1,
                 per_page: 10,
@@ -106,6 +107,7 @@
                         this.total = data.data.total
                         this.last_page = data.data.last_page
                         this.history = this.history.concat(data.data.data)
+                        this.unread = data.data.unread || 0
                     }
                 } catch (err) {
                     console.log(err)
@@ -128,13 +130,13 @@
                     const idx = this.history.findIndex(x => x.id == id)
                     if(idx !== -1) {
                         const obj = this.history[idx]
-                        obj.seen = true
 
-                        this.$set(this.history, idx, obj)
                         await this.$http.put('notifications/seen/' + id)
                         if(obj.url) {
                             window.location.href = `/${obj.url}`
-                        }                        
+                        }   
+                        
+                        this.unread -= 1 
                     }
                 } catch (err) {
                     console.log(err)
