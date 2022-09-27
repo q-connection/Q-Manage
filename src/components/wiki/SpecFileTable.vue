@@ -47,22 +47,48 @@
         </b-row>
         <b-row>
             <b-col cols=12 v-for="(item, index) in designs" :key="index">
-                <div class="design-item" @click="onShowDetailSpec(item)">
-                    <div class="design-item--title mb-1">
-                        <span class="bg-primary text-white font-weight-medium rounded-lg" style="font-weight: 600; padding: 2px 4px">{{ item.version ? item.version.name : 'N/A' }}</span>
-                        <span class="ml-1 h5 mb-0" style="font-weight: 600">{{ item.screen ? item.screen.name : 'Unknown' }}</span>
-                    </div>
-                    <div class="design-item--author">
-                        <div class="text-muted">{{ $mm(item.created_at).format('DD/MM/YYYY HH:mm:ss') }}</div>
-                        <div class="text-muted">Created by <b>{{ item.created_by.fullname }}</b></div>
-                    </div>
-                    <div class="design-item--tag">
-                        <span 
-                            class="rounded-lg ml-2" 
-                            :style="{backgroundColor: item.tag ? item.tag.color : '#333', color: '#fff', padding: '2px 4px'}"
+                <div class="spec-item">
+                    <b-dropdown class="spec-item-actions" variant="primary" no-caret boundary="window">
+                        <template #button-content>
+                            <q-icon icon="carbon:overflow-menu-vertical"/>
+                        </template>
+                        <b-dropdown-item 
+                            :to="{name: 'project-wiki-spec-files-edit', params: {id: $route.params.id, spec_id: item.id}}"
+                            :disabled="!$hasPermission('project.spec.edit') || item.disabled"
                         >
-                            {{ item.tag ? item.tag.name : 'N/A' }}
-                        </span>
+                            Edit
+                        </b-dropdown-item>
+                        <b-dropdown-item 
+                            :to="{name: 'project-issues-detail', params: {id: $route.params.id, issue_id: item.issue_id}}" 
+                            v-if="item.issue_id"
+                        >
+                            View issue
+                        </b-dropdown-item>
+                        <b-dropdown-item 
+                            href="javascript:;"
+                            @click="() => $emit('onCreateIssue', item)"
+                            v-else
+                        >
+                            Create issue
+                        </b-dropdown-item>
+                    </b-dropdown>                    
+                    <div class="spec-item-content" @click="onShowDetailSpec(item)">
+                        <div class="spec-item--title mb-1">
+                            <span class="bg-primary text-white font-weight-medium rounded-lg" style="font-weight: 600; padding: 2px 4px">{{ item.version ? item.version.name : 'N/A' }}</span>
+                            <span class="ml-1 h5 mb-0" style="font-weight: 600">{{ item.screen ? item.screen.name : 'Unknown' }}</span>
+                        </div>
+                        <div class="spec-item--author">
+                            <div class="text-muted">{{ $mm(item.created_at).format('DD/MM/YYYY HH:mm:ss') }}</div>
+                            <div class="text-muted">Created by <b>{{ item.created_by.fullname }}</b></div>
+                        </div>
+                        <div class="spec-item--tag">
+                            <span 
+                                class="rounded-lg ml-2" 
+                                :style="{backgroundColor: item.tag ? item.tag.color : '#333', color: '#fff', padding: '2px 4px'}"
+                            >
+                                {{ item.tag ? item.tag.name : 'N/A' }}
+                            </span>
+                        </div>
                     </div>
                 </div>
             </b-col>
@@ -203,37 +229,49 @@
     }
 </script>
 
-<style lang="scss" scoped>
-.design-item {
-    padding: .75rem;
+<style lang="scss">
+.spec-item {
     border: 1px solid #E0E0E0;
     box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.25);
     border-radius: 5px;
     margin-bottom: .75rem;
-    position: relative;
-    cursor: pointer;
     transition: .25s;
-    
-    &:hover {
-        transform: scale(1.01);
+    display: flex;
+    width: 100%;
+    overflow: hidden;
+
+    .spec-item-content {
+        padding: .75rem;
+        position: relative;
+        width: 100%;
+        cursor: pointer;
+
+        .spec-item--author {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .spec-item--tag {
+            position: absolute;
+            top: .75rem;
+            right: .75rem;
+        }        
     }
 
-    .design-item--author {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
+    .spec-item-actions {
+        width: 32px;
 
-    .design-item--tag {
-        position: absolute;
-        top: .75rem;
-        right: .75rem;
+        button {
+            min-width: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            color: #fff;
+            border-radius: 0;
+            padding: 0;
+        }
     }
-}
-
-.description {
-    white-space: pre-wrap; 
-    word-wrap: break-word;
-    font-family: inherit;    
 }
 </style>

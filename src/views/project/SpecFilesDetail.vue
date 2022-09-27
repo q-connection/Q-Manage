@@ -17,7 +17,7 @@
                             <div class="d-flex align-items-end mb-1">
                                 <span class="bg-primary text-white font-weight-medium rounded-lg" style="font-weight: 600; padding: 2px 4px">{{ spec.version?.name || 'N/A' }}</span>
                                 <span class="ml-2 h5 mb-0" style="font-weight: 600">{{ spec.screen ? spec.screen.name : 'Unknown' }}</span>                                
-                                <router-link :to="{name: 'project-wiki-spec-files-edit'}" class="ml-2 h4 mb-0" v-if="$hasPermission('project.spec.edit')">
+                                <router-link :to="{name: 'project-wiki-spec-files-edit'}" class="ml-2 h4 mb-0" v-if="$hasPermission('project.spec.edit') && !spec.disabled">
                                     <q-icon icon="akar-icons:edit"/>    
                                 </router-link>                                
                             </div>

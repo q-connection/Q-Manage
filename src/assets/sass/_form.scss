@@ -234,6 +234,10 @@
 
 $text-color: #000 !default;
 
+.ql-editor ul {
+    padding-left: 0;
+}
+
 .ql-editor ul.task-list {
     padding-left: 1rem;
 }

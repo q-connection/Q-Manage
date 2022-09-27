@@ -13,11 +13,11 @@
                 :key="index" 
             >
                 <div class="left">
-                    <img-lazy-load 
+                    <div 
                         class="avatar" 
-                        :src="user.avatar_thumb_url" 
-                        error="/images/avatar-placeholder.png"
-                    />
+                    >
+                        <img :src="user.avatar_thumb_url || '/images/avatar-placeholder.png'">
+                    </div>
                     <div>
                         <div class="font-weight-bold">{{ user.fullname }}</div>
                         <div class="text-gray small">{{ user.username }}</div>
@@ -55,11 +55,11 @@
                         :class="{active: value.includes(user.id)}" 
                     >
                         <div class="left">
-                            <img-lazy-load 
+                            <div 
                                 class="avatar" 
-                                :src="user.avatar_thumb_url" 
-                                error="/images/avatar-placeholder.png"
-                            />
+                            >
+                                <img :src="user.avatar_thumb_url || '/images/avatar-placeholder.png'">
+                            </div>
                             <div>
                                 <div class="font-weight-bold">{{ user.fullname }}</div>
                                 <div class="text-gray small">{{ user.username }}</div>

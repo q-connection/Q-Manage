@@ -43,6 +43,13 @@
                     const { data } = await this.$http.get('project_specs/' + spec_id)
 
                     if(!data.error) {
+                        if(data.data.disabled) {
+                            this.$toast.error('Selected spec is disabled for edit.')
+                            this.$router.push({name: 'project-wiki-spec-files'})
+
+                            return
+                        }
+
                         this.$store.commit('project/SET_SPEC', data.data)
                     }
                 } catch (err) {
