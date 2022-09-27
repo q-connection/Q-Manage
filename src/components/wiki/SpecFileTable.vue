@@ -53,6 +53,12 @@
                             <q-icon icon="carbon:overflow-menu-vertical"/>
                         </template>
                         <b-dropdown-item 
+                            href="javascript:;"
+                            @click="onShowDetailSpec(item)"
+                        >
+                            View
+                        </b-dropdown-item>
+                        <b-dropdown-item 
                             :to="{name: 'project-wiki-spec-files-edit', params: {id: $route.params.id, spec_id: item.id}}"
                             :disabled="!$hasPermission('project.spec.edit') || item.disabled"
                         >
@@ -67,7 +73,7 @@
                         <b-dropdown-item 
                             href="javascript:;"
                             @click="() => $emit('onCreateIssue', item)"
-                            v-else
+                            v-if="!item.issue_id && $hasPermission('project.spec.edit')"
                         >
                             Create issue
                         </b-dropdown-item>
